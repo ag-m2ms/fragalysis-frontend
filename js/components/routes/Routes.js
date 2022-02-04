@@ -20,6 +20,7 @@ import { DirectDisplay } from '../direct/directDisplay';
 import { setSnapshotJustSaved } from '../snapshot/redux/actions';
 import { useDispatch } from 'react-redux';
 import { DirectDownload } from '../direct/directDownload';
+import { App as CARApp } from '../../car/App';
 
 const useStyles = makeStyles(theme => ({
   content: {
@@ -72,6 +73,7 @@ const Routes = memo(() => {
           <Route exact path={URLS.funders} component={Funders} />
           <Route path={`${URLS.direct}*`} component={DirectDisplay} />
           <Route path={`${URLS.download}*`} component={DirectDownload} />
+          <Route exact path={URLS.car} component={CARApp} />
         </Switch>
       </Box>
       <BrowserCheck />
