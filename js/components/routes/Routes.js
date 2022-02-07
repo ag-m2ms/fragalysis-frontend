@@ -53,10 +53,11 @@ const Routes = memo(() => {
   }, [location]);
 
   return (
-    <Box minHeight="100vh" width="100%" margin={0}>
-      <Header headerHeight={headerHeight} setHeaderHeight={setHeaderHeight} />
-      <Box className={classes.content} minHeight={contentHeight} width={contentWidth}>
-        <Switch>
+    <Switch>
+      <Route exact path={URLS.car} component={CARApp} />
+      <Box minHeight="100vh" width="100%" margin={0}>
+        <Header headerHeight={headerHeight} setHeaderHeight={setHeaderHeight} />
+        <Box className={classes.content} minHeight={contentHeight} width={contentWidth}>
           <Route exact path={URLS.projects} component={Projects} />
           <Route exact path={`${URLS.projects}:projectId/history`} component={ProjectDetailSessionList} />
           <Route exact path={`${URLS.projects}:projectId`} component={ProjectPreview} />
@@ -73,30 +74,29 @@ const Routes = memo(() => {
           <Route exact path={URLS.funders} component={Funders} />
           <Route path={`${URLS.direct}*`} component={DirectDisplay} />
           <Route path={`${URLS.download}*`} component={DirectDownload} />
-          <Route exact path={URLS.car} component={CARApp} />
-        </Switch>
+        </Box>
+        <BrowserCheck />
+        {/* SnackBar is populated by Header Provider */}
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right'
+          }}
+          open={snackBarTitle !== null}
+          autoHideDuration={60000}
+          onClose={handleCloseSnackbar}
+          ContentProps={{
+            'aria-describedby': 'message-id'
+          }}
+          message={<span id="message-id">{snackBarTitle}</span>}
+          action={
+            <IconButton key="close" aria-label="close" color="inherit" onClick={handleCloseSnackbar}>
+              <Close />
+            </IconButton>
+          }
+        />
       </Box>
-      <BrowserCheck />
-      {/* SnackBar is populated by Header Provider */}
-      <Snackbar
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right'
-        }}
-        open={snackBarTitle !== null}
-        autoHideDuration={60000}
-        onClose={handleCloseSnackbar}
-        ContentProps={{
-          'aria-describedby': 'message-id'
-        }}
-        message={<span id="message-id">{snackBarTitle}</span>}
-        action={
-          <IconButton key="close" aria-label="close" color="inherit" onClick={handleCloseSnackbar}>
-            <Close />
-          </IconButton>
-        }
-      />
-    </Box>
+    </Switch>
   );
 });
 

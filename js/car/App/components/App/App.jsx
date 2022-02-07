@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
-import ReactDOM from 'react-dom';
 import { Helmet } from 'react-helmet';
 
 import Header from '../../../Layout/Header';
 import Body from '../../../Body/Body';
-import { ThemeProvider } from '@material-ui/core';
 import Project from '../../../Project';
-import { theme } from './theme';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 const queryClient = new QueryClient({
@@ -18,7 +15,7 @@ const queryClient = new QueryClient({
 });
 
 export const App = () => {
-  const [projectId, setProjectId] = useState();
+  const [projectId, setProjectId] = useState(1);
 
   function changeProject(projectid) {
     setProjectId(projectid);
@@ -71,11 +68,9 @@ export const App = () => {
         </script>
       </Helmet>
       <QueryClientProvider client={queryClient}>
-        <ThemeProvider theme={theme}>
-          <Header changeProject={changeProject} deleteProject={deleteProject} generateProtocol={generateProtocol} />
-          {projectId && <Project projectId={projectId} />}
-          {/* <ProtocolBody ProjectID={ProjectID} key={ProjectID + 1} /> */}
-        </ThemeProvider>
+        <Header changeProject={changeProject} deleteProject={deleteProject} generateProtocol={generateProtocol} />
+        {projectId && <Project projectId={projectId} />}
+        {/* <ProtocolBody ProjectID={ProjectID} key={ProjectID + 1} /> */}
       </QueryClientProvider>
     </>
   );
