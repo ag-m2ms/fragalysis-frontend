@@ -73,9 +73,9 @@ const Header = ({ changeProject, deleteProject, generateProtocol }) => {
   useEffect(() => {
     async function fetchData() {
       const request = await axios.get('/car/api/projects/');
-      setProjects(request.data);
+      setProjects(request.data.results);
     }
-    //fetchData();
+    fetchData();
   }, []);
 
   async function deleteData(projectid) {
