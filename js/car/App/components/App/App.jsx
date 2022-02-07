@@ -15,7 +15,7 @@ const queryClient = new QueryClient({
 });
 
 export const App = () => {
-  const [projectId, setProjectId] = useState(1);
+  const [projectId, setProjectId] = useState(0);
 
   function changeProject(projectid) {
     setProjectId(projectid);
