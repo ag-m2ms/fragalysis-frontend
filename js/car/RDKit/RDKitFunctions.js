@@ -1,3 +1,24 @@
+export const loadRDKit = () => {
+  const script = document.createElement('script');
+  script.src = 'https://unpkg.com/@rdkit/rdkit/Code/MinimalLib/dist/RDKit_minimal.js';
+  script.onload = () => {
+    window
+      .initRDKitModule()
+      .then(function(RDKit) {
+        console.log('RDKit version: ' + RDKit.version());
+        window.RDKit = RDKit;
+        /**
+         * The RDKit module is now loaded.
+         * You can use it anywhere.
+         */
+      })
+      .catch(() => {
+        // handle loading errors here...
+      });
+  };
+  document.head.append(script);
+};
+
 export function checkmol(text) {
   if (text.length > 0) {
     var mol = window.RDKit.get_mol(text);

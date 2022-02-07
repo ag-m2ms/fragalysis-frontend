@@ -1,4 +1,3 @@
-export const getMethodsQueryKey = (targetId) =>
-  `/api/methods?search=${targetId}`;
+export const getMethodsQueryKey = targetId => `/car/api/methods?search=${targetId}`;
 
-export const patchMethodsKey = (methodId) => `/api/methods/${methodId}/`;
+export const patchMethodsKey = methodId => `/car/api/methods/${methodId}/`;

@@ -1,2 +1,1 @@
-export const getTargetsQueryKey = (projectId) =>
-  `/api/targets?search=${projectId}`;
+export const getTargetsQueryKey = projectId => `/car/api/targets?search=${projectId}`;

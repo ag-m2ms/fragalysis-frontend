@@ -5,6 +5,9 @@ import Header from '../../../Layout/Header';
 import Body from '../../../Body/Body';
 import Project from '../../../Project';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { loadRDKit } from '../../../RDKit/RDKitFunctions';
+
+loadRDKit();
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -50,26 +53,10 @@ export const App = () => {
           integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s"
           crossorigin="anonymous"
         ></script>
-        <script src="https://unpkg.com/@rdkit/rdkit/Code/MinimalLib/dist/RDKit_minimal.js"></script>
-        <script>
-          {`window
-            .initRDKitModule()
-            .then(function(RDKit) {
-              console.log('RDKit version: ' + RDKit.version());
-              window.RDKit = RDKit;
-              /**
-               * The RDKit module is now loaded.
-               * You can use it anywhere.
-               */
-            })
-            .catch(() => {
-              // handle loading errors here...
-            })`}
-        </script>
       </Helmet>
       <QueryClientProvider client={queryClient}>
         <Header changeProject={changeProject} deleteProject={deleteProject} generateProtocol={generateProtocol} />
-        {projectId && <Project projectId={projectId} />}
+        {!!projectId && <Project projectId={projectId} />}
         {/* <ProtocolBody ProjectID={ProjectID} key={ProjectID + 1} /> */}
       </QueryClientProvider>
     </>

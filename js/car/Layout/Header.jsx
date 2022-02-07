@@ -72,7 +72,7 @@ const Header = ({ changeProject, deleteProject, generateProtocol }) => {
 
   useEffect(() => {
     async function fetchData() {
-      const request = await axios.get('api/projects/');
+      const request = await axios.get('/car/api/projects/');
       setProjects(request.data);
     }
     //fetchData();
@@ -80,7 +80,7 @@ const Header = ({ changeProject, deleteProject, generateProtocol }) => {
 
   async function deleteData(projectid) {
     try {
-      const response = await axios.delete(`api/projects/${projectid}`);
+      const response = await axios.delete(`/car/api/projects/${projectid}`);
     } catch (error) {
       console.log(error);
     }
@@ -121,7 +121,7 @@ const Header = ({ changeProject, deleteProject, generateProtocol }) => {
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="mr-auto">
-          <Nav.Link href="/upload/">New Project</Nav.Link>
+          <Nav.Link href="/car/upload/">New Project</Nav.Link>
           <NavDropdown title="Load project" id="collasible-nav-dropdown">
             {Projects.map(project => (
               <NavDropdown.Item key={project.id} onClick={() => handleChange(project.id)}>
