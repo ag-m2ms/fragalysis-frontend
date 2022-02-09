@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
 
-import Header from '../../../Layout/Header';
-import Body from '../../../Body/Body';
-import Project from '../../../Project';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { loadRDKit } from '../../../RDKit/RDKitFunctions';
+import Layout from '../../../Layout';
 
 loadRDKit();
 
@@ -55,9 +53,7 @@ export const App = () => {
         ></script>
       </Helmet>
       <QueryClientProvider client={queryClient}>
-        <Header changeProject={changeProject} deleteProject={deleteProject} generateProtocol={generateProtocol} />
-        {!!projectId && <Project projectId={projectId} />}
-        {/* <ProtocolBody ProjectID={ProjectID} key={ProjectID + 1} /> */}
+        <Layout />
       </QueryClientProvider>
     </>
   );
