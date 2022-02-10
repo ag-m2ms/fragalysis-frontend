@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
     whiteSpace: 'nowrap',
     borderColor: theme.palette.divider
   },
-  sortCell: {
+  flexCell: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -92,7 +92,7 @@ export const ReactionTable = ({ noSteps, methodData }) => {
           disableSortBy: true,
           Header: () => {
             return (
-              <div className={classes.sortCell}>
+              <div className={classes.flexCell}>
                 <IconComponent Component={IoFootsteps} />
                 <Typography component="span">{index + 1}</Typography>
               </div>
@@ -102,7 +102,7 @@ export const ReactionTable = ({ noSteps, methodData }) => {
             const reaction = row.original.reactions[index];
 
             return (
-              <>
+              <div className={classes.flexCell}>
                 <img src={value} width={270} height={60} />
                 <IconButton size="small" onClick={() => adjustReactionSuccessRate({ reaction, successrate: 0.6 })}>
                   <IconComponent Component={ImSmile} />
@@ -110,7 +110,7 @@ export const ReactionTable = ({ noSteps, methodData }) => {
                 <IconButton size="small" onClick={() => adjustReactionSuccessRate({ reaction, successrate: 0.4 })}>
                   <IconComponent Component={ImSad} />
                 </IconButton>
-              </>
+              </div>
             );
           }
         };
@@ -119,7 +119,7 @@ export const ReactionTable = ({ noSteps, methodData }) => {
         id: 'hidden'
       }
     ];
-  }, [adjustReactionSuccessRate, classes.sortCell, noSteps, synthesiseMethod]);
+  }, [adjustReactionSuccessRate, classes.flexCell, noSteps, synthesiseMethod]);
 
   const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows } = useTable(
     {
@@ -141,7 +141,7 @@ export const ReactionTable = ({ noSteps, methodData }) => {
                 aria-hidden={column.id === 'hidden' ? 'true' : undefined}
               >
                 {column.canSort ? (
-                  <div className={classes.sortCell}>
+                  <div className={classes.flexCell}>
                     {column.render('Header')}
                     <TableSortLabel
                       active={column.isSorted}
