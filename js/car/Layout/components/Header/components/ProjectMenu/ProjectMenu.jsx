@@ -7,7 +7,14 @@ export const ProjectMenu = ({ id, anchorEl, handleSelected, handleClose }) => {
   const { projects, isLoading } = useGetProjects();
 
   return (
-    <Menu id={id} anchorEl={anchorEl} open={!!anchorEl} onClose={handleClose}>
+    <Menu
+      id={id}
+      anchorEl={anchorEl}
+      open={!!anchorEl}
+      onClose={handleClose}
+      anchorOrigin={{ vertical: 'bottom' }}
+      getContentAnchorEl={null}
+    >
       {isLoading && (
         <ListItem>
           <LoadingSpinner />
