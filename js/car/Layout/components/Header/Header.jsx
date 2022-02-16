@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { AppBar, Button, Toolbar, Typography, makeStyles } from '@material-ui/core';
 import { ProjectMenu } from './components/ProjectMenu';
+import { useDeleteProject } from './hooks/useDeleteProject';
 
 const useStyles = makeStyles(theme => ({
   toolbar: {
@@ -15,6 +16,8 @@ export const Header = ({ setProject }) => {
   const classes = useStyles();
 
   const [projectMenuState, setProjectMenuState] = useState({});
+
+  const { mutate: deleteProject } = useDeleteProject();
 
   const clearProjectMenuState = () => setProjectMenuState({});
 
@@ -40,7 +43,18 @@ export const Header = ({ setProject }) => {
           >
             Load project
           </Button>
-          <Button>Delete Project</Button>
+          <Button
+            onClick={event =>
+              setProjectMenuState({
+                id: 'delete-project-menu',
+                anchorEl: event.currentTarget,
+                handleSelected: project => deleteProject({ project }),
+                handleClose: clearProjectMenuState
+              })
+            }
+          >
+            Delete Project
+          </Button>
           <Button>Create OT Protocol</Button>
         </Toolbar>
       </AppBar>

@@ -9,3 +9,8 @@ export const axiosPatch = async (...params) => {
   const response = await axios.patch(...params);
   return response;
 };
+
+export const axiosDelete = async (...params) => {
+  const response = await axios.delete(...params);
+  return response;
+};
