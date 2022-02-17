@@ -20,7 +20,7 @@ export const useSynthesiseMethod = () => {
         const newMethods = [...oldMethods];
         const newMethod = { ...method, synthesise };
 
-        const methodIndex = oldMethods.findIndex(m => m === method);
+        const methodIndex = oldMethods.findIndex(m => m.id === method.id);
         newMethods.splice(methodIndex, 1, newMethod);
 
         return newMethods;

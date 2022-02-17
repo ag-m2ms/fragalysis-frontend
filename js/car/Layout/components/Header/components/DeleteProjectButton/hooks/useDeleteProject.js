@@ -19,7 +19,7 @@ export const useDeleteProject = () => {
       queryClient.setQueryData(projectsQueryKey, oldProjects => {
         const newProjects = [...oldProjects];
 
-        const projectIndex = oldProjects.findIndex(p => p === project);
+        const projectIndex = oldProjects.findIndex(p => p.id === project.id);
         newProjects.splice(projectIndex, 1);
 
         return newProjects;

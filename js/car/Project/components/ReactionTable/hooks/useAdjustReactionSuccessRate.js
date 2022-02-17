@@ -25,7 +25,7 @@ export const useAdjustReactionSuccessRate = () => {
           const newReactions = [...oldReactions];
           const newReaction = { ...reaction, successrate };
 
-          const reactionIndex = oldReactions.findIndex(r => r === reaction);
+          const reactionIndex = oldReactions.findIndex(r => r.id === reaction.id);
           newReactions.splice(reactionIndex, 1, newReaction);
 
           return newReactions;
