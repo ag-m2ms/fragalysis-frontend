@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query';
 import { axiosGet } from '../../../../../../common/utils/axiosFunctions';
-import { getProjectsQueryKey } from '../../../../../api/projectsQueryKeys';
+import { getProjectsQueryKey } from '../../../../../../common/api/projectsQueryKeys';
 
 export const useGetProjects = () => {
   const queryKey = getProjectsQueryKey();

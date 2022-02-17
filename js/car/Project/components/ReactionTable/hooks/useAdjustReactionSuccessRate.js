@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from 'react-query';
 import { axiosPatch } from '../../../../common/utils/axiosFunctions';
-import { getReactionsQueryKey, patchReactionKey } from '../../../api/reactionsQueryKeys';
+import { getReactionsQueryKey, patchReactionKey } from '../../../../common/api/reactionsQueryKeys';
 
 export const useAdjustReactionSuccessRate = () => {
   const queryClient = useQueryClient();

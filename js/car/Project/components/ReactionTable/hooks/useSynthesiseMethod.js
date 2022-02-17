@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from 'react-query';
 import { axiosPatch } from '../../../../common/utils/axiosFunctions';
-import { getMethodsQueryKey, patchMethodsKey } from '../../../api/methodsQueryKeys';
+import { getMethodsQueryKey, patchMethodsKey } from '../../../../common/api/methodsQueryKeys';
 
 export const useSynthesiseMethod = () => {
   const queryClient = useQueryClient();

@@ -1,5 +1,5 @@
 import { useQuery } from 'react-query';
-import { getTargetsQueryKey } from '../../../api/targetsQueryKeys';
+import { getTargetsQueryKey } from '../../../../common/api/targetsQueryKeys';
 import { axiosGet } from '../../../../common/utils/axiosFunctions';
 import { useMemo } from 'react';
 

@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useQueries } from 'react-query';
 import { axiosGet } from '../../../../common/utils/axiosFunctions';
-import { getMethodsQueryKey } from '../../../api/methodsQueryKeys';
+import { getMethodsQueryKey } from '../../../../common/api/methodsQueryKeys';
 
 export const useGetMethodsForTargets = targets => {
   const results = useQueries(
