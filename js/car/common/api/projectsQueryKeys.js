@@ -1,3 +1,3 @@
-export const getProjectsQueryKey = () => '/car/api/projects/';
+export const getProjectsQueryKey = () => '/projects/';
 
-export const deleteProjectQueryKey = projectId => `/car/api/projects/${projectId}`;
+export const deleteProjectQueryKey = projectId => `/projects/${projectId}`;
