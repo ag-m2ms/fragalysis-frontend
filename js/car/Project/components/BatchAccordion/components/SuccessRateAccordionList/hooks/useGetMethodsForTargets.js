@@ -3,21 +3,21 @@ import { useQueries } from 'react-query';
 import { axiosGet } from '../../../../../../common/utils/axiosFunctions';
 import { getMethodsQueryKey } from '../../../../../../common/api/methodsQueryKeys';
 
-export const useGetMethodsForTargets = targetsWithBatch => {
+export const useGetMethodsForTargets = targets => {
   const results = useQueries(
-    targetsWithBatch.map(targetWithBatch => {
-      const queryKey = getMethodsQueryKey(targetWithBatch.target.id);
+    targets?.map(target => {
+      const queryKey = getMethodsQueryKey(target.id);
 
       return {
         queryKey,
         queryFn: async () => {
           const methods = await axiosGet(queryKey);
 
-          return methods.filter(method => method.target_id === targetWithBatch.target.id);
+          return methods.filter(method => method.target_id === target.id);
         },
         onError: err => console.error(err)
       };
-    })
+    }) || []
   );
 
   const areAllNotFetched = results.find(result => !result.isFetched);
@@ -32,7 +32,7 @@ export const useGetMethodsForTargets = targetsWithBatch => {
     return results
       .map((result, index) => ({
         result,
-        ...targetsWithBatch[index]
+        target: targets[index]
       }))
       .filter(({ result }) => result.isSuccess)
       .map(({ result, ...rest }) =>
@@ -42,7 +42,7 @@ export const useGetMethodsForTargets = targetsWithBatch => {
         }))
       )
       .flat();
-  }, [targetsWithBatch, results, areAllNotFetched]);
+  }, [targets, results, areAllNotFetched]);
 
   return { isLoading, methodsWithTarget };
 };

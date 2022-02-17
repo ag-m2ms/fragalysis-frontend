@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export const Header = ({ setProject }) => {
+export const Header = () => {
   const classes = useStyles();
 
   return (
@@ -25,7 +25,7 @@ export const Header = ({ setProject }) => {
           <Button href="/car/upload" component="button">
             New project
           </Button>
-          <LoadProjectButton setProject={setProject} />
+          <LoadProjectButton />
           <DeleteProjectButton />
           <Button>Create OT Protocol</Button>
         </Toolbar>

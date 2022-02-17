@@ -3,13 +3,16 @@ import { Button } from '@material-ui/core';
 import { ProjectMenu } from '../ProjectMenu';
 import { useDeleteProject } from './hooks/useDeleteProject';
 import { ConfirmationDialog } from '../../../../../common/components/ConfirmationDialog/ConfirmationDialog';
+import { useProjectContext } from '../../../../../common/hooks/useProjectContext';
 
 export const DeleteProjectButton = () => {
+  const { project, setProject } = useProjectContext();
+
+  const { mutate: deleteProject } = useDeleteProject();
+
   const [menuAnchorEl, setMenuAnchorEl] = useState(null);
   const [projectToDelete, setProjectToDelete] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
-
-  const { mutate: deleteProject } = useDeleteProject();
 
   return (
     <>
@@ -34,6 +37,10 @@ export const DeleteProjectButton = () => {
         }
         handleCancel={() => setDialogOpen(false)}
         handleOk={() => {
+          if (project.id === projectToDelete.id) {
+            setProject(null);
+          }
+
           setDialogOpen(false);
           setMenuAnchorEl(null);
           deleteProject({ project: projectToDelete });

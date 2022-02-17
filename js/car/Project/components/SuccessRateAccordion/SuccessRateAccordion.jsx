@@ -17,6 +17,7 @@ import { FaRegEdit, FaFlask } from 'react-icons/fa';
 import { Fragment } from 'react';
 import { CategoryAccordion } from '../CategoryAccordion';
 import { IconComponent } from '../../../common/components/IconComponent';
+import { useBatchContext } from '../../hooks/useBatchContext';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -60,8 +61,10 @@ const temporaryData = [
   { type: 'ignore', CategoryIcon: Cancel, value: 10 }
 ];
 
-export const SuccessRateAccordion = ({ batch, successString, methodData }) => {
+export const SuccessRateAccordion = ({ successString, methodData }) => {
   const classes = useStyles();
+
+  const batch = useBatchContext();
 
   return (
     <Accordion

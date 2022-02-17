@@ -4,7 +4,7 @@ import { useGetProjects } from './hooks/useGetProjects';
 import { LoadingSpinner } from '../../../../../common/components/LoadingSpinner';
 
 export const ProjectMenu = ({ id, anchorEl, handleSelected, handleClose }) => {
-  const { projects, isLoading } = useGetProjects();
+  const { data: projects, isLoading } = useGetProjects();
 
   return (
     <Menu

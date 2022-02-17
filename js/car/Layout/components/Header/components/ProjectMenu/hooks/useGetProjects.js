@@ -4,12 +4,8 @@ import { getProjectsQueryKey } from '../../../../../../common/api/projectsQueryK
 
 export const useGetProjects = () => {
   const queryKey = getProjectsQueryKey();
-  const { data: projects, ...rest } = useQuery(queryKey, () => axiosGet(queryKey), {
+
+  return useQuery(queryKey, () => axiosGet(queryKey), {
     onError: err => console.error(err)
   });
-
-  return {
-    projects,
-    ...rest
-  };
 };

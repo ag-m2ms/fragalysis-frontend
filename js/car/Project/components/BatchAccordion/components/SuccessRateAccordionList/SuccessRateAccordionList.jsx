@@ -6,6 +6,7 @@ import { useCategorizeMethodsDataBySuccessRate } from './hooks/useCategorizeMeth
 import { LoadingSpinner } from '../../../../../common/components/LoadingSpinner';
 import { SuccessRateAccordion } from '../../../SuccessRateAccordion';
 import { useGetMethodsForTargets } from './hooks/useGetMethodsForTargets';
+import { useBatchContext } from '../../../../hooks/useBatchContext';
 
 const useStyles = makeStyles(theme => ({
   list: {
@@ -17,11 +18,13 @@ const useStyles = makeStyles(theme => ({
 }));
 
 // Separated from StepAccordion to enable loading reactions only when StepAccordion's details are open
-export const SuccessRateAccordionList = ({ batch }) => {
+export const SuccessRateAccordionList = () => {
   const classes = useStyles();
 
-  const { targetsWithBatch, isLoading: isLoadingTargets } = useGetTargets(batch);
-  const { methodsWithTarget, isLoading: isLoadingMethodsWithTargets } = useGetMethodsForTargets(targetsWithBatch);
+  const batch = useBatchContext();
+
+  const { data: targets, isLoading: isLoadingTargets } = useGetTargets(batch.id);
+  const { methodsWithTarget, isLoading: isLoadingMethodsWithTargets } = useGetMethodsForTargets(targets);
   const { methodsData, isLoading: isLoadingMethodsReactions } = useGetMethodsReactions(methodsWithTarget);
   const categorizedMethodsData = useCategorizeMethodsDataBySuccessRate(methodsData);
 
@@ -38,7 +41,7 @@ export const SuccessRateAccordionList = ({ batch }) => {
           return (
             <Fragment key={successString}>
               <ListItem disableGutters>
-                <SuccessRateAccordion batch={batch} successString={successString} methodData={methodData} />
+                <SuccessRateAccordion successString={successString} methodData={methodData} />
               </ListItem>
               {!!(index < methodData.length - 1) && <Divider />}
             </Fragment>

@@ -3,6 +3,7 @@ import { Accordion, AccordionDetails, AccordionSummary, makeStyles, Typography }
 import { ExpandMore } from '@material-ui/icons';
 import { useLayoutEffect, useState } from 'react';
 import { SuccessRateAccordionList } from './components/SuccessRateAccordionList';
+import { useBatchContext } from '../../hooks/useBatchContext';
 
 const useStyles = makeStyles(theme => ({
   summary: {
@@ -20,8 +21,10 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export const BatchAccordion = ({ open, batch }) => {
+export const BatchAccordion = ({ open }) => {
   const classes = useStyles();
+
+  const batch = useBatchContext();
 
   const [expanded, setExpanded] = useState(open);
 
@@ -46,7 +49,7 @@ export const BatchAccordion = ({ open, batch }) => {
         </Typography>
       </AccordionSummary>
       <AccordionDetails className={classes.details}>
-        <SuccessRateAccordionList batch={batch} />
+        <SuccessRateAccordionList />
       </AccordionDetails>
     </Accordion>
   );
