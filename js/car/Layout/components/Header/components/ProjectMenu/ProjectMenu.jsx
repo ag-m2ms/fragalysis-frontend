@@ -20,14 +20,21 @@ export const ProjectMenu = ({ id, anchorEl, handleSelected, handleClose }) => {
           <LoadingSpinner />
         </ListItem>
       )}
-      {projects &&
-        projects.map(project => {
-          return (
-            <MenuItem key={project.id} onClick={() => handleSelected(project)}>
-              {project.name}
-            </MenuItem>
-          );
-        })}
+      {projects && (
+        <>
+          {!!projects.length ? (
+            projects.map(project => {
+              return (
+                <MenuItem key={project.id} onClick={() => handleSelected(project)}>
+                  {project.name}
+                </MenuItem>
+              );
+            })
+          ) : (
+            <MenuItem disabled>There are no projects</MenuItem>
+          )}
+        </>
+      )}
     </Menu>
   );
 };
