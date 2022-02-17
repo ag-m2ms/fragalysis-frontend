@@ -1,1 +1,1 @@
-export const getTargetsQueryKey = projectId => `/targets?project_id=${projectId}`;
+export const getTargetsQueryKey = targetId => `/targets?target_id=${targetId}`;

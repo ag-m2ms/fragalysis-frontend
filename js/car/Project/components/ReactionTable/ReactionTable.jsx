@@ -41,12 +41,14 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export const ReactionTable = ({ noSteps, methodData }) => {
+export const ReactionTable = ({ methodData }) => {
   const classes = useStyles();
 
   const { mutate: synthesiseMethod } = useSynthesiseMethod();
 
   const { mutate: adjustReactionSuccessRate } = useAdjustReactionSuccessRate();
+
+  const maxNoSteps = Math.max(...methodData.map(({ reactions }) => reactions.length));
 
   const columns = useMemo(() => {
     return [
@@ -86,7 +88,7 @@ export const ReactionTable = ({ noSteps, methodData }) => {
           );
         }
       },
-      ...new Array(noSteps).fill(0).map((_, index) => {
+      ...new Array(maxNoSteps).fill(0).map((_, index) => {
         return {
           accessor: `reactions[${index}].reactionimage`,
           disableSortBy: true,
@@ -119,7 +121,7 @@ export const ReactionTable = ({ noSteps, methodData }) => {
         id: 'hidden'
       }
     ];
-  }, [adjustReactionSuccessRate, classes.flexCell, noSteps, synthesiseMethod]);
+  }, [adjustReactionSuccessRate, maxNoSteps, classes.flexCell, synthesiseMethod]);
 
   const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows } = useTable(
     {

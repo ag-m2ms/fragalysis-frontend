@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export const CategoryAccordion = ({ noSteps, successString, methodData, category }) => {
+export const CategoryAccordion = ({ batch, successString, methodData, category }) => {
   const classes = useStyles();
 
   return (
@@ -41,8 +41,8 @@ export const CategoryAccordion = ({ noSteps, successString, methodData, category
           content: classes.content
         }}
         expandIcon={<ExpandMore />}
-        aria-controls={`successrate-accordion-${noSteps}-${successString}-${category.type}-content`}
-        id={`successrate-accordion-${noSteps}-${successString}-${category.type}-header`}
+        aria-controls={`successrate-accordion-${batch.id}-${successString}-${category.type}-content`}
+        id={`successrate-accordion-${batch.id}-${successString}-${category.type}-header`}
       >
         {[...successString].map((successChar, index) => {
           return (
@@ -55,7 +55,7 @@ export const CategoryAccordion = ({ noSteps, successString, methodData, category
         <IconComponent Component={category.CategoryIcon} />
       </AccordionSummary>
       <AccordionDetails className={classes.details}>
-        <ReactionTable noSteps={noSteps} methodData={methodData} />
+        <ReactionTable methodData={methodData} />
       </AccordionDetails>
     </Accordion>
   );

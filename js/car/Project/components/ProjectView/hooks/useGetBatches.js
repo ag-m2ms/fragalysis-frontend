@@ -1,16 +1,16 @@
-import { useQuery } from 'react-query';
-import { getTargetsQueryKey } from '../../../../common/api/targetsQueryKeys';
-import { axiosGet } from '../../../../common/utils/axiosFunctions';
 import { useMemo } from 'react';
+import { useQuery } from 'react-query';
+import { getBatchesQueryKey } from '../../../../common/api/batchesQueryKeys';
+import { axiosGet } from '../../../../common/utils/axiosFunctions';
 
-export const useGetTargets = projectId => {
-  const queryKey = getTargetsQueryKey(projectId);
+export const useGetBatches = projectId => {
+  const queryKey = getBatchesQueryKey(projectId);
 
   const { data, ...rest } = useQuery(queryKey, () => axiosGet(queryKey), {
     onError: err => console.error(err)
   });
 
-  const targets = useMemo(() => {
+  const batches = useMemo(() => {
     if (!data) {
       return [];
     }
@@ -18,7 +18,7 @@ export const useGetTargets = projectId => {
   }, [data]);
 
   return {
-    targets,
+    batches,
     ...rest
   };
 };

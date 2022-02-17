@@ -60,7 +60,7 @@ const temporaryData = [
   { type: 'ignore', CategoryIcon: Cancel, value: 10 }
 ];
 
-export const SuccessRateAccordion = ({ noSteps, successString, methodData }) => {
+export const SuccessRateAccordion = ({ batch, successString, methodData }) => {
   const classes = useStyles();
 
   return (
@@ -74,8 +74,8 @@ export const SuccessRateAccordion = ({ noSteps, successString, methodData }) => 
           content: classes.content
         }}
         expandIcon={<ExpandMore />}
-        aria-controls={`successrate-accordion-${noSteps}-${successString}-content`}
-        id={`successrate-accordion-${noSteps}-${successString}-header`}
+        aria-controls={`successrate-accordion-${batch.id}-${successString}-content`}
+        id={`successrate-accordion-${batch.id}-${successString}-header`}
       >
         <div>
           {/** See the comment in useCategorizeMethodsDataBySuccessRate.js */}
@@ -106,7 +106,7 @@ export const SuccessRateAccordion = ({ noSteps, successString, methodData }) => 
               <Fragment key={index}>
                 <ListItem disableGutters>
                   <CategoryAccordion
-                    noSteps={noSteps}
+                    batch={batch}
                     successString={successString}
                     methodData={methodData}
                     category={category}

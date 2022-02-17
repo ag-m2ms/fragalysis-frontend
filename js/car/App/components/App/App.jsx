@@ -23,6 +23,7 @@ const theme = createTheme({
         }
       },
       content: {
+        margin: 0,
         '&$expanded': {
           margin: 0
         }

@@ -1,10 +1,8 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core';
 import { LoadingSpinner } from '../../../common/components/LoadingSpinner/LoadingSpinner';
-import { StepAccordion } from '../StepAccordion';
-import { useCategorizeMethodsByNoSteps } from './hooks/useCategorizeMethodsByNoSteps';
-import { useGetMethodsForTargets } from './hooks/useGetMethodsForTargets';
-import { useGetTargets } from './hooks/useGetTargets';
+import { BatchAccordion } from '../BatchAccordion';
+import { useGetBatches } from './hooks/useGetBatches';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -15,25 +13,16 @@ const useStyles = makeStyles(theme => ({
 export const ProjectView = ({ projectId }) => {
   const classes = useStyles();
 
-  const { targets, isLoading: isLoadingTargets } = useGetTargets(projectId);
-  const { methodsWithTarget, isLoading: isLoadingMethodsWithTargets } = useGetMethodsForTargets(targets);
-  const categorizedMethodsWithTarget = useCategorizeMethodsByNoSteps(methodsWithTarget);
+  const { batches, isLoading } = useGetBatches(projectId);
 
-  if (isLoadingTargets || isLoadingMethodsWithTargets) {
+  if (isLoading) {
     return <LoadingSpinner />;
   }
 
   return (
     <main className={classes.root}>
-      {Object.entries(categorizedMethodsWithTarget).map(([noSteps, methodsWithTarget], index) => {
-        return (
-          <StepAccordion
-            key={noSteps}
-            noSteps={Number(noSteps)}
-            open={index === 0}
-            methodsWithTarget={methodsWithTarget}
-          />
-        );
+      {batches.map((batch, index) => {
+        return <BatchAccordion key={batch.id} open={index === 0} batch={batch} />;
       })}
     </main>
   );
