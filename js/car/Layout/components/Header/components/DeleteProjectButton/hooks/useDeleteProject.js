@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from 'react-query';
-import { axiosDelete } from '../../../../common/utils/axiosFunctions';
-import { deleteProjectQueryKey, getProjectsQueryKey } from '../../../api/projectsQueryKeys';
+import { axiosDelete } from '../../../../../../common/utils/axiosFunctions';
+import { deleteProjectQueryKey, getProjectsQueryKey } from '../../../../../api/projectsQueryKeys';
 
 export const useDeleteProject = () => {
   const queryClient = useQueryClient();

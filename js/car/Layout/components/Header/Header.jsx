@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { AppBar, Button, Toolbar, Typography, makeStyles } from '@material-ui/core';
-import { ProjectMenu } from './components/ProjectMenu';
-import { useDeleteProject } from './hooks/useDeleteProject';
+import { DeleteProjectButton } from './components/DeleteProjectButton';
+import { LoadProjectButton } from './components/LoadProjectButton';
 
 const useStyles = makeStyles(theme => ({
   toolbar: {
@@ -15,12 +15,6 @@ const useStyles = makeStyles(theme => ({
 export const Header = ({ setProject }) => {
   const classes = useStyles();
 
-  const [projectMenuState, setProjectMenuState] = useState({});
-
-  const { mutate: deleteProject } = useDeleteProject();
-
-  const clearProjectMenuState = () => setProjectMenuState({});
-
   return (
     <>
       <AppBar position="static">
@@ -31,34 +25,11 @@ export const Header = ({ setProject }) => {
           <Button href="/car/upload" component="button">
             New project
           </Button>
-          <Button
-            onClick={event =>
-              setProjectMenuState({
-                id: 'load-project-menu',
-                anchorEl: event.currentTarget,
-                handleSelected: setProject,
-                handleClose: clearProjectMenuState
-              })
-            }
-          >
-            Load project
-          </Button>
-          <Button
-            onClick={event =>
-              setProjectMenuState({
-                id: 'delete-project-menu',
-                anchorEl: event.currentTarget,
-                handleSelected: project => deleteProject({ project }),
-                handleClose: clearProjectMenuState
-              })
-            }
-          >
-            Delete Project
-          </Button>
+          <LoadProjectButton setProject={setProject} />
+          <DeleteProjectButton />
           <Button>Create OT Protocol</Button>
         </Toolbar>
       </AppBar>
-      <ProjectMenu {...projectMenuState} />
     </>
   );
 };

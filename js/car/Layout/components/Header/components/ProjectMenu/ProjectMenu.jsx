@@ -12,7 +12,7 @@ export const ProjectMenu = ({ id, anchorEl, handleSelected, handleClose }) => {
       anchorEl={anchorEl}
       open={!!anchorEl}
       onClose={handleClose}
-      anchorOrigin={{ vertical: 'bottom' }}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
       getContentAnchorEl={null}
     >
       {isLoading && (
@@ -23,13 +23,7 @@ export const ProjectMenu = ({ id, anchorEl, handleSelected, handleClose }) => {
       {projects &&
         projects.map(project => {
           return (
-            <MenuItem
-              key={project.id}
-              onClick={() => {
-                handleSelected(project);
-                handleClose();
-              }}
-            >
+            <MenuItem key={project.id} onClick={() => handleSelected(project)}>
               {project.name}
             </MenuItem>
           );
