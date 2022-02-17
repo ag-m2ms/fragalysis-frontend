@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme => ({
   summary: {
     backgroundColor: colors.grey[100], // Might be removed
     position: 'sticky',
-    top: 128,
+    top: 96,
     zIndex: 1
   },
   content: {
