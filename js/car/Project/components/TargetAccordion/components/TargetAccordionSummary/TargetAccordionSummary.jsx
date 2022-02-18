@@ -5,12 +5,13 @@ import { useTargetContext } from '../../../../hooks/useTargetContext';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    width: 120, // The same width as target image
     display: 'grid',
-    justifyContent: 'center'
+    gridTemplateColumns: 'auto 1fr',
+    alignItems: 'center',
+    gap: theme.spacing()
   },
   name: {
-    textAlign: 'center'
+    fontWeight: 500
   },
   image: {
     mixBlendMode: 'multiply'
@@ -26,7 +27,7 @@ export const TargetAccordionSummary = () => {
     <div className={classes.root}>
       <img className={classes.image} src={target.image} width={120} height={60} alt={target.name} />
 
-      <Typography className={classes.name} variant="caption" noWrap>
+      <Typography className={classes.name} component="h3" noWrap>
         {target.name}
       </Typography>
     </div>

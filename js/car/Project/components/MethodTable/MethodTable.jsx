@@ -9,11 +9,11 @@ import {
   TableHead,
   TableRow,
   TableSortLabel,
+  Tooltip,
   Typography
 } from '@material-ui/core';
 import { useMemo } from 'react';
 import { useTable, useSortBy } from 'react-table';
-import { SiMoleculer } from 'react-icons/si';
 import { IconComponent } from '../../../common/components/IconComponent';
 import { FaFlask } from 'react-icons/fa';
 import { GiMoneyStack } from 'react-icons/gi';
@@ -24,14 +24,29 @@ import { useAdjustReactionSuccessRate } from './hooks/useAdjustReactionSuccessRa
 
 const useStyles = makeStyles(theme => ({
   table: {
-    '& td:last-child': {
-      width: '100%'
+    '& thead > tr': {
+      paddingTop: theme.spacing(),
+      paddingBottom: theme.spacing()
+    },
+    '& tr': {
+      display: 'grid',
+      gridTemplateColumns: ({ maxNoSteps }) => `60px 40px repeat(${maxNoSteps}, 338px)`,
+      alignItems: 'stretch',
+      gap: `0 ${theme.spacing()}px`,
+      borderBottom: `1px solid ${theme.palette.divider}`,
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2)
+    },
+    '& th, td': {
+      display: 'grid',
+      placeItems: 'center',
+      border: 0,
+      padding: 0
     }
   },
-  cell: {
-    textAlign: 'center',
-    whiteSpace: 'nowrap',
-    borderColor: theme.palette.divider
+  text: {
+    width: '100%',
+    textAlign: 'center'
   },
   flexCell: {
     display: 'flex',
@@ -42,12 +57,12 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const MethodTable = ({ methodsWithReactions }) => {
-  const classes = useStyles();
+  const maxNoSteps = Math.max(...methodsWithReactions.map(({ reactions }) => reactions.length));
+
+  const classes = useStyles({ maxNoSteps });
 
   const { mutate: synthesiseMethod } = useSynthesiseMethod();
   const { mutate: adjustReactionSuccessRate } = useAdjustReactionSuccessRate();
-
-  const maxNoSteps = Math.max(...methodsWithReactions.map(({ reactions }) => reactions.length));
 
   const columns = useMemo(() => {
     return [
@@ -55,6 +70,13 @@ export const MethodTable = ({ methodsWithReactions }) => {
         accessor: 'method.estimatecost',
         Header: () => {
           return <IconComponent Component={GiMoneyStack} />;
+        },
+        Cell: ({ value }) => {
+          return (
+            <Typography className={classes.text} component="span" noWrap>
+              {value}
+            </Typography>
+          );
         }
       },
       {
@@ -109,12 +131,9 @@ export const MethodTable = ({ methodsWithReactions }) => {
             );
           }
         };
-      }),
-      {
-        id: 'hidden'
-      }
+      })
     ];
-  }, [adjustReactionSuccessRate, maxNoSteps, classes.flexCell, synthesiseMethod]);
+  }, [maxNoSteps, classes.text, classes.flexCell, synthesiseMethod, adjustReactionSuccessRate]);
 
   const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows } = useTable(
     {
@@ -129,26 +148,28 @@ export const MethodTable = ({ methodsWithReactions }) => {
       <TableHead>
         {headerGroups.map(headerGroup => (
           <TableRow {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
-              <TableCell
-                className={classes.cell}
-                {...column.getHeaderProps(column.canSort ? column.getSortByToggleProps() : undefined)}
-                aria-hidden={column.id === 'hidden' ? 'true' : undefined}
-              >
-                {column.canSort ? (
-                  <div className={classes.flexCell}>
-                    {column.render('Header')}
-                    <TableSortLabel
-                      active={column.isSorted}
-                      // react-table has a unsorted state which is not treated here
-                      direction={column.isSortedDesc ? 'desc' : 'asc'}
-                    />
-                  </div>
-                ) : (
-                  column.render('Header')
-                )}
-              </TableCell>
-            ))}
+            {headerGroup.headers.map(column => {
+              if (column.canSort) {
+                // Title is unused
+                const { title, ...rest } = column.getSortByToggleProps();
+
+                return (
+                  <Tooltip title="Sort by cost" {...column.getHeaderProps()}>
+                    <TableCell {...rest}>
+                      <div className={classes.flexCell}>
+                        {column.render('Header')}
+                        <TableSortLabel
+                          active={column.isSorted}
+                          // react-table has a unsorted state which is not treated here
+                          direction={column.isSortedDesc ? 'desc' : 'asc'}
+                        />
+                      </div>
+                    </TableCell>
+                  </Tooltip>
+                );
+              }
+              return <TableCell {...column.getHeaderProps()}>{column.render('Header')}</TableCell>;
+            })}
           </TableRow>
         ))}
       </TableHead>

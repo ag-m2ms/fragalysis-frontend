@@ -28,11 +28,6 @@ const theme = createTheme({
           margin: 0
         }
       }
-    },
-    MuiTableCell: {
-      root: {
-        padding: '0 8px'
-      }
     }
   }
 });
