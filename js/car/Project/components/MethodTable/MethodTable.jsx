@@ -24,6 +24,8 @@ import { useAdjustReactionSuccessRate } from './hooks/useAdjustReactionSuccessRa
 
 const useStyles = makeStyles(theme => ({
   table: {
+    display: 'grid',
+    overflowX: 'auto',
     '& thead > tr': {
       paddingTop: theme.spacing(),
       paddingBottom: theme.spacing()
@@ -174,7 +176,7 @@ export const MethodTable = ({ methodsWithReactions }) => {
         ))}
       </TableHead>
       <TableBody {...getTableBodyProps()}>
-        {rows.map((row, i) => {
+        {rows.map(row => {
           prepareRow(row);
           return (
             <TableRow {...row.getRowProps()}>
