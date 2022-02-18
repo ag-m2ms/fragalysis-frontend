@@ -8,7 +8,7 @@ import { BatchContext } from '../../context/BatchContext';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    padding: theme.spacing(2)
+    paddingTop: theme.spacing(2)
   }
 }));
 
