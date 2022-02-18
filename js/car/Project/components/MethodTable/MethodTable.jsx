@@ -41,27 +41,16 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export const ReactionTable = ({ methodData }) => {
+export const MethodTable = ({ methodsWithReactions }) => {
   const classes = useStyles();
 
   const { mutate: synthesiseMethod } = useSynthesiseMethod();
-
   const { mutate: adjustReactionSuccessRate } = useAdjustReactionSuccessRate();
 
-  const maxNoSteps = Math.max(...methodData.map(({ reactions }) => reactions.length));
+  const maxNoSteps = Math.max(...methodsWithReactions.map(({ reactions }) => reactions.length));
 
   const columns = useMemo(() => {
     return [
-      {
-        accessor: 'target.image',
-        disableSortBy: true,
-        Header: () => {
-          return <IconComponent Component={SiMoleculer} />;
-        },
-        Cell: ({ value }) => {
-          return <img src={value} width={120} height={60} />;
-        }
-      },
       {
         accessor: 'method.estimatecost',
         Header: () => {
@@ -103,6 +92,10 @@ export const ReactionTable = ({ methodData }) => {
           Cell: ({ value, row }) => {
             const reaction = row.original.reactions[index];
 
+            if (!reaction) {
+              return null;
+            }
+
             return (
               <div className={classes.flexCell}>
                 <img src={value} width={270} height={60} />
@@ -126,7 +119,7 @@ export const ReactionTable = ({ methodData }) => {
   const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows } = useTable(
     {
       columns,
-      data: methodData
+      data: methodsWithReactions
     },
     useSortBy
   );

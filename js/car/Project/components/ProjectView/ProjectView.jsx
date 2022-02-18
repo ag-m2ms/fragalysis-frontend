@@ -17,7 +17,7 @@ export const ProjectView = () => {
 
   const { project } = useProjectContext();
 
-  const { batches, isLoading } = useGetBatches(project.id);
+  const { data: batches, isLoading } = useGetBatches(project.id);
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -25,7 +25,7 @@ export const ProjectView = () => {
 
   return (
     <main className={classes.root}>
-      {batches.map((batch, index) => {
+      {batches?.map((batch, index) => {
         return (
           <BatchContext.Provider key={batch.id} value={batch}>
             <BatchAccordion open={index === 0} />
