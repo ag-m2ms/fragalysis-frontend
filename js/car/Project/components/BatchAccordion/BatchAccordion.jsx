@@ -57,7 +57,7 @@ export const BatchAccordion = ({ open }) => {
     <Accordion
       expanded={expanded}
       onChange={(_, expanded) => setExpanded(expanded)}
-      TransitionProps={{ unmountOnExit: true }} // Performance
+      TransitionProps={{ mountOnEnter: true }} // Performance
     >
       <AccordionSummary
         className={classes.summary}

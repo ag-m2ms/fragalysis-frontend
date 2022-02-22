@@ -83,6 +83,7 @@
     "three.js": "^0.77.1",
     "typeface-roboto": "^0.0.75",
     "url-loader": "^2.2.0",
+    "use-deep-compare-effect": "^1.8.1",
     "uuid": "^3.2.1",
     "webpack-dev-middleware": "^3.7.2",
     "webpack-hot-middleware": "^2.25.0"

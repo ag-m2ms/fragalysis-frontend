@@ -13,7 +13,7 @@ import {
   Typography
 } from '@material-ui/core';
 import { useMemo } from 'react';
-import { useTable, useSortBy } from 'react-table';
+import { useTable, useSortBy, useExpanded } from 'react-table';
 import { IconComponent } from '../../../common/components/IconComponent';
 import { FaFlask } from 'react-icons/fa';
 import { GiMoneyStack } from 'react-icons/gi';
@@ -21,6 +21,9 @@ import { IoFootsteps } from 'react-icons/io5';
 import { ImSad, ImSmile } from 'react-icons/im';
 import { useSynthesiseMethod } from './hooks/useSynthesiseMethod';
 import { useAdjustReactionSuccessRate } from './hooks/useAdjustReactionSuccessRate';
+import { TargetRow } from './components/TargetRow/TargetRow';
+import { useTargetMethodsWithReactions } from './hooks/useTargetMethodsWithReactions';
+import { useTableExpandedState } from './hooks/useTableExpandedState';
 
 const useStyles = makeStyles(theme => ({
   table: {
@@ -32,7 +35,6 @@ const useStyles = makeStyles(theme => ({
     },
     '& tr': {
       display: 'grid',
-      gridTemplateColumns: ({ maxNoSteps }) => `60px 40px repeat(${maxNoSteps}, 338px)`,
       alignItems: 'stretch',
       gap: `0 ${theme.spacing()}px`,
       borderBottom: `1px solid ${theme.palette.divider}`,
@@ -55,16 +57,52 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
     alignItems: 'center',
     gap: theme.spacing(1 / 2)
+  },
+  row: {
+    gridTemplateColumns: ({ maxNoSteps }) => {
+      if (!maxNoSteps) {
+        return '60px 40px';
+      }
+      return `60px 40px repeat(${maxNoSteps}, 338px)`;
+    }
   }
 }));
 
-export const MethodTable = ({ methodsWithReactions }) => {
-  const maxNoSteps = Math.max(...methodsWithReactions.map(({ reactions }) => reactions.length));
-
-  const classes = useStyles({ maxNoSteps });
-
+export const TargetTable = ({ targets }) => {
   const { mutate: synthesiseMethod } = useSynthesiseMethod();
   const { mutate: adjustReactionSuccessRate } = useAdjustReactionSuccessRate();
+
+  const { targetMethodsWithReaction, updateTargetMethodsWitReactions } = useTargetMethodsWithReactions();
+  const { expandedState, updateExpandedState } = useTableExpandedState();
+
+  const tableData = useMemo(() => {
+    const data = targets.map(target => ({ ...target, subRows: [] }));
+
+    Object.entries(targetMethodsWithReaction).forEach(([targetId, methodAndReactions]) => {
+      const targetIndex = data.findIndex(target => String(target.id) === targetId);
+
+      if (targetIndex !== -1) {
+        const target = { ...targets[targetIndex] };
+        target.subRows = methodAndReactions;
+        data[targetIndex] = target;
+      }
+    });
+
+    return data;
+  }, [targets, targetMethodsWithReaction]);
+
+  const maxNoSteps = Math.max(
+    ...tableData
+      .map(({ subRows }) => {
+        if (subRows.length) {
+          return subRows.map(({ reactions }) => reactions.length);
+        }
+        return 0;
+      })
+      .flat()
+  );
+
+  const classes = useStyles({ maxNoSteps });
 
   const columns = useMemo(() => {
     return [
@@ -79,7 +117,8 @@ export const MethodTable = ({ methodsWithReactions }) => {
               {value}
             </Typography>
           );
-        }
+        },
+        sortType: 'number'
       },
       {
         accessor: 'method.synthesise',
@@ -140,16 +179,18 @@ export const MethodTable = ({ methodsWithReactions }) => {
   const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows } = useTable(
     {
       columns,
-      data: methodsWithReactions
+      data: tableData,
+      initialState: { expanded: expandedState }
     },
-    useSortBy
+    useSortBy,
+    useExpanded
   );
 
   return (
     <Table className={classes.table} {...getTableProps()}>
       <TableHead>
         {headerGroups.map(headerGroup => (
-          <TableRow {...headerGroup.getHeaderGroupProps()}>
+          <TableRow {...headerGroup.getHeaderGroupProps()} className={classes.row}>
             {headerGroup.headers.map(column => {
               if (column.canSort) {
                 // Title is unused
@@ -178,12 +219,22 @@ export const MethodTable = ({ methodsWithReactions }) => {
       <TableBody {...getTableBodyProps()}>
         {rows.map(row => {
           prepareRow(row);
+
+          if (row.depth === 0) {
+            return (
+              <TargetRow
+                {...row.getRowProps()}
+                row={row}
+                updateTargetMethodsWitReactions={updateTargetMethodsWitReactions}
+                updateExpandedState={updateExpandedState}
+              />
+            );
+          }
+
           return (
-            <TableRow {...row.getRowProps()}>
+            <TableRow {...row.getRowProps()} className={classes.row}>
               {row.cells.map(cell => (
-                <TableCell className={classes.cell} {...cell.getCellProps()}>
-                  {cell.render('Cell')}
-                </TableCell>
+                <TableCell {...cell.getCellProps()}>{cell.render('Cell')}</TableCell>
               ))}
             </TableRow>
           );
