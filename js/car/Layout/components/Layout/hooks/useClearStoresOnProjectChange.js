@@ -8,11 +8,12 @@ import { useCurrentProjectStore } from '../../../../common/stores/currentProject
 export const useClearStoresOnProjectChange = () => {
   useEffect(
     () =>
-      useCurrentProjectStore.subscribe((currentProject, previousProject) => {
-        if (currentProject?.id !== previousProject?.id) {
+      useCurrentProjectStore.subscribe(
+        state => state.project?.id,
+        () => {
           clearBatchesToDisplayStore();
         }
-      }),
+      ),
     []
   );
 };

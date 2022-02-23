@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const selectedBatchesIdsSelector = state =>
-  Object.entries(state)
+  Object.entries(state.batchesToDisplay)
     .filter(([_, value]) => value)
     .map(([batchId]) => String(batchId));
 
@@ -32,13 +32,12 @@ const renderTree = node => {
 export const BatchNavigation = () => {
   const classes = useStyles();
 
-  const currentProject = useCurrentProjectStore();
+  const currentProject = useCurrentProjectStore.useCurrentProject();
 
   const { data: batches } = useGetBatches(currentProject.id);
   const navigation = useBatchesNavigation(batches);
 
   const selectedBatchesIds = useBatchesToDisplayStore(selectedBatchesIdsSelector);
-  console.log(selectedBatchesIds);
 
   return (
     <TreeView

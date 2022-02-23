@@ -1,8 +1,16 @@
 import create from 'zustand';
+import { subscribeWithSelector } from 'zustand/middleware';
+import { createSelectorHooks } from 'auto-zustand-selectors-hook';
 
 /**
  * Stores currently selected project
  */
-export const useCurrentProjectStore = create(() => null);
+const currentProjectStore = create(
+  subscribeWithSelector(() => ({
+    currentProject: null
+  }))
+);
 
-export const setCurrentProject = project => useCurrentProjectStore.setState(project);
+export const useCurrentProjectStore = createSelectorHooks(currentProjectStore);
+
+export const setCurrentProject = project => useCurrentProjectStore.setState({ currentProject: project });

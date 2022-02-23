@@ -19,7 +19,9 @@ const useStyles = makeStyles(theme => ({
 export const NavigationItem = ({ batch, children }) => {
   const classes = useStyles();
 
-  const displayed = useBatchesToDisplayStore(useCallback(state => state[batch.id] || false, [batch.id]));
+  const displayed = useBatchesToDisplayStore(
+    useCallback(state => state.batchesToDisplay[batch.id] || false, [batch.id])
+  );
 
   return (
     <TreeItem

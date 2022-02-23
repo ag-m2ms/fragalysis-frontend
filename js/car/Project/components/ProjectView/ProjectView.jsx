@@ -7,11 +7,11 @@ import { useBatchesToDisplayStore } from '../../../common/stores/batchesToDispla
 import { useCurrentProjectStore } from '../../../common/stores/currentProjectStore';
 
 export const ProjectView = () => {
-  const currentProject = useCurrentProjectStore();
+  const currentProject = useCurrentProjectStore.useCurrentProject();
 
   const { data: batches, isLoading } = useGetBatches(currentProject.id);
 
-  const batchesToDisplay = useBatchesToDisplayStore();
+  const batchesToDisplay = useBatchesToDisplayStore.useBatchesToDisplay();
 
   if (isLoading) {
     return <LoadingSpinner />;

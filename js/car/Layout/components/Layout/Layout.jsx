@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
 export const Layout = () => {
   const classes = useStyles();
 
-  const currentProject = useCurrentProjectStore();
+  const currentProject = useCurrentProjectStore.useCurrentProject();
 
   useClearStoresOnProjectChange();
 

@@ -6,7 +6,7 @@ import { ConfirmationDialog } from '../../../../../common/components/Confirmatio
 import { setCurrentProject, useCurrentProjectStore } from '../../../../../common/stores/currentProjectStore';
 
 export const DeleteProjectButton = () => {
-  const currentProject = useCurrentProjectStore();
+  const currentProject = useCurrentProjectStore.useCurrentProject();
 
   const { mutate: deleteProject } = useDeleteProject();
 
