@@ -1,1 +1,1 @@
-export { ProjectView as default } from './components/ProjectView';
+export * from './components/ProjectView';

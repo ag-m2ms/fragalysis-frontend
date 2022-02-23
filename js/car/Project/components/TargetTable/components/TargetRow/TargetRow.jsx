@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
   image: {
     mixBlendMode: 'multiply'
   },
-  button: {
+  icon: {
     color: theme.palette.action.active,
     justifySelf: 'flex-end',
     transform: ({ expanded }) => `rotate(${expanded ? 180 : 0}deg)`
@@ -51,7 +51,7 @@ export const TargetRow = ({ row, updateTargetMethodsWitReactions, updateExpanded
         }}
       >
         <TableCell>
-          <img className={classes.image} src={target.image} width={120} height={60} alt={name} />
+          <img className={classes.image} src={target.image} width={120} height={60} alt={target.name} />
         </TableCell>
 
         <TableCell>
@@ -61,7 +61,7 @@ export const TargetRow = ({ row, updateTargetMethodsWitReactions, updateExpanded
         </TableCell>
 
         <TableCell>
-          <ExpandMore className={classes.button} />
+          <ExpandMore className={classes.icon} />
         </TableCell>
       </TableRow>
 
