@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { Button } from '@material-ui/core';
 import { ProjectMenu } from '../ProjectMenu';
-import { useProjectContext } from '../../../../../common/hooks/useProjectContext';
+import { setCurrentProject } from '../../../../../common/stores/currentProjectStore';
 
 export const LoadProjectButton = () => {
-  const { setProject } = useProjectContext();
-
   const [menuAnchorEl, setMenuAnchorEl] = useState(null);
 
   return (
@@ -16,7 +14,7 @@ export const LoadProjectButton = () => {
         anchorEl={menuAnchorEl}
         handleClose={() => setMenuAnchorEl(null)}
         handleSelected={project => {
-          setProject(project);
+          setCurrentProject(project);
           setMenuAnchorEl(null);
         }}
       />

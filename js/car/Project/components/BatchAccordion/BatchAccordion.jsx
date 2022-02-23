@@ -1,7 +1,6 @@
 import React from 'react';
 import { Accordion, AccordionDetails, AccordionSummary, makeStyles, Typography } from '@material-ui/core';
 import { Cancel, ExpandMore, FindInPage } from '@material-ui/icons';
-import { useLayoutEffect, useState } from 'react';
 import { useBatchContext } from '../../hooks/useBatchContext';
 import { FaFlask, FaRegEdit } from 'react-icons/fa';
 import { IconComponent } from '../../../common/components/IconComponent';
@@ -42,21 +41,13 @@ const temporaryData = [
   { type: 'ignore', CategoryIcon: Cancel, value: 10 }
 ];
 
-export const BatchAccordion = ({ open }) => {
+export const BatchAccordion = () => {
   const classes = useStyles();
 
   const batch = useBatchContext();
 
-  const [expanded, setExpanded] = useState(open);
-
-  useLayoutEffect(() => {
-    setExpanded(open);
-  }, [open]);
-
   return (
     <Accordion
-      expanded={expanded}
-      onChange={(_, expanded) => setExpanded(expanded)}
       TransitionProps={{ mountOnEnter: true }} // Performance
     >
       <AccordionSummary

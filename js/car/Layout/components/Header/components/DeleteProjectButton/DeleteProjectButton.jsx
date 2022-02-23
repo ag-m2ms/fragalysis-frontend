@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { Button } from '@material-ui/core';
 import { ProjectMenu } from '../ProjectMenu';
 import { useDeleteProject } from './hooks/useDeleteProject';
-import { ConfirmationDialog } from '../../../../../common/components/ConfirmationDialog/ConfirmationDialog';
-import { useProjectContext } from '../../../../../common/hooks/useProjectContext';
+import { ConfirmationDialog } from '../../../../../common/components/ConfirmationDialog';
+import { setCurrentProject, useCurrentProjectStore } from '../../../../../common/stores/currentProjectStore';
 
 export const DeleteProjectButton = () => {
-  const { project, setProject } = useProjectContext();
+  const currentProject = useCurrentProjectStore();
 
   const { mutate: deleteProject } = useDeleteProject();
 
@@ -37,8 +37,8 @@ export const DeleteProjectButton = () => {
         }
         handleCancel={() => setDialogOpen(false)}
         handleOk={() => {
-          if (project.id === projectToDelete.id) {
-            setProject(null);
+          if (currentProject.id === projectToDelete.id) {
+            setCurrentProject(null);
           }
 
           setDialogOpen(false);

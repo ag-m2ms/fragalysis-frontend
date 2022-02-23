@@ -1,11 +1,12 @@
-import React, { useState, useMemo } from 'react';
+import React from 'react';
 import { ProjectView } from '../../../Project';
 import { Header } from '../Header';
-import { ProjectContext } from '../../../common/context/ProjectContext';
 import { makeStyles } from '@material-ui/styles';
 import { SuspenseWithBoundary } from '../../../common/components/SuspenseWithBoundary/SuspenseWithBoundary';
-import { BatchNavigator } from '../BatchNavigator/BatchNavigator';
+import { BatchNavigation } from '../BatchNavigator/BatchNavigation';
 import { ContentBox } from '../../../common/components/ContentBox/ContentBox';
+import { useClearStoresOnProjectChange } from './hooks/useClearStoresOnProjectChange';
+import { useCurrentProjectStore } from '../../../common/stores/currentProjectStore';
 
 const useStyles = makeStyles(theme => ({
   content: {
@@ -19,31 +20,25 @@ const useStyles = makeStyles(theme => ({
 export const Layout = () => {
   const classes = useStyles();
 
-  const [project, setProject] = useState(null);
+  const currentProject = useCurrentProjectStore();
 
-  const value = useMemo(
-    () => ({
-      project,
-      setProject
-    }),
-    [project]
-  );
+  useClearStoresOnProjectChange();
 
   return (
-    <ProjectContext.Provider value={value}>
+    <>
       <Header />
-      {project && (
+      {currentProject && (
         <div className={classes.content}>
           <aside>
             <ContentBox title="Navigation">
               <SuspenseWithBoundary>
-                <BatchNavigator />
+                <BatchNavigation />
               </SuspenseWithBoundary>
             </ContentBox>
           </aside>
           <ProjectView />
         </div>
       )}
-    </ProjectContext.Provider>
+    </>
   );
 };

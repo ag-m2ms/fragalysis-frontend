@@ -1,1 +1,1 @@
-export * from './BatchNavigator';
+export * from './BatchNavigation';
