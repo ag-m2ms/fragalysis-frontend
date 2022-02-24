@@ -1,5 +1,6 @@
 import React from 'react';
 import { makeStyles, Paper, Typography } from '@material-ui/core';
+import { SuspenseWithBoundary } from '../SuspenseWithBoundary';
 
 const useStyles = makeStyles(theme => ({
   title: {
@@ -12,7 +13,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export const ContentBox = ({ title, children }) => {
+export const ContentBox = ({ title, children, SuspenseProps, ErrorBoundaryProps }) => {
   const classes = useStyles();
 
   return (
@@ -22,7 +23,9 @@ export const ContentBox = ({ title, children }) => {
           {title}
         </Typography>
       </div>
-      {children}
+      <SuspenseWithBoundary SuspenseProps={SuspenseProps} ErrorBoundaryProps={ErrorBoundaryProps}>
+        {children}
+      </SuspenseWithBoundary>
     </Paper>
   );
 };

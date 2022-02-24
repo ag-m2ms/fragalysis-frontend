@@ -20,8 +20,8 @@ export const DeleteProjectButton = () => {
       <ProjectMenu
         id="delete-project-menu"
         anchorEl={menuAnchorEl}
-        handleClose={() => setMenuAnchorEl(null)}
-        handleSelected={project => {
+        onClose={() => setMenuAnchorEl(null)}
+        onSelected={project => {
           setProjectToDelete(project);
           setDialogOpen(true);
         }}

@@ -1,37 +1,21 @@
 import React from 'react';
-import { ListItem, Menu, MenuItem } from '@material-ui/core';
-import { useGetProjects } from './hooks/useGetProjects';
-import { LoadingSpinner } from '../../../../../common/components/LoadingSpinner';
+import { Menu } from '@material-ui/core';
+import { SuspenseWithBoundary } from '../../../../../common/components/SuspenseWithBoundary';
+import { ProjectMenuContents } from '../ProjectMenuContents';
 
-export const ProjectMenu = ({ id, anchorEl, handleSelected, handleClose }) => {
-  const { data: projects, isLoading } = useGetProjects();
-
+export const ProjectMenu = ({ id, anchorEl, onSelected, onClose }) => {
   return (
     <Menu
       id={id}
       anchorEl={anchorEl}
       open={!!anchorEl}
-      onClose={handleClose}
+      onClose={onClose}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
       getContentAnchorEl={null}
     >
-      {isLoading && (
-        <ListItem>
-          <LoadingSpinner />
-        </ListItem>
-      )}
-      {projects &&
-        (!!projects.length ? (
-          projects.map(project => {
-            return (
-              <MenuItem key={project.id} onClick={() => handleSelected(project)}>
-                {project.name}
-              </MenuItem>
-            );
-          })
-        ) : (
-          <MenuItem disabled>There are no projects</MenuItem>
-        ))}
+      <SuspenseWithBoundary>
+        <ProjectMenuContents onSelected={onSelected} />
+      </SuspenseWithBoundary>
     </Menu>
   );
 };

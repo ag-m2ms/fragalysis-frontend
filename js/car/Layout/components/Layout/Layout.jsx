@@ -2,11 +2,11 @@ import React from 'react';
 import { ProjectView } from '../../../Project';
 import { Header } from '../Header';
 import { makeStyles } from '@material-ui/styles';
-import { SuspenseWithBoundary } from '../../../common/components/SuspenseWithBoundary/SuspenseWithBoundary';
-import { BatchNavigation } from '../BatchNavigator/BatchNavigation';
-import { ContentBox } from '../../../common/components/ContentBox/ContentBox';
+import { BatchNavigation } from '../BatchNavigator';
+import { ContentBox } from '../../../common/components/ContentBox';
 import { useClearStoresOnProjectChange } from './hooks/useClearStoresOnProjectChange';
 import { useCurrentProjectStore } from '../../../common/stores/currentProjectStore';
+import { SuspenseWithBoundary } from '../../../common/components/SuspenseWithBoundary';
 
 const useStyles = makeStyles(theme => ({
   content: {
@@ -31,12 +31,14 @@ export const Layout = () => {
         <div className={classes.content}>
           <aside>
             <ContentBox title="Navigation">
-              <SuspenseWithBoundary>
-                <BatchNavigation />
-              </SuspenseWithBoundary>
+              <BatchNavigation />
             </ContentBox>
           </aside>
-          <ProjectView />
+          <main>
+            <SuspenseWithBoundary>
+              <ProjectView />
+            </SuspenseWithBoundary>
+          </main>
         </div>
       )}
     </>

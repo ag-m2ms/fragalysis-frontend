@@ -12,8 +12,8 @@ export const LoadProjectButton = () => {
       <ProjectMenu
         id="load-project-menu"
         anchorEl={menuAnchorEl}
-        handleClose={() => setMenuAnchorEl(null)}
-        handleSelected={project => {
+        onClose={() => setMenuAnchorEl(null)}
+        onSelected={project => {
           setCurrentProject(project);
           setMenuAnchorEl(null);
         }}

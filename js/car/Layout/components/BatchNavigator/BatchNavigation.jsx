@@ -1,6 +1,6 @@
 import React from 'react';
 import { useBatchesNavigation } from './hooks/useBatchesNavigation';
-import { useGetBatches } from './hooks/useGetBatches';
+import { useGetBatches } from '../../../common/hooks/useGetBatches';
 import { TreeView } from '@material-ui/lab';
 import { ChevronRight, ExpandMore } from '@material-ui/icons';
 import { NavigationItem } from './components/NavigationItem';

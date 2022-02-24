@@ -6,6 +6,6 @@ export const useGetProjects = () => {
   const queryKey = getProjectsQueryKey();
 
   return useQuery(queryKey, () => axiosGet(queryKey), {
-    onError: err => console.error(err)
+    suspense: true
   });
 };
