@@ -1,9 +1,6 @@
 import React from 'react';
 import { colors, TableCell, TableRow, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import { useGetMethodsWithReactions } from './hooks/useGetMethodsWithReactions';
-import useDeepCompareEffect from 'use-deep-compare-effect';
-import { LoadingSpinner } from '../../../../../common/components/LoadingSpinner';
 import { ExpandMore } from '@material-ui/icons';
 
 const useStyles = makeStyles(theme => ({
@@ -27,19 +24,10 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export const TargetRow = ({ row, updateTargetMethodsWitReactions, updateExpandedState }) => {
+export const TargetRow = ({ row, updateExpandedState }) => {
   const classes = useStyles({ expanded: row.isExpanded });
 
-  const target = row.original;
-
-  const { data: methodsWithReactions, isLoading } = useGetMethodsWithReactions(target.id, !!row.isExpanded);
-
-  // useQueries always returns new array no matter what
-  useDeepCompareEffect(() => {
-    if (methodsWithReactions) {
-      updateTargetMethodsWitReactions(target.id, methodsWithReactions);
-    }
-  }, [methodsWithReactions, updateTargetMethodsWitReactions, target.id]);
+  const target = row.original.target;
 
   return (
     <>
@@ -64,14 +52,6 @@ export const TargetRow = ({ row, updateTargetMethodsWitReactions, updateExpanded
           <ExpandMore className={classes.icon} />
         </TableCell>
       </TableRow>
-
-      {isLoading && row.isExpanded && (
-        <TableRow>
-          <TableCell>
-            <LoadingSpinner />
-          </TableCell>
-        </TableRow>
-      )}
     </>
   );
 };

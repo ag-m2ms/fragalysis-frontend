@@ -11,7 +11,7 @@ import { SuspenseWithBoundary } from '../../../common/components/SuspenseWithBou
 const useStyles = makeStyles(theme => ({
   content: {
     display: 'grid',
-    gridTemplateColumns: '300px 1fr',
+    gridTemplateColumns: '300px minmax(0, 1fr)',
     gap: theme.spacing(2),
     padding: theme.spacing(2)
   }

@@ -1,4 +1,5 @@
 import { useQueries } from 'react-query';
+import { useDeepCompareMemoize } from 'use-deep-compare-effect';
 // This breaks the encapsulation of files but it hides a suspense mechanism nobody should tinker with or use anywhere else
 import { useLegacySuspenseWithBoundary } from '../components/SuspenseWithBoundary/hooks/useLegacySuspenseWithBoundary';
 
@@ -7,5 +8,5 @@ import { useLegacySuspenseWithBoundary } from '../components/SuspenseWithBoundar
  */
 export const useSuspendedQueries = queries => {
   useLegacySuspenseWithBoundary(queries);
-  return useQueries(queries);
+  return useDeepCompareMemoize(useQueries(queries));
 };

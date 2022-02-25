@@ -22,8 +22,8 @@ import { ImSad, ImSmile } from 'react-icons/im';
 import { useSynthesiseMethod } from './hooks/useSynthesiseMethod';
 import { useAdjustReactionSuccessRate } from './hooks/useAdjustReactionSuccessRate';
 import { TargetRow } from './components/TargetRow/TargetRow';
-import { useTargetMethodsWithReactions } from './hooks/useTargetMethodsWithReactions';
 import { useTableExpandedState } from './hooks/useTableExpandedState';
+import { useGetTableData } from './hooks/useGetTableData';
 
 const useStyles = makeStyles(theme => ({
   table: {
@@ -68,28 +68,13 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export const TargetTable = ({ targets }) => {
+export const TargetTable = () => {
   const { mutate: synthesiseMethod } = useSynthesiseMethod();
   const { mutate: adjustReactionSuccessRate } = useAdjustReactionSuccessRate();
 
-  const { targetMethodsWithReaction, updateTargetMethodsWitReactions } = useTargetMethodsWithReactions();
   const { expandedState, updateExpandedState } = useTableExpandedState();
 
-  const tableData = useMemo(() => {
-    const data = targets.map(target => ({ ...target, subRows: [] }));
-
-    Object.entries(targetMethodsWithReaction).forEach(([targetId, methodAndReactions]) => {
-      const targetIndex = data.findIndex(target => String(target.id) === targetId);
-
-      if (targetIndex !== -1) {
-        const target = { ...targets[targetIndex] };
-        target.subRows = methodAndReactions;
-        data[targetIndex] = target;
-      }
-    });
-
-    return data;
-  }, [targets, targetMethodsWithReaction]);
+  const tableData = useGetTableData();
 
   const maxNoSteps = Math.max(
     ...tableData
@@ -221,14 +206,7 @@ export const TargetTable = ({ targets }) => {
           prepareRow(row);
 
           if (row.depth === 0) {
-            return (
-              <TargetRow
-                {...row.getRowProps()}
-                row={row}
-                updateTargetMethodsWitReactions={updateTargetMethodsWitReactions}
-                updateExpandedState={updateExpandedState}
-              />
-            );
+            return <TargetRow {...row.getRowProps()} row={row} updateExpandedState={updateExpandedState} />;
           }
 
           return (

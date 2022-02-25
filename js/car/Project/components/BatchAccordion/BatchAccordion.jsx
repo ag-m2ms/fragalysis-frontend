@@ -2,9 +2,9 @@ import React from 'react';
 import { Accordion, AccordionDetails, AccordionSummary, makeStyles, Typography } from '@material-ui/core';
 import { ExpandMore } from '@material-ui/icons';
 import { useBatchContext } from '../../hooks/useBatchContext';
-import { BatchAccordionDetails } from './components/BatchAccordionDetails';
 import { SuspenseWithBoundary } from '../../../common/components/SuspenseWithBoundary';
 import { BatchSummary } from './components/BatchSummary';
+import { TargetTable } from '../TargetTable';
 
 const useStyles = makeStyles(theme => ({
   summary: {
@@ -34,9 +34,7 @@ export const BatchAccordion = () => {
   const batch = useBatchContext();
 
   return (
-    <Accordion
-      TransitionProps={{ mountOnEnter: true }} // Performance
-    >
+    <Accordion>
       <AccordionSummary
         className={classes.summary}
         classes={{
@@ -60,7 +58,7 @@ export const BatchAccordion = () => {
       </AccordionSummary>
       <AccordionDetails className={classes.details}>
         <SuspenseWithBoundary>
-          <BatchAccordionDetails />
+          <TargetTable />
         </SuspenseWithBoundary>
       </AccordionDetails>
     </Accordion>
