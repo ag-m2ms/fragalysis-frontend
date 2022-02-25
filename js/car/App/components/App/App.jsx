@@ -8,7 +8,8 @@ import Layout from '../../../Layout';
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: Infinity
+      staleTime: Infinity,
+      suspense: true
     }
   }
 });

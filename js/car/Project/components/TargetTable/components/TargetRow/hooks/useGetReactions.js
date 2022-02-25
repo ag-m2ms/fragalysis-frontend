@@ -10,8 +10,7 @@ export const useGetReactions = (methods, enabled) => {
       return {
         queryKey,
         queryFn: () => axiosGet(queryKey),
-        onError: err => console.error(err),
-        enabled
+        onError: err => console.error(err)
       };
     }) || []
   );

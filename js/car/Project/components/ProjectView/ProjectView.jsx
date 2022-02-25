@@ -3,12 +3,12 @@ import { BatchAccordion } from '../BatchAccordion';
 import { BatchContext } from '../../context/BatchContext';
 import { useBatchesToDisplayStore } from '../../../common/stores/batchesToDisplayStore';
 import { useCurrentProjectStore } from '../../../common/stores/currentProjectStore';
-import { useGetBatches } from '../../../common/hooks/useGetBatches';
+import { useGetBatchesForProject } from '../../../common/hooks/useGetBatchesForProject';
 
 export const ProjectView = () => {
   const currentProject = useCurrentProjectStore.useCurrentProject();
 
-  const { data: batches } = useGetBatches(currentProject.id);
+  const { data: batches } = useGetBatchesForProject(currentProject.id);
 
   const batchesToDisplay = useBatchesToDisplayStore.useBatchesToDisplay();
 

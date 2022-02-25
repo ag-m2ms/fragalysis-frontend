@@ -1,6 +1,6 @@
 import React from 'react';
 import { useBatchesNavigation } from './hooks/useBatchesNavigation';
-import { useGetBatches } from '../../../common/hooks/useGetBatches';
+import { useGetBatchesForProject } from '../../../common/hooks/useGetBatchesForProject';
 import { TreeView } from '@material-ui/lab';
 import { ChevronRight, ExpandMore } from '@material-ui/icons';
 import { NavigationItem } from './components/NavigationItem';
@@ -34,7 +34,7 @@ export const BatchNavigation = () => {
 
   const currentProject = useCurrentProjectStore.useCurrentProject();
 
-  const { data: batches } = useGetBatches(currentProject.id);
+  const { data: batches } = useGetBatchesForProject(currentProject.id);
   const navigation = useBatchesNavigation(batches);
 
   const selectedBatchesIds = useBatchesToDisplayStore(selectedBatchesIdsSelector);

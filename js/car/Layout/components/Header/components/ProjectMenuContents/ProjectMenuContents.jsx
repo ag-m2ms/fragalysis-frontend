@@ -1,6 +1,6 @@
 import { MenuItem } from '@material-ui/core';
 import React from 'react';
-import { useGetProjects } from './hooks/useGetProjects';
+import { useGetProjects } from '../../../../../common/hooks/useGetProjects';
 
 export const ProjectMenuContents = ({ onSelected }) => {
   const { data: projects } = useGetProjects();
