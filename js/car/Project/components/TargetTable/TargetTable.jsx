@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   Checkbox,
+  colors,
   IconButton,
   makeStyles,
   Table,
@@ -64,6 +65,11 @@ const useStyles = makeStyles(theme => ({
         return '60px 40px';
       }
       return `60px 40px repeat(${maxNoSteps}, 338px)`;
+    }
+  },
+  sortIconInactive: {
+    '& svg': {
+      color: `${colors.grey[400]} !important`
     }
   }
 }));
@@ -187,8 +193,8 @@ export const TargetTable = () => {
                       <div className={classes.flexCell}>
                         {column.render('Header')}
                         <TableSortLabel
-                          active={column.isSorted}
-                          // react-table has a unsorted state which is not treated here
+                          className={!column.isSorted && classes.sortIconInactive}
+                          active={true}
                           direction={column.isSortedDesc ? 'desc' : 'asc'}
                         />
                       </div>
