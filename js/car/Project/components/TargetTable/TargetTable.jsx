@@ -14,7 +14,7 @@ import {
   Typography
 } from '@material-ui/core';
 import { useMemo } from 'react';
-import { useTable, useSortBy, useExpanded } from 'react-table';
+import { useTable, useSortBy, useExpanded, useRowSelect } from 'react-table';
 import { IconComponent } from '../../../common/components/IconComponent';
 import { FaFlask } from 'react-icons/fa';
 import { GiMoneyStack } from 'react-icons/gi';
@@ -30,10 +30,6 @@ const useStyles = makeStyles(theme => ({
   table: {
     display: 'grid',
     overflowX: 'auto',
-    '& thead > tr': {
-      paddingTop: theme.spacing(),
-      paddingBottom: theme.spacing()
-    },
     '& tr': {
       display: 'grid',
       alignItems: 'stretch',
@@ -62,9 +58,9 @@ const useStyles = makeStyles(theme => ({
   row: {
     gridTemplateColumns: ({ maxNoSteps }) => {
       if (!maxNoSteps) {
-        return '60px 40px';
+        return '40px 60px 40px';
       }
-      return `60px 40px repeat(${maxNoSteps}, 338px)`;
+      return `40px 60px 40px repeat(${maxNoSteps}, 338px)`;
     }
   },
   sortIconInactive: {
@@ -174,7 +170,20 @@ export const TargetTable = () => {
       initialState: { expanded: expandedState }
     },
     useSortBy,
-    useExpanded
+    useExpanded,
+    useRowSelect,
+    hooks => {
+      hooks.visibleColumns.push(columns => [
+        {
+          id: 'selection',
+          Header: ({ getToggleAllRowsSelectedProps }) => <Checkbox {...getToggleAllRowsSelectedProps()} />,
+          Cell: ({ row }) => (
+            <Checkbox {...row.getToggleRowSelectedProps()} onClick={event => event.stopPropagation()} />
+          )
+        },
+        ...columns
+      ]);
+    }
   );
 
   return (

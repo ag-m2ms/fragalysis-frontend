@@ -5,7 +5,7 @@ import { ExpandMore } from '@material-ui/icons';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    gridTemplateColumns: 'repeat(2, auto) 1fr',
+    gridTemplateColumns: '40px repeat(2, auto) 1fr',
     justifyContent: 'flex-start',
     backgroundColor: colors.grey[100],
     cursor: 'pointer'
@@ -29,6 +29,8 @@ export const TargetRow = ({ row, updateExpandedState }) => {
 
   const target = row.original.target;
 
+  const selectionCell = row.cells.find(cell => cell.column.id === 'selection');
+
   return (
     <>
       <TableRow
@@ -38,6 +40,8 @@ export const TargetRow = ({ row, updateExpandedState }) => {
           updateExpandedState(row.id, !row.isExpanded);
         }}
       >
+        <TableCell {...selectionCell.getCellProps()}>{selectionCell.render('Cell')}</TableCell>
+
         <TableCell>
           <img className={classes.image} src={target.image} width={120} height={60} alt={target.name} />
         </TableCell>

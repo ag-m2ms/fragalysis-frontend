@@ -34,7 +34,7 @@ export const BatchAccordion = () => {
   const batch = useBatchContext();
 
   return (
-    <Accordion>
+    <Accordion expanded>
       <AccordionSummary
         className={classes.summary}
         classes={{
