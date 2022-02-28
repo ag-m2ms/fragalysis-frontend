@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
   Checkbox,
   colors,
@@ -23,8 +23,13 @@ import { ImSad, ImSmile } from 'react-icons/im';
 import { useSynthesiseMethod } from './hooks/useSynthesiseMethod';
 import { useAdjustReactionSuccessRate } from './hooks/useAdjustReactionSuccessRate';
 import { TargetRow } from './components/TargetRow/TargetRow';
-import { useTableExpandedState } from './hooks/useTableExpandedState';
 import { useGetTableData } from './hooks/useGetTableData';
+import {
+  setAllRowsSelected,
+  setRowSelected,
+  useBatchesTableState
+} from '../../../common/stores/batchesTableStateStore';
+import { useBatchContext } from '../../hooks/useBatchContext';
 
 const useStyles = makeStyles(theme => ({
   table: {
@@ -74,7 +79,10 @@ export const TargetTable = () => {
   const { mutate: synthesiseMethod } = useSynthesiseMethod();
   const { mutate: adjustReactionSuccessRate } = useAdjustReactionSuccessRate();
 
-  const { expandedState, updateExpandedState } = useTableExpandedState();
+  const batch = useBatchContext();
+
+  const expanded = useBatchesTableState(useCallback(state => state.expanded[batch.id] || {}, [batch.id]));
+  const selected = useBatchesTableState(useCallback(state => state.selected[batch.id] || {}, [batch.id]));
 
   const tableData = useGetTableData();
 
@@ -167,7 +175,11 @@ export const TargetTable = () => {
     {
       columns,
       data: tableData,
-      initialState: { expanded: expandedState }
+      getRowId: useCallback((row, relativeIndex, parent) => {
+        const rowId = !parent ? row.target.id : row.method.id;
+        return parent ? [parent.id, rowId].join('.') : String(rowId);
+      }, []),
+      initialState: { expanded, selectedRowIds: selected }
     },
     useSortBy,
     useExpanded,
@@ -176,10 +188,33 @@ export const TargetTable = () => {
       hooks.visibleColumns.push(columns => [
         {
           id: 'selection',
-          Header: ({ getToggleAllRowsSelectedProps }) => <Checkbox {...getToggleAllRowsSelectedProps()} />,
-          Cell: ({ row }) => (
-            <Checkbox {...row.getToggleRowSelectedProps()} onClick={event => event.stopPropagation()} />
-          )
+          Header: ({ getToggleAllRowsSelectedProps, flatRows, isAllRowsSelected }) => {
+            const { onChange, ...rest } = getToggleAllRowsSelectedProps();
+
+            return (
+              <Checkbox
+                {...rest}
+                onChange={event => {
+                  onChange(event);
+                  setAllRowsSelected(batch.id, flatRows, !isAllRowsSelected);
+                }}
+              />
+            );
+          },
+          Cell: ({ row }) => {
+            const { onChange, ...rest } = row.getToggleRowSelectedProps();
+
+            return (
+              <Checkbox
+                {...rest}
+                onClick={event => event.stopPropagation()}
+                onChange={event => {
+                  onChange(event);
+                  setRowSelected(batch.id, row.id, !row.isSelected);
+                }}
+              />
+            );
+          }
         },
         ...columns
       ]);
@@ -221,7 +256,7 @@ export const TargetTable = () => {
           prepareRow(row);
 
           if (row.depth === 0) {
-            return <TargetRow {...row.getRowProps()} row={row} updateExpandedState={updateExpandedState} />;
+            return <TargetRow {...row.getRowProps()} row={row} />;
           }
 
           return (

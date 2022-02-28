@@ -2,6 +2,8 @@ import React from 'react';
 import { colors, TableCell, TableRow, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { ExpandMore } from '@material-ui/icons';
+import { useBatchContext } from '../../../../hooks/useBatchContext';
+import { setRowExpanded } from '../../../../../common/stores/batchesTableStateStore';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -24,8 +26,10 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export const TargetRow = ({ row, updateExpandedState }) => {
+export const TargetRow = ({ row }) => {
   const classes = useStyles({ expanded: row.isExpanded });
+
+  const batch = useBatchContext();
 
   const target = row.original.target;
 
@@ -37,7 +41,7 @@ export const TargetRow = ({ row, updateExpandedState }) => {
         className={classes.root}
         onClick={() => {
           row.toggleRowExpanded();
-          updateExpandedState(row.id, !row.isExpanded);
+          setRowExpanded(batch.id, row.id, !row.isExpanded);
         }}
       >
         <TableCell {...selectionCell.getCellProps()}>{selectionCell.render('Cell')}</TableCell>

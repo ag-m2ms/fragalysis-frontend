@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { clearBatchesTableState } from '../../../../common/stores/batchesTableStateStore';
 import { clearBatchesToDisplayStore } from '../../../../common/stores/batchesToDisplayStore';
 import { useCurrentProjectStore } from '../../../../common/stores/currentProjectStore';
 
@@ -9,9 +10,10 @@ export const useClearStoresOnProjectChange = () => {
   useEffect(
     () =>
       useCurrentProjectStore.subscribe(
-        state => state.project?.id,
+        state => state.currentProject?.id,
         () => {
           clearBatchesToDisplayStore();
+          clearBatchesTableState();
         }
       ),
     []
