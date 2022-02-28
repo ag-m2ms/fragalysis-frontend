@@ -3,7 +3,7 @@ import { colors, TableCell, TableRow, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { ExpandMore } from '@material-ui/icons';
 import { useBatchContext } from '../../../../hooks/useBatchContext';
-import { setRowExpanded } from '../../../../../common/stores/batchesTableStateStore';
+import { setRowsExpanded } from '../../../../../common/stores/batchesTableStateStore';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -41,7 +41,7 @@ export const TargetRow = ({ row }) => {
         className={classes.root}
         onClick={() => {
           row.toggleRowExpanded();
-          setRowExpanded(batch.id, row.id, !row.isExpanded);
+          setRowsExpanded(batch.id, [row], !row.isExpanded);
         }}
       >
         <TableCell {...selectionCell.getCellProps()}>{selectionCell.render('Cell')}</TableCell>

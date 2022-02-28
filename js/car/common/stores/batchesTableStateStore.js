@@ -1,37 +1,33 @@
 import create from 'zustand';
 import { createSelectorHooks } from 'auto-zustand-selectors-hook';
 
-const batchesTableState = create(() => ({ expanded: {}, selected: {} }));
+const batchesTableState = create(() => ({
+  expanded: {},
+  // Stores only methods, not targets
+  selected: {}
+}));
 
 export const useBatchesTableState = createSelectorHooks(batchesTableState);
 
-export const setRowExpanded = (batchId, rowId, expanded) =>
+export const setRowsExpanded = (batchId, rows, expanded) =>
   useBatchesTableState.setState(state => ({
     expanded: {
       ...state.expanded,
       [batchId]: {
         ...(state.expanded[batchId] || {}),
-        [rowId]: expanded
+        ...Object.fromEntries(rows.map(row => [row.id, expanded]))
       }
     }
   }));
 
-export const setRowSelected = (batchId, rowId, selected) =>
+export const setRowsSelected = (batchId, rows, selected) =>
   useBatchesTableState.setState(state => ({
     selected: {
       ...state.selected,
       [batchId]: {
         ...(state.selected[batchId] || {}),
-        [rowId]: selected
+        ...Object.fromEntries(rows.map(row => [row.id, selected]))
       }
-    }
-  }));
-
-export const setAllRowsSelected = (batchId, rows, selected) =>
-  useBatchesTableState.setState(state => ({
-    selected: {
-      ...state.selected,
-      [batchId]: Object.fromEntries(rows.map(row => [row.id, selected]))
     }
   }));
 

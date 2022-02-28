@@ -22,16 +22,17 @@ import { IoFootsteps } from 'react-icons/io5';
 import { ImSad, ImSmile } from 'react-icons/im';
 import { useSynthesiseMethod } from './hooks/useSynthesiseMethod';
 import { useAdjustReactionSuccessRate } from './hooks/useAdjustReactionSuccessRate';
-import { TargetRow } from './components/TargetRow/TargetRow';
+import { TargetRow } from './components/TargetRow';
 import { useGetTableData } from './hooks/useGetTableData';
-import {
-  setAllRowsSelected,
-  setRowSelected,
-  useBatchesTableState
-} from '../../../common/stores/batchesTableStateStore';
+import { setRowsSelected, useBatchesTableState } from '../../../common/stores/batchesTableStateStore';
 import { useBatchContext } from '../../hooks/useBatchContext';
+import { TableToolbar } from './components/TableToolbar';
 
 const useStyles = makeStyles(theme => ({
+  root: {
+    display: 'grid',
+    width: '100%'
+  },
   table: {
     display: 'grid',
     overflowX: 'auto',
@@ -194,7 +195,7 @@ export const TargetTable = () => {
     adjustReactionSuccessRate
   ]);
 
-  const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows } = useTable(
+  const tableInstance = useTable(
     {
       columns,
       data: tableData,
@@ -219,7 +220,11 @@ export const TargetTable = () => {
                 {...rest}
                 onChange={event => {
                   onChange(event);
-                  setAllRowsSelected(batch.id, flatRows, !isAllRowsSelected);
+                  setRowsSelected(
+                    batch.id,
+                    flatRows.filter(row => row.depth === 1),
+                    !isAllRowsSelected
+                  );
                 }}
               />
             );
@@ -233,7 +238,8 @@ export const TargetTable = () => {
                 onClick={event => event.stopPropagation()}
                 onChange={event => {
                   onChange(event);
-                  setRowSelected(batch.id, row.id, !row.isSelected);
+                  // If this is a target row, select only its subRows
+                  setRowsSelected(batch.id, row.depth === 0 ? row.subRows : [row], !row.isSelected);
                 }}
               />
             );
@@ -244,53 +250,58 @@ export const TargetTable = () => {
     }
   );
 
+  const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows } = tableInstance;
+
   return (
-    <Table className={classes.table} {...getTableProps()}>
-      <TableHead>
-        {headerGroups.map(headerGroup => (
-          <TableRow {...headerGroup.getHeaderGroupProps()} className={classes.row}>
-            {headerGroup.headers.map(column => {
-              if (column.canSort) {
-                // Title is unused
-                const { title, ...rest } = column.getSortByToggleProps();
+    <div className={classes.root}>
+      <TableToolbar tableInstance={tableInstance} />
+      <Table className={classes.table} {...getTableProps()}>
+        <TableHead>
+          {headerGroups.map(headerGroup => (
+            <TableRow {...headerGroup.getHeaderGroupProps()} className={classes.row}>
+              {headerGroup.headers.map(column => {
+                if (column.canSort) {
+                  // Title is unused
+                  const { title, ...rest } = column.getSortByToggleProps();
 
-                return (
-                  <Tooltip title="Sort by cost" {...column.getHeaderProps()}>
-                    <TableCell {...rest}>
-                      <div className={classes.flexCell}>
-                        {column.render('Header')}
-                        <TableSortLabel
-                          className={!column.isSorted && classes.sortIconInactive}
-                          active={true}
-                          direction={column.isSortedDesc ? 'desc' : 'asc'}
-                        />
-                      </div>
-                    </TableCell>
-                  </Tooltip>
-                );
-              }
-              return <TableCell {...column.getHeaderProps()}>{column.render('Header')}</TableCell>;
-            })}
-          </TableRow>
-        ))}
-      </TableHead>
-      <TableBody {...getTableBodyProps()}>
-        {rows.map(row => {
-          prepareRow(row);
-
-          if (row.depth === 0) {
-            return <TargetRow {...row.getRowProps()} row={row} />;
-          }
-
-          return (
-            <TableRow {...row.getRowProps()} className={classes.row}>
-              {row.cells.map(cell => (
-                <TableCell {...cell.getCellProps()}>{cell.render('Cell')}</TableCell>
-              ))}
+                  return (
+                    <Tooltip title="Sort by cost" {...column.getHeaderProps()}>
+                      <TableCell {...rest}>
+                        <div className={classes.flexCell}>
+                          {column.render('Header')}
+                          <TableSortLabel
+                            className={!column.isSorted && classes.sortIconInactive}
+                            active={true}
+                            direction={column.isSortedDesc ? 'desc' : 'asc'}
+                          />
+                        </div>
+                      </TableCell>
+                    </Tooltip>
+                  );
+                }
+                return <TableCell {...column.getHeaderProps()}>{column.render('Header')}</TableCell>;
+              })}
             </TableRow>
-          );
-        })}
-      </TableBody>
-    </Table>
+          ))}
+        </TableHead>
+        <TableBody {...getTableBodyProps()}>
+          {rows.map(row => {
+            prepareRow(row);
+
+            if (row.depth === 0) {
+              return <TargetRow {...row.getRowProps()} row={row} />;
+            }
+
+            return (
+              <TableRow {...row.getRowProps()} className={classes.row}>
+                {row.cells.map(cell => (
+                  <TableCell {...cell.getCellProps()}>{cell.render('Cell')}</TableCell>
+                ))}
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
+    </div>
   );
 };
