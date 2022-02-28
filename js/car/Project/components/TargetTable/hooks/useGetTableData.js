@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { getMethodsQueryKey } from '../../../../common/api/methodsQueryKeys';
 import { getReactionsQueryKey } from '../../../../common/api/reactionsQueryKeys';
 import { useGetTargetsForBatch } from '../../../../common/hooks/useGetTargetsForBatch';
-import { useSuspendedQueries } from '../../../../common/hooks/useSuspendedQueries';
+import { useSuspendingQueries } from '../../../../common/hooks/useSuspendingQueries';
 import { axiosGet } from '../../../../common/utils/axiosFunctions';
 import { useBatchContext } from '../../../hooks/useBatchContext';
 
@@ -11,7 +11,7 @@ export const useGetTableData = () => {
 
   const { data: targets } = useGetTargetsForBatch(batch.id);
 
-  const methodsResponses = useSuspendedQueries(
+  const methodsResponses = useSuspendingQueries(
     useMemo(() => {
       return (
         targets?.map(target => {
@@ -30,7 +30,7 @@ export const useGetTableData = () => {
     return methodsResponses.filter(result => result.isSuccess).map(result => result.data);
   }, [methodsResponses]);
 
-  const reactionsResponses = useSuspendedQueries(
+  const reactionsResponses = useSuspendingQueries(
     useMemo(() => {
       return (
         targetsMethods?.flat().map(method => {

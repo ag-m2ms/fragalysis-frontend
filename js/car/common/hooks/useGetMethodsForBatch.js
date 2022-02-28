@@ -2,12 +2,12 @@ import { useMemo } from 'react';
 import { getMethodsQueryKey } from '../api/methodsQueryKeys';
 import { axiosGet } from '../utils/axiosFunctions';
 import { useGetTargetsForBatch } from './useGetTargetsForBatch';
-import { useSuspendedQueries } from './useSuspendedQueries';
+import { useSuspendingQueries } from './useSuspendingQueries';
 
 export const useGetMethodsForBatch = batchId => {
   const { data: targets } = useGetTargetsForBatch(batchId);
 
-  return useSuspendedQueries(
+  return useSuspendingQueries(
     useMemo(() => {
       return (
         targets?.map(target => {

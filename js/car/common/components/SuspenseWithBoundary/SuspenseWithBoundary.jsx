@@ -2,7 +2,7 @@ import React, { forwardRef, Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { LoadingSpinner } from '../LoadingSpinner';
 import { Alert, AlertTitle } from '@material-ui/lab';
-import { LegacySuspenseWithBoundary } from './components/LegacySuspenseWithBoundaries';
+import { QuerySuspender } from './components/QuerySuspender';
 
 export const SuspenseWithBoundary = forwardRef(({ children, SuspenseProps = {}, ErrorBoundaryProps = {} }, ref) => {
   return (
@@ -20,7 +20,7 @@ export const SuspenseWithBoundary = forwardRef(({ children, SuspenseProps = {}, 
       {...ErrorBoundaryProps}
     >
       <Suspense fallback={<LoadingSpinner />} {...SuspenseProps}>
-        <LegacySuspenseWithBoundary>{children}</LegacySuspenseWithBoundary>
+        <QuerySuspender>{children}</QuerySuspender>
       </Suspense>
     </ErrorBoundary>
   );

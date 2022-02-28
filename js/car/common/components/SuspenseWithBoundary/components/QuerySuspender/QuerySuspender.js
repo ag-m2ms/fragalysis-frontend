@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { LegacySuspenseWithBoundaryContext } from '../../context/LegacySuspenseWithBoundaryContext';
+import { SuspendQueriesContext } from '../../context/SuspendQueriesContext';
 import { QueryWrapper } from '../QueryWrapper/QueryWrapper';
 
 /**
@@ -8,7 +8,7 @@ import { QueryWrapper } from '../QueryWrapper/QueryWrapper';
  * Don't use it anywhere else apart from the places where it has already been used and don't remove it from them.
  * DON'T CHANGE IT UNLESS YOU REALLY HAVE TO - THINGS MAY BREAK!!!
  */
-export const LegacySuspenseWithBoundary = ({ children }) => {
+export const QuerySuspender = ({ children }) => {
   // Store queries in a map where keys are IDs of the querying hooks
   const [queriesMap, setQueriesMap] = useState({});
 
@@ -36,11 +36,11 @@ export const LegacySuspenseWithBoundary = ({ children }) => {
   );
 
   return (
-    <LegacySuspenseWithBoundaryContext.Provider value={value}>
+    <SuspendQueriesContext.Provider value={value}>
       {children}
       {Object.entries(queriesMap).map(([id, queries]) =>
         queries.map((query, index) => <QueryWrapper key={`${id}-${index}`} query={query} />)
       )}
-    </LegacySuspenseWithBoundaryContext.Provider>
+    </SuspendQueriesContext.Provider>
   );
 };

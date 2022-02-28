@@ -12,7 +12,7 @@ const warn = () => {
  * Don't use it anywhere else apart from the places where it has already been used and don't remove it from them.
  * DON'T CHANGE IT UNLESS YOU REALLY HAVE TO - THINGS MAY BREAK!!!
  */
-export const LegacySuspenseWithBoundaryContext = createContext({
+export const SuspendQueriesContext = createContext({
   addQueries: (id, queries) => void warn(),
   removeQueries: id => void warn()
 });
