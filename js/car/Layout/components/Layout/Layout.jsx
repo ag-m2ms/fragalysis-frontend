@@ -14,6 +14,15 @@ const useStyles = makeStyles(theme => ({
     gridTemplateColumns: '300px minmax(0, 1fr)',
     gap: theme.spacing(2),
     padding: theme.spacing(2)
+  },
+  navigation: {
+    position: 'sticky',
+    top: theme.spacing(2)
+  },
+  project: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(2)
   }
 }));
 
@@ -30,11 +39,11 @@ export const Layout = () => {
       {currentProject && (
         <div className={classes.content}>
           <aside>
-            <ContentBox title="Navigation">
+            <ContentBox title="Navigation" PaperProps={{ className: classes.navigation }}>
               <BatchNavigation />
             </ContentBox>
           </aside>
-          <main>
+          <main className={classes.project}>
             <SuspenseWithBoundary>
               <ProjectView />
             </SuspenseWithBoundary>

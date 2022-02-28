@@ -3,25 +3,30 @@ import { makeStyles, Paper, Typography } from '@material-ui/core';
 import { SuspenseWithBoundary } from '../SuspenseWithBoundary';
 
 const useStyles = makeStyles(theme => ({
-  title: {
-    minHeight: theme.spacing(6),
+  titleWrapper: {
+    height: theme.spacing(6),
     padding: `0 ${theme.spacing(2)}px`,
-    display: 'grid',
+    display: 'flex',
     alignItems: 'center',
     color: theme.palette.white,
-    backgroundColor: theme.palette.primary.main
+    backgroundColor: theme.palette.primary.main,
+    gap: theme.spacing()
+  },
+  title: {
+    flexGrow: 1
   }
 }));
 
-export const ContentBox = ({ title, children, SuspenseProps, ErrorBoundaryProps }) => {
+export const ContentBox = ({ title, children, endAdornment, PaperProps = {}, SuspenseProps, ErrorBoundaryProps }) => {
   const classes = useStyles();
 
   return (
-    <Paper square>
-      <div className={classes.title}>
-        <Typography variant="h6" component="h2" noWrap>
+    <Paper square {...PaperProps}>
+      <div className={classes.titleWrapper}>
+        <Typography className={classes.title} variant="h6" component="h2" noWrap>
           {title}
         </Typography>
+        {endAdornment}
       </div>
       <SuspenseWithBoundary SuspenseProps={SuspenseProps} ErrorBoundaryProps={ErrorBoundaryProps}>
         {children}

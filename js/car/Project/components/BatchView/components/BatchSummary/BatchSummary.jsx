@@ -6,6 +6,9 @@ import { FaFlask } from 'react-icons/fa';
 import { Cancel, FindInPage } from '@material-ui/icons';
 
 const useStyles = makeStyles(theme => ({
+  root: {
+    display: 'flex'
+  },
   categoryInfo: {
     display: 'grid',
     gridTemplateColumns: 'repeat(2, auto)',
@@ -20,7 +23,7 @@ export const BatchSummary = () => {
   const summary = useGetBatchSummary();
 
   return (
-    <div>
+    <div className={classes.root}>
       <div className={classes.categoryInfo}>
         <Typography>{summary.total}</Typography>
         <IconComponent Component={FindInPage} />

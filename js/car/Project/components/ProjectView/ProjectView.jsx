@@ -1,5 +1,5 @@
 import React from 'react';
-import { BatchAccordion } from '../BatchAccordion';
+import { BatchView } from '../BatchView';
 import { BatchContext } from '../../context/BatchContext';
 import { useBatchesToDisplayStore } from '../../../common/stores/batchesToDisplayStore';
 import { useCurrentProjectStore } from '../../../common/stores/currentProjectStore';
@@ -19,7 +19,7 @@ export const ProjectView = () => {
         .map(batch => {
           return (
             <BatchContext.Provider key={batch.id} value={batch}>
-              <BatchAccordion />
+              <BatchView />
             </BatchContext.Provider>
           );
         })}
