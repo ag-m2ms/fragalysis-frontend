@@ -72,6 +72,14 @@ const useStyles = makeStyles(theme => ({
     '& svg': {
       color: `${colors.grey[400]} !important`
     }
+  },
+  reactionWrapper: {
+    display: 'grid'
+  },
+  reactionNameWrapper: {
+    textAlign: 'center',
+    display: 'grid',
+    lineHeight: 1
   }
 }));
 
@@ -156,7 +164,14 @@ export const TargetTable = () => {
 
             return (
               <div className={classes.flexCell}>
-                <img src={value} width={270} height={60} />
+                <div className={classes.reactionWrapper}>
+                  <img src={value} width={270} height={60} />
+                  <div className={classes.reactionNameWrapper}>
+                    <Typography variant="caption" noWrap>
+                      {reaction.reactionclass}
+                    </Typography>
+                  </div>
+                </div>
                 <IconButton size="small" onClick={() => adjustReactionSuccessRate({ reaction, successrate: 0.6 })}>
                   <IconComponent Component={ImSmile} />
                 </IconButton>
@@ -169,7 +184,15 @@ export const TargetTable = () => {
         };
       })
     ];
-  }, [maxNoSteps, classes.text, classes.flexCell, synthesiseMethod, adjustReactionSuccessRate]);
+  }, [
+    maxNoSteps,
+    classes.text,
+    classes.flexCell,
+    classes.reactionWrapper,
+    classes.reactionNameWrapper,
+    synthesiseMethod,
+    adjustReactionSuccessRate
+  ]);
 
   const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows } = useTable(
     {
