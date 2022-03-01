@@ -1,3 +1,3 @@
 export const getProjectsQueryKey = () => '/projects/';
 
-export const deleteProjectQueryKey = projectId => `/projects/${projectId}`;
+export const deleteProjectKey = projectId => `/projects/${projectId}`;

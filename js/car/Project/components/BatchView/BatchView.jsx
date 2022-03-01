@@ -5,8 +5,8 @@ import { ContentBox } from '../../../common/components/ContentBox';
 import { BatchSummary } from './components/BatchSummary';
 import { makeStyles } from '@material-ui/core';
 import { setBatchViewRef } from '../../../common/stores/batchViewsRefsStore';
-import { TargetTableDataLoader } from './components/TargetTableDataLoader';
-import { TargetTable } from '../TargetTable';
+import { BatchTableDataLoader } from './components/BatchTableDataLoader';
+import { BatchTable } from '../BatchTable';
 
 const useStyles = makeStyles(theme => ({
   box: {
@@ -41,9 +41,9 @@ export const BatchView = () => {
       PaperProps={{ className: classes.box }}
     >
       <SuspenseWithBoundary>
-        <TargetTableDataLoader>
-          {({ tableData, isLoading }) => (isLoading ? null : <TargetTable tableData={tableData} />)}
-        </TargetTableDataLoader>
+        <BatchTableDataLoader>
+          {({ tableData, isLoading }) => (isLoading ? null : <BatchTable tableData={tableData} />)}
+        </BatchTableDataLoader>
       </SuspenseWithBoundary>
     </ContentBox>
   );

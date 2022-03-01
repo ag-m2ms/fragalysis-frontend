@@ -83,7 +83,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export const TargetTable = memo(({ tableData }) => {
+export const BatchTable = memo(({ tableData }) => {
   const { mutate: synthesiseMethod } = useSynthesiseMethod();
   const { mutate: adjustReactionSuccessRate } = useAdjustReactionSuccessRate();
 
@@ -303,4 +303,4 @@ export const TargetTable = memo(({ tableData }) => {
   );
 });
 
-TargetTable.displayName = 'TargetTable';
+BatchTable.displayName = 'BatchTable';
