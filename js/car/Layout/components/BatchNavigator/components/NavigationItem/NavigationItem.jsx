@@ -25,7 +25,8 @@ const useStyles = makeStyles(theme => ({
   button: {
     minHeight: 'unset',
     width: theme.spacing(2),
-    height: theme.spacing(2)
+    height: theme.spacing(2),
+    boxShadow: 'none'
   },
   icon: {
     width: '1.2em',
@@ -56,7 +57,10 @@ export const NavigationItem = ({ batch, children }) => {
               <Fab
                 className={classNames(classes.action, classes.button)}
                 size="small"
-                onClick={() => elementRef.scrollIntoView()}
+                onClick={event => {
+                  event.stopPropagation();
+                  elementRef.scrollIntoView({ behavior: 'smooth' });
+                }}
                 color="secondary"
               >
                 <IconComponent className={classes.icon} Component={CgArrowsScrollV} />
