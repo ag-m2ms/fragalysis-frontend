@@ -5,9 +5,11 @@ import { ContentBox } from '../../../common/components/ContentBox';
 import { BatchSummary } from './components/BatchSummary';
 import { TargetTable } from '../TargetTable';
 import { makeStyles } from '@material-ui/core';
+import { setBatchViewRef } from '../../../common/stores/batchViewsRefsStore';
 
 const useStyles = makeStyles(theme => ({
   box: {
+    scrollMarginTop: `${theme.spacing(2)}px`,
     // Title wrapper
     '& > :first-child': {
       position: 'sticky',
@@ -24,6 +26,7 @@ export const BatchView = () => {
 
   return (
     <ContentBox
+      ref={element => setBatchViewRef(batch.id, element)}
       title={batch.batch_tag}
       endAdornment={
         <SuspenseWithBoundary

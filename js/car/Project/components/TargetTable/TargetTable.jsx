@@ -24,7 +24,7 @@ import { useSynthesiseMethod } from './hooks/useSynthesiseMethod';
 import { useAdjustReactionSuccessRate } from './hooks/useAdjustReactionSuccessRate';
 import { TargetRow } from './components/TargetRow';
 import { useGetTableData } from './hooks/useGetTableData';
-import { setRowsSelected, useBatchesTableState } from '../../../common/stores/batchesTableStateStore';
+import { setRowsSelected, useBatchesTableStateStore } from '../../../common/stores/batchesTableStateStore';
 import { useBatchContext } from '../../hooks/useBatchContext';
 import { TableToolbar } from './components/TableToolbar';
 
@@ -90,8 +90,8 @@ export const TargetTable = () => {
 
   const batch = useBatchContext();
 
-  const expanded = useBatchesTableState(useCallback(state => state.expanded[batch.id] || {}, [batch.id]));
-  const selected = useBatchesTableState(useCallback(state => state.selected[batch.id] || {}, [batch.id]));
+  const expanded = useBatchesTableStateStore(useCallback(state => state.expanded[batch.id] || {}, [batch.id]));
+  const selected = useBatchesTableStateStore(useCallback(state => state.selected[batch.id] || {}, [batch.id]));
 
   const tableData = useGetTableData();
 

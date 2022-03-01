@@ -10,8 +10,8 @@ let generator = 0;
  * DON'T CHANGE IT UNLESS YOU REALLY HAVE TO - THINGS MAY BREAK!!!
  */
 export const useSuspendQueries = queries => {
-  // Each time queries change, generate a new id. The reason for generating a new one one queries change is that
-  // we can uniquely identify each query when rendering it in LegacySuspenseWithBoundary component.
+  // Each time queries change, generate a new ID. The reason for generating a new one once queries change is that
+  // we can uniquely identify each query when rendering it in QueriesSuspender component.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const id = useMemo(() => ++generator, [queries]);
 

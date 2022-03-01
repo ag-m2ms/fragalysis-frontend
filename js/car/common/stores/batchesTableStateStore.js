@@ -7,10 +7,10 @@ const batchesTableState = create(() => ({
   selected: {}
 }));
 
-export const useBatchesTableState = createSelectorHooks(batchesTableState);
+export const useBatchesTableStateStore = createSelectorHooks(batchesTableState);
 
 export const setRowsExpanded = (batchId, rows, expanded) =>
-  useBatchesTableState.setState(state => ({
+  useBatchesTableStateStore.setState(state => ({
     expanded: {
       ...state.expanded,
       [batchId]: {
@@ -21,7 +21,7 @@ export const setRowsExpanded = (batchId, rows, expanded) =>
   }));
 
 export const setRowsSelected = (batchId, rows, selected) =>
-  useBatchesTableState.setState(state => ({
+  useBatchesTableStateStore.setState(state => ({
     selected: {
       ...state.selected,
       [batchId]: {
@@ -31,4 +31,4 @@ export const setRowsSelected = (batchId, rows, selected) =>
     }
   }));
 
-export const clearBatchesTableState = () => useBatchesTableState.setState({ expanded: {}, selected: {} });
+export const clearBatchesTableStateStore = () => useBatchesTableStateStore.setState({ expanded: {}, selected: {} });

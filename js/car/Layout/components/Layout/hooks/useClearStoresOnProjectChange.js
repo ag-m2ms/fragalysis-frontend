@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
-import { clearBatchesTableState } from '../../../../common/stores/batchesTableStateStore';
+import { clearBatchViewsRefsStore } from '../../../../common/stores/batchViewsRefsStore';
+import { clearBatchesTableStateStore } from '../../../../common/stores/batchesTableStateStore';
 import { clearBatchesToDisplayStore } from '../../../../common/stores/batchesToDisplayStore';
 import { useCurrentProjectStore } from '../../../../common/stores/currentProjectStore';
 
@@ -13,7 +14,8 @@ export const useClearStoresOnProjectChange = () => {
         state => state.currentProject?.id,
         () => {
           clearBatchesToDisplayStore();
-          clearBatchesTableState();
+          clearBatchesTableStateStore();
+          clearBatchViewsRefsStore();
         }
       ),
     []

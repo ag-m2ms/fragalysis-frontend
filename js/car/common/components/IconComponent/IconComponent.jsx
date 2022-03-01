@@ -8,8 +8,8 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export const IconComponent = ({ Component }) => {
+export const IconComponent = ({ Component, ...rest }) => {
   const classes = useStyles();
 
-  return <Component className={classes.icon} />;
+  return <Component className={classes.icon} {...rest} />;
 };

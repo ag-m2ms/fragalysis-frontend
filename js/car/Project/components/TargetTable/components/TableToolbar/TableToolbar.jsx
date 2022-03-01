@@ -1,6 +1,6 @@
 import { Button, makeStyles, Typography } from '@material-ui/core';
 import React, { useCallback } from 'react';
-import { setRowsExpanded, useBatchesTableState } from '../../../../../common/stores/batchesTableStateStore';
+import { setRowsExpanded, useBatchesTableStateStore } from '../../../../../common/stores/batchesTableStateStore';
 import { useBatchContext } from '../../../../hooks/useBatchContext';
 
 const useStyles = makeStyles(theme => ({
@@ -17,7 +17,7 @@ export const TableToolbar = ({ tableInstance }) => {
 
   const { flatRows, toggleAllRowsExpanded } = tableInstance;
 
-  const selectedMethodRowsCount = useBatchesTableState(
+  const selectedMethodRowsCount = useBatchesTableStateStore(
     useCallback(state => Object.values(state.selected[batch.id] || {}).filter(value => value).length, [batch.id])
   );
 

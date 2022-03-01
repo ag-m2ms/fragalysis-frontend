@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { makeStyles, Paper, Typography } from '@material-ui/core';
 import { SuspenseWithBoundary } from '../SuspenseWithBoundary';
 
@@ -17,20 +17,24 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export const ContentBox = ({ title, children, endAdornment, PaperProps = {}, SuspenseProps, ErrorBoundaryProps }) => {
-  const classes = useStyles();
+export const ContentBox = forwardRef(
+  ({ title, children, endAdornment, PaperProps = {}, SuspenseProps, ErrorBoundaryProps }, ref) => {
+    const classes = useStyles();
 
-  return (
-    <Paper square {...PaperProps}>
-      <div className={classes.titleWrapper}>
-        <Typography className={classes.title} variant="h6" component="h2" noWrap>
-          {title}
-        </Typography>
-        {endAdornment}
-      </div>
-      <SuspenseWithBoundary SuspenseProps={SuspenseProps} ErrorBoundaryProps={ErrorBoundaryProps}>
-        {children}
-      </SuspenseWithBoundary>
-    </Paper>
-  );
-};
+    return (
+      <Paper ref={ref} square {...PaperProps}>
+        <div className={classes.titleWrapper}>
+          <Typography className={classes.title} variant="h6" component="h2" noWrap>
+            {title}
+          </Typography>
+          {endAdornment}
+        </div>
+        <SuspenseWithBoundary SuspenseProps={SuspenseProps} ErrorBoundaryProps={ErrorBoundaryProps}>
+          {children}
+        </SuspenseWithBoundary>
+      </Paper>
+    );
+  }
+);
+
+ContentBox.displayName = 'ContentBox';
