@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { memo, useCallback } from 'react';
 import {
   Checkbox,
   colors,
@@ -23,7 +23,6 @@ import { ImSad, ImSmile } from 'react-icons/im';
 import { useSynthesiseMethod } from './hooks/useSynthesiseMethod';
 import { useAdjustReactionSuccessRate } from './hooks/useAdjustReactionSuccessRate';
 import { TargetRow } from './components/TargetRow';
-import { useGetTableData } from './hooks/useGetTableData';
 import { setRowsSelected, useBatchesTableStateStore } from '../../../common/stores/batchesTableStateStore';
 import { useBatchContext } from '../../hooks/useBatchContext';
 import { TableToolbar } from './components/TableToolbar';
@@ -84,7 +83,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export const TargetTable = () => {
+export const TargetTable = memo(({ tableData }) => {
   const { mutate: synthesiseMethod } = useSynthesiseMethod();
   const { mutate: adjustReactionSuccessRate } = useAdjustReactionSuccessRate();
 
@@ -92,8 +91,6 @@ export const TargetTable = () => {
 
   const expanded = useBatchesTableStateStore(useCallback(state => state.expanded[batch.id] || {}, [batch.id]));
   const selected = useBatchesTableStateStore(useCallback(state => state.selected[batch.id] || {}, [batch.id]));
-
-  const tableData = useGetTableData();
 
   const maxNoSteps = Math.max(
     ...tableData
@@ -304,4 +301,6 @@ export const TargetTable = () => {
       </Table>
     </div>
   );
-};
+});
+
+TargetTable.displayName = 'TargetTable';

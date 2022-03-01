@@ -3,9 +3,10 @@ import { useBatchContext } from '../../hooks/useBatchContext';
 import { SuspenseWithBoundary } from '../../../common/components/SuspenseWithBoundary';
 import { ContentBox } from '../../../common/components/ContentBox';
 import { BatchSummary } from './components/BatchSummary';
-import { TargetTable } from '../TargetTable';
 import { makeStyles } from '@material-ui/core';
 import { setBatchViewRef } from '../../../common/stores/batchViewsRefsStore';
+import { TargetTableDataLoader } from './components/TargetTableDataLoader';
+import { TargetTable } from '../TargetTable';
 
 const useStyles = makeStyles(theme => ({
   box: {
@@ -40,7 +41,9 @@ export const BatchView = () => {
       PaperProps={{ className: classes.box }}
     >
       <SuspenseWithBoundary>
-        <TargetTable />
+        <TargetTableDataLoader>
+          {({ tableData, isLoading }) => (isLoading ? null : <TargetTable tableData={tableData} />)}
+        </TargetTableDataLoader>
       </SuspenseWithBoundary>
     </ContentBox>
   );
