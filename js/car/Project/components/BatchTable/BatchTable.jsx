@@ -143,8 +143,7 @@ export const BatchTable = memo(({ tableData }) => {
       },
       ...new Array(maxNoSteps).fill(0).map((_, index) => {
         return {
-          accessor: `reactions[${index}].reactionimage`,
-          disableSortBy: true,
+          accessor: `reactions[${index}].reactionclass`,
           Header: () => {
             return (
               <div className={classes.flexCell}>
@@ -163,10 +162,10 @@ export const BatchTable = memo(({ tableData }) => {
             return (
               <div className={classes.flexCell}>
                 <div className={classes.reactionWrapper}>
-                  <img src={value} width={270} height={60} />
+                  <img src={reaction.reactionimage} width={270} height={60} />
                   <div className={classes.reactionNameWrapper}>
                     <Typography variant="caption" noWrap>
-                      {reaction.reactionclass}
+                      {value}
                     </Typography>
                   </div>
                 </div>
