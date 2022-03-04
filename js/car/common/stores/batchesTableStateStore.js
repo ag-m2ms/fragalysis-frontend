@@ -4,7 +4,8 @@ import { createSelectorHooks } from 'auto-zustand-selectors-hook';
 const batchesTableState = create(() => ({
   expanded: {},
   // Stores only methods, not targets
-  selected: {}
+  selected: {},
+  filters: {}
 }));
 
 export const useBatchesTableStateStore = createSelectorHooks(batchesTableState);
@@ -28,6 +29,14 @@ export const setRowsSelected = (batchId, rows, selected) =>
         ...(state.selected[batchId] || {}),
         ...Object.fromEntries(rows.map(row => [row.id, selected]))
       }
+    }
+  }));
+
+export const setFilters = (batchId, filters) =>
+  useBatchesTableStateStore.setState(state => ({
+    filters: {
+      ...state.filters,
+      [batchId]: filters
     }
   }));
 

@@ -1,12 +1,25 @@
+import React, { Fragment, useCallback } from 'react';
 import { Button, makeStyles, Typography } from '@material-ui/core';
-import React, { useCallback } from 'react';
 import { setRowsExpanded, useBatchesTableStateStore } from '../../../../../common/stores/batchesTableStateStore';
 import { useBatchContext } from '../../../../hooks/useBatchContext';
+import { ToolbarSection } from '../ToolbarSection/ToolbarSection';
 
 const useStyles = makeStyles(theme => ({
   root: {
+    display: 'flex',
+    gap: theme.spacing(2),
+    padding: `${theme.spacing()}px ${theme.spacing(2)}px`,
+    '& > :nth-child(2)': {
+      flexGrow: 1
+    }
+  },
+  firstColumn: {
+    flexBasis: 260
+  },
+  filterColumn: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(4, 25%)'
+    gap: theme.spacing(),
+    width: '100%'
   }
 }));
 
@@ -15,7 +28,7 @@ export const TableToolbar = ({ tableInstance }) => {
 
   const batch = useBatchContext();
 
-  const { flatRows, toggleAllRowsExpanded } = tableInstance;
+  const { flatRows, toggleAllRowsExpanded, columns } = tableInstance;
 
   const selectedMethodRowsCount = useBatchesTableStateStore(
     useCallback(state => Object.values(state.selected[batch.id] || {}).filter(value => value).length, [batch.id])
@@ -23,35 +36,50 @@ export const TableToolbar = ({ tableInstance }) => {
 
   return (
     <div className={classes.root}>
-      <div>
-        <Typography>Selected methods: {selectedMethodRowsCount}</Typography>
+      <div className={classes.firstColumn}>
+        <ToolbarSection title="Summary">
+          <Typography>Selected methods: {selectedMethodRowsCount}</Typography>
+        </ToolbarSection>
+        <ToolbarSection title="Actions">
+          <Button
+            fullWidth
+            variant="contained"
+            color="secondary"
+            onClick={() => {
+              toggleAllRowsExpanded(true);
+              setRowsExpanded(
+                batch.id,
+                flatRows.filter(row => row.depth === 0),
+                true
+              );
+            }}
+          >
+            Expand rows
+          </Button>
+          <Button
+            fullWidth
+            variant="contained"
+            color="secondary"
+            onClick={() => {
+              toggleAllRowsExpanded(false);
+              setRowsExpanded(
+                batch.id,
+                flatRows.filter(row => row.depth === 0),
+                false
+              );
+            }}
+          >
+            Collapse rows
+          </Button>
+        </ToolbarSection>
       </div>
-      <div>
-        <Button
-          onClick={() => {
-            toggleAllRowsExpanded(true);
-            setRowsExpanded(
-              batch.id,
-              flatRows.filter(row => row.depth === 0),
-              true
-            );
-          }}
-        >
-          Expand rows
-        </Button>
-        <Button
-          onClick={() => {
-            toggleAllRowsExpanded(false);
-            setRowsExpanded(
-              batch.id,
-              flatRows.filter(row => row.depth === 0),
-              false
-            );
-          }}
-        >
-          Collapse rows
-        </Button>
-      </div>
+      <ToolbarSection title="Filters">
+        {columns
+          .filter(column => column.canFilter)
+          .map(column => (
+            <Fragment key={column.id}>{column.render('Filter')}</Fragment>
+          ))}
+      </ToolbarSection>
     </div>
   );
 };
