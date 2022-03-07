@@ -7,19 +7,23 @@ import { ContentBox } from '../../../common/components/ContentBox';
 import { useClearStoresOnProjectChange } from './hooks/useClearStoresOnProjectChange';
 import { useCurrentProjectStore } from '../../../common/stores/currentProjectStore';
 import { SuspenseWithBoundary } from '../../../common/components/SuspenseWithBoundary';
+import { useLayoutStore } from '../../../common/stores/layoutStore';
 
 const useStyles = makeStyles(theme => ({
   content: {
-    display: 'grid',
-    gridTemplateColumns: '300px minmax(0, 1fr)',
+    display: 'flex',
     gap: theme.spacing(2),
     padding: theme.spacing(2)
   },
   navigation: {
+    flex: '1 0 300px'
+  },
+  navigationBox: {
     position: 'sticky',
     top: theme.spacing(2)
   },
   project: {
+    flex: '1 1 100%',
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(2)
@@ -28,6 +32,9 @@ const useStyles = makeStyles(theme => ({
 
 export const Layout = () => {
   const classes = useStyles();
+
+  const navigationDisplayed = useLayoutStore.useNavigation();
+  const projectViewDisplayed = useLayoutStore.useProjectView();
 
   const currentProject = useCurrentProjectStore.useCurrentProject();
 
@@ -38,16 +45,20 @@ export const Layout = () => {
       <Header />
       {currentProject && (
         <div className={classes.content}>
-          <aside>
-            <ContentBox title="Navigation" PaperProps={{ className: classes.navigation }}>
-              <BatchNavigation />
-            </ContentBox>
-          </aside>
-          <main className={classes.project}>
-            <SuspenseWithBoundary>
-              <ProjectView />
-            </SuspenseWithBoundary>
-          </main>
+          {navigationDisplayed && (
+            <aside className={classes.navigation}>
+              <ContentBox title="Navigation" PaperProps={{ className: classes.navigationBox }}>
+                <BatchNavigation />
+              </ContentBox>
+            </aside>
+          )}
+          {projectViewDisplayed && (
+            <main className={classes.project}>
+              <SuspenseWithBoundary>
+                <ProjectView />
+              </SuspenseWithBoundary>
+            </main>
+          )}
         </div>
       )}
     </>
