@@ -1,8 +1,6 @@
 import React, { memo, useCallback, useLayoutEffect } from 'react';
 import {
-  Checkbox,
   colors,
-  IconButton,
   makeStyles,
   Table,
   TableBody,
@@ -10,23 +8,15 @@ import {
   TableHead,
   TableRow,
   TableSortLabel,
-  Tooltip,
-  Typography
+  Tooltip
 } from '@material-ui/core';
-import { useMemo } from 'react';
 import { useTable, useSortBy, useExpanded, useRowSelect, useFilters } from 'react-table';
-import { IconComponent } from '../../../common/components/IconComponent';
-import { FaFlask } from 'react-icons/fa';
-import { GiMoneyStack } from 'react-icons/gi';
-import { IoFootsteps } from 'react-icons/io5';
-import { ImSad, ImSmile } from 'react-icons/im';
-import { useSynthesiseMethod } from './hooks/useSynthesiseMethod';
-import { useAdjustReactionSuccessRate } from './hooks/useAdjustReactionSuccessRate';
 import { TargetRow } from './components/TargetRow';
-import { setFilters, setRowsSelected, useBatchesTableStateStore } from '../../../common/stores/batchesTableStateStore';
+import { setFilters, useBatchesTableStateStore } from '../../../common/stores/batchesTableStateStore';
 import { useBatchContext } from '../../hooks/useBatchContext';
 import { TableToolbar } from './components/TableToolbar';
-import { AutocompleteFilter } from './components/AutocompleteFilter/AutocompleteFilter';
+import { useTableSelectionColumn } from './hooks/useTableSelectionColumn';
+import { useTableColumns } from './hooks/useTableColumns';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -51,10 +41,6 @@ const useStyles = makeStyles(theme => ({
       padding: 0
     }
   },
-  text: {
-    width: '100%',
-    textAlign: 'center'
-  },
   flexCell: {
     display: 'flex',
     justifyContent: 'center',
@@ -73,46 +59,10 @@ const useStyles = makeStyles(theme => ({
     '& svg': {
       color: `${colors.grey[400]} !important`
     }
-  },
-  reactionWrapper: {
-    display: 'grid'
-  },
-  reactionNameWrapper: {
-    textAlign: 'center',
-    display: 'grid',
-    lineHeight: 1
   }
 }));
 
-const filterByReactionName = index => (rows, ids, filterValue) => {
-  if (!filterValue || !filterValue.length) {
-    return [...rows];
-  }
-
-  return (
-    rows
-      .filter(row => {
-        const { original, depth } = row;
-        if (depth === 0) {
-          return original.subRows.some(subRow => {
-            const reactionClass = subRow.reactions[index]?.reactionclass;
-            return filterValue.includes(reactionClass);
-          });
-        }
-
-        const reactionClass = original.reactions[index]?.reactionclass;
-        return filterValue.includes(reactionClass);
-      })
-      // A bug in the library results in loosing subRows when applying filtering. To avoid it a copy of each row
-      // has to be returned from the filter method.
-      .map(row => ({ ...row }))
-  );
-};
-
 export const BatchTable = memo(({ tableData }) => {
-  const { mutate: synthesiseMethod } = useSynthesiseMethod();
-  const { mutate: adjustReactionSuccessRate } = useAdjustReactionSuccessRate();
-
   const batch = useBatchContext();
 
   const expanded = useBatchesTableStateStore(useCallback(state => state.expanded[batch.id] || {}, [batch.id]));
@@ -130,116 +80,7 @@ export const BatchTable = memo(({ tableData }) => {
       .flat()
   );
 
-  const classes = useStyles({ maxNoSteps });
-
-  const columns = useMemo(() => {
-    return [
-      {
-        id: 'cost',
-        accessor: 'method.estimatecost',
-        disableFilters: true,
-        Header: () => {
-          return <IconComponent Component={GiMoneyStack} />;
-        },
-        Cell: ({ value }) => {
-          return (
-            <Typography className={classes.text} component="span" noWrap>
-              {value}
-            </Typography>
-          );
-        },
-        sortType: 'number'
-      },
-      {
-        accessor: 'method.synthesise',
-        disableSortBy: true,
-        disableFilters: true,
-        Header: () => {
-          return <IconComponent Component={FaFlask} />;
-        },
-        Cell: ({ value, row }) => {
-          return (
-            <Checkbox
-              checked={value}
-              onChange={(_, checked) =>
-                synthesiseMethod({
-                  method: row.original.method,
-                  synthesise: checked
-                })
-              }
-            />
-          );
-        }
-      },
-      ...new Array(maxNoSteps).fill(0).map((_, index) => {
-        return {
-          id: `reaction step ${index + 1}`,
-          accessor: `reactions[${index}].reactionclass`,
-          Header: () => {
-            return (
-              <div className={classes.flexCell}>
-                <IconComponent Component={IoFootsteps} />
-                <Typography component="span">{index + 1}</Typography>
-              </div>
-            );
-          },
-          Cell: ({ value, row }) => {
-            const reaction = row.original.reactions[index];
-
-            if (!reaction) {
-              return null;
-            }
-
-            return (
-              <div className={classes.flexCell}>
-                <div className={classes.reactionWrapper}>
-                  <img src={reaction.reactionimage} width={270} height={60} />
-                  <div className={classes.reactionNameWrapper}>
-                    <Typography variant="caption" noWrap>
-                      {value}
-                    </Typography>
-                  </div>
-                </div>
-                <IconButton size="small" onClick={() => adjustReactionSuccessRate({ reaction, successrate: 0.6 })}>
-                  <IconComponent Component={ImSmile} />
-                </IconButton>
-                <IconButton size="small" onClick={() => adjustReactionSuccessRate({ reaction, successrate: 0.4 })}>
-                  <IconComponent Component={ImSad} />
-                </IconButton>
-              </div>
-            );
-          },
-          Filter: ({ column: { filterValue, setFilter }, preFilteredFlatRows }) => {
-            return (
-              <AutocompleteFilter
-                id={`reaction-${index + 1}-filter`}
-                options={[
-                  ...new Set(
-                    preFilteredFlatRows
-                      .filter(row => row.depth === 1)
-                      .map(row => row.original.reactions?.[index]?.reactionclass)
-                  )
-                ].sort()}
-                label={`Reaction type - step ${index + 1}`}
-                placeholder="Reaction type"
-                filterValue={filterValue}
-                setFilter={setFilter}
-              />
-            );
-          },
-          filter: filterByReactionName(index)
-        };
-      })
-    ];
-  }, [
-    maxNoSteps,
-    classes.text,
-    classes.flexCell,
-    classes.reactionWrapper,
-    classes.reactionNameWrapper,
-    synthesiseMethod,
-    adjustReactionSuccessRate
-  ]);
+  const columns = useTableColumns(maxNoSteps);
 
   const tableInstance = useTable(
     {
@@ -255,53 +96,17 @@ export const BatchTable = memo(({ tableData }) => {
     useSortBy,
     useExpanded,
     useRowSelect,
-    hooks => {
-      hooks.visibleColumns.push(columns => [
-        {
-          id: 'selection',
-          Header: ({ getToggleAllRowsSelectedProps, flatRows, isAllRowsSelected }) => {
-            const { onChange, ...rest } = getToggleAllRowsSelectedProps();
-
-            return (
-              <Checkbox
-                {...rest}
-                onChange={event => {
-                  onChange(event);
-                  setRowsSelected(
-                    batch.id,
-                    flatRows.filter(row => row.depth === 1),
-                    !isAllRowsSelected
-                  );
-                }}
-              />
-            );
-          },
-          Cell: ({ row }) => {
-            const { onChange, ...rest } = row.getToggleRowSelectedProps();
-
-            return (
-              <Checkbox
-                {...rest}
-                onClick={event => event.stopPropagation()}
-                onChange={event => {
-                  onChange(event);
-                  // If this is a target row, select only its subRows
-                  setRowsSelected(batch.id, row.depth === 0 ? row.subRows : [row], !row.isSelected);
-                }}
-              />
-            );
-          }
-        },
-        ...columns
-      ]);
-    }
+    useTableSelectionColumn
   );
 
   const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows, state } = tableInstance;
 
   useLayoutEffect(() => {
+    // Sync filters with zustand store
     setFilters(batch.id, state.filters);
   }, [batch.id, state.filters]);
+
+  const classes = useStyles({ maxNoSteps });
 
   return (
     <div className={classes.root}>
@@ -321,7 +126,7 @@ export const BatchTable = memo(({ tableData }) => {
                         <div className={classes.flexCell}>
                           {column.render('Header')}
                           <TableSortLabel
-                            className={!column.isSorted && classes.sortIconInactive}
+                            className={!column.isSorted ? classes.sortIconInactive : undefined}
                             active={true}
                             direction={column.isSortedDesc ? 'desc' : 'asc'}
                           />
