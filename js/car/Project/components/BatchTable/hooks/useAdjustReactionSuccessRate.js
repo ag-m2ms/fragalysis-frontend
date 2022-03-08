@@ -1,9 +1,15 @@
 import { useMutation, useQueryClient } from 'react-query';
 import { axiosPatch } from '../../../../common/utils/axiosFunctions';
-import { getReactionsQueryKey, patchReactionKey } from '../../../../common/api/reactionsQueryKeys';
+import { patchReactionKey } from '../../../../common/api/reactionsQueryKeys';
+import { getTargetsQueryKey } from '../../../../common/api/targetsQueryKeys';
+import { useBatchContext } from '../../../hooks/useBatchContext';
 
 export const useAdjustReactionSuccessRate = () => {
   const queryClient = useQueryClient();
+
+  const batch = useBatchContext();
+
+  const targetsQueryKey = getTargetsQueryKey({ batch_id: batch.id, fetchall: 'yes' });
 
   return useMutation(
     ({ reaction, successrate }) =>
@@ -11,38 +17,42 @@ export const useAdjustReactionSuccessRate = () => {
         successrate
       }),
     {
-      onMutate: async ({ reaction, successrate }) => {
-        const reactionQueryKey = getReactionsQueryKey(reaction.method_id);
-
+      onMutate: async ({ reaction: reactionToUpdate, successrate }) => {
         // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-        await queryClient.cancelQueries(reactionQueryKey);
+        await queryClient.cancelQueries(targetsQueryKey);
 
         // Snapshot the previous value
-        const previousReactions = queryClient.getQueryData(reactionQueryKey);
+        const previousTargets = queryClient.getQueryData(targetsQueryKey);
 
         // Optimistically update to the new value
-        queryClient.setQueryData(reactionQueryKey, oldReactions => {
-          const newReactions = [...oldReactions];
-          const newReaction = { ...reaction, successrate };
+        queryClient.setQueryData(targetsQueryKey, targets => {
+          return targets.map(target => ({
+            ...target,
+            methods: target.methods.map(method => ({
+              ...method,
+              reactions: method.reactions.map(reaction => {
+                if (reaction.id === reactionToUpdate.id) {
+                  return { ...reactionToUpdate, successrate };
+                }
 
-          const reactionIndex = oldReactions.findIndex(r => r.id === reaction.id);
-          newReactions.splice(reactionIndex, 1, newReaction);
-
-          return newReactions;
+                return reaction;
+              })
+            }))
+          }));
         });
 
         // Return a context object with the snapshotted value
-        return { previousReactions };
+        return { previousTargets };
       },
       // If the mutation fails, use the context returned from onMutate to roll back
-      onError: (err, { reaction }, context) => {
+      onError: (err, _, context) => {
         console.error(err);
 
-        queryClient.setQueryData(getReactionsQueryKey(reaction.method_id), context.previousReactions);
+        queryClient.setQueryData(targetsQueryKey, context.previousTargets);
       },
       // Always refetch after error or success:
-      onSettled: (data, error, { reaction }) => {
-        queryClient.invalidateQueries(getReactionsQueryKey(reaction.method_id));
+      onSettled: () => {
+        queryClient.invalidateQueries(targetsQueryKey);
       }
     }
   );

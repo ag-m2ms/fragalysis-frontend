@@ -81,8 +81,8 @@ export const TableToolbar = ({ tableInstance }) => {
           .map(column => (
             <Fragment key={column.id}>{column.render('Filter')}</Fragment>
           ))}
-        <RangeFilter id="test" label="Test test test" min={10} max={25} filterValue={[10, 25]} setFilter={() => {}} />
-        <YesNoFilter id="test2" label="Test2" filterValue={undefined} setFilter={() => {}} />
+        {/*<RangeFilter id="test" label="Test test test" min={10} max={25} filterValue={[10, 25]} setFilter={() => {}} />
+        <YesNoFilter id="test2" label="Test2" filterValue={undefined} setFilter={() => {}} />*/}
       </ToolbarSection>
     </div>
   );

@@ -74,7 +74,7 @@ export const useTableColumns = maxNoSteps => {
               checked={value}
               onChange={(_, checked) =>
                 synthesiseMethod({
-                  method: row.original.method,
+                  method: row.original,
                   synthesise: checked
                 })
               }

@@ -1,1 +1,1 @@
-export const getBatchesQueryKey = projectId => `/batches/?project_id=${projectId}`;
+export const getBatchesQueryKey = params => ['/batches/', params];

@@ -3,12 +3,12 @@ import { BatchView } from '../BatchView';
 import { BatchContext } from '../../context/BatchContext';
 import { useBatchesToDisplayStore } from '../../../common/stores/batchesToDisplayStore';
 import { useCurrentProjectStore } from '../../../common/stores/currentProjectStore';
-import { useGetBatchesForProject } from '../../../common/hooks/useGetBatchesForProject';
+import { useGetBatches } from '../../../common/hooks/useGetBatches';
 
 export const ProjectView = () => {
   const currentProject = useCurrentProjectStore.useCurrentProject();
 
-  const { data: batches } = useGetBatchesForProject(currentProject.id);
+  const { data: batches } = useGetBatches({ project_id: currentProject.id });
 
   const batchesToDisplay = useBatchesToDisplayStore.useBatchesToDisplay();
 

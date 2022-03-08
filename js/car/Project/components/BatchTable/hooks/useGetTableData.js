@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
-import { useGetTargetsForBatch } from '../../../../common/hooks/useGetTargetsForBatch';
+import { useGetTargets } from '../../../../common/hooks/useGetTargets';
 import { useBatchContext } from '../../../hooks/useBatchContext';
 
 export const useGetTableData = () => {
   const batch = useBatchContext();
 
-  const { data: targets } = useGetTargetsForBatch(batch.id);
+  const { data: targets } = useGetTargets({ batch_id: batch.id, fetchall: 'yes' });
 
   const tableData = useMemo(() => {
     if (!targets) {
