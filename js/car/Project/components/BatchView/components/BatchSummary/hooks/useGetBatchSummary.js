@@ -1,15 +1,12 @@
-import { useGetMethodsForBatch } from '../../../../../../common/hooks/useGetMethodsForBatch';
+import { useGetTargetsForBatch } from '../../../../../../common/hooks/useGetTargetsForBatch';
 import { useBatchContext } from '../../../../../hooks/useBatchContext';
 
 export const useGetBatchSummary = () => {
   const batch = useBatchContext();
 
-  const methodResults = useGetMethodsForBatch(batch.id);
+  const { data: targets } = useGetTargetsForBatch(batch.id);
 
-  const methods = methodResults
-    .map(result => result.data)
-    .filter(method => !!method)
-    .flat();
+  const methods = targets?.map(({ methods }) => methods).flat() || [];
 
   const total = methods.length;
   const synthesise = methods.filter(method => method.synthesise).length;

@@ -31,7 +31,7 @@ export const TargetRow = ({ row }) => {
 
   const batch = useBatchContext();
 
-  const target = row.original.target;
+  const target = row.original;
 
   const selectionCell = row.cells.find(cell => cell.column.id === 'selection');
 

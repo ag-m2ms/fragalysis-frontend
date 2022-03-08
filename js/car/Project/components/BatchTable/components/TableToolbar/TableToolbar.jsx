@@ -3,6 +3,8 @@ import { Button, makeStyles, Typography } from '@material-ui/core';
 import { setRowsExpanded, useBatchesTableStateStore } from '../../../../../common/stores/batchesTableStateStore';
 import { useBatchContext } from '../../../../hooks/useBatchContext';
 import { ToolbarSection } from '../ToolbarSection/ToolbarSection';
+import { RangeFilter } from '../RangeFilter';
+import { YesNoFilter } from '../YesNoFilter';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -79,6 +81,8 @@ export const TableToolbar = ({ tableInstance }) => {
           .map(column => (
             <Fragment key={column.id}>{column.render('Filter')}</Fragment>
           ))}
+        <RangeFilter id="test" label="Test test test" min={10} max={25} filterValue={[10, 25]} setFilter={() => {}} />
+        <YesNoFilter id="test2" label="Test2" filterValue={undefined} setFilter={() => {}} />
       </ToolbarSection>
     </div>
   );

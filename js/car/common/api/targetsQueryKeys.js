@@ -1,1 +1,1 @@
-export const getTargetsQueryKey = targetId => `/targets/?batch_id=${targetId}`;
+export const getTargetsQueryKey = batchId => `/targets/?batch_id=${batchId}&fetchall=yes`;

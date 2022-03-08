@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useLayoutEffect } from 'react';
+import React, { useCallback, useLayoutEffect } from 'react';
 import {
   colors,
   makeStyles,
@@ -17,6 +17,7 @@ import { useBatchContext } from '../../hooks/useBatchContext';
 import { TableToolbar } from './components/TableToolbar';
 import { useTableSelectionColumn } from './hooks/useTableSelectionColumn';
 import { useTableColumns } from './hooks/useTableColumns';
+import { useGetTableData } from './hooks/useGetTableData';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -62,23 +63,33 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export const BatchTable = memo(({ tableData }) => {
+const getRowId = (row, relativeIndex, parent) => {
+  return parent ? [parent.id, row.id].join('.') : String(row.id);
+};
+
+const getSubRows = row => row.methods;
+
+export const BatchTable = () => {
+  const tableData = useGetTableData();
+
   const batch = useBatchContext();
 
   const expanded = useBatchesTableStateStore(useCallback(state => state.expanded[batch.id] || {}, [batch.id]));
   const selected = useBatchesTableStateStore(useCallback(state => state.selected[batch.id] || {}, [batch.id]));
   const filters = useBatchesTableStateStore(useCallback(state => state.filters[batch.id] || [], [batch.id]));
 
-  const maxNoSteps = Math.max(
-    ...tableData
-      .map(({ subRows }) => {
-        if (subRows.length) {
-          return subRows.map(({ reactions }) => reactions.length);
-        }
-        return 0;
-      })
-      .flat()
-  );
+  const maxNoSteps = tableData.length
+    ? Math.max(
+        ...tableData
+          .map(({ methods }) => {
+            if (methods.length) {
+              return methods.map(({ reactions }) => reactions.length);
+            }
+            return 0;
+          })
+          .flat()
+      )
+    : 0;
 
   const columns = useTableColumns(maxNoSteps);
 
@@ -86,10 +97,8 @@ export const BatchTable = memo(({ tableData }) => {
     {
       columns,
       data: tableData,
-      getRowId: useCallback((row, relativeIndex, parent) => {
-        const rowId = !parent ? row.target.id : row.method.id;
-        return parent ? [parent.id, rowId].join('.') : String(rowId);
-      }, []),
+      getRowId,
+      getSubRows,
       initialState: { expanded, selectedRowIds: selected, filters }
     },
     useFilters,
@@ -160,6 +169,4 @@ export const BatchTable = memo(({ tableData }) => {
       </Table>
     </div>
   );
-});
-
-BatchTable.displayName = 'BatchTable';
+};

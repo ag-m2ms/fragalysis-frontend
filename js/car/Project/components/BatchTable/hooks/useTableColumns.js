@@ -47,7 +47,7 @@ export const useTableColumns = maxNoSteps => {
     return [
       {
         id: 'cost',
-        accessor: 'method.estimatecost',
+        accessor: 'estimatecost',
         disableFilters: true,
         Header: () => {
           return <IconComponent Component={GiMoneyStack} />;
@@ -62,7 +62,7 @@ export const useTableColumns = maxNoSteps => {
         sortType: 'number'
       },
       {
-        accessor: 'method.synthesise',
+        accessor: 'synthesise',
         disableSortBy: true,
         disableFilters: true,
         Header: () => {
