@@ -150,21 +150,25 @@ export const BatchTable = () => {
           ))}
         </TableHead>
         <TableBody {...getTableBodyProps()}>
-          {rows.map(row => {
-            prepareRow(row);
+          {rows
+            // When filters are applied, there might be a case where children partially match multiple filters but not all.
+            // In that case react-library still displays the parent row even though there are no subRows.
+            .filter(row => (row.depth === 0 && row.subRows.length !== row.originalSubRows ? row.subRows.length : true))
+            .map(row => {
+              prepareRow(row);
 
-            if (row.depth === 0) {
-              return <TargetRow {...row.getRowProps()} row={row} />;
-            }
+              if (row.depth === 0) {
+                return <TargetRow {...row.getRowProps()} row={row} />;
+              }
 
-            return (
-              <TableRow {...row.getRowProps()} className={classes.row}>
-                {row.cells.map(cell => (
-                  <TableCell {...cell.getCellProps()}>{cell.render('Cell')}</TableCell>
-                ))}
-              </TableRow>
-            );
-          })}
+              return (
+                <TableRow {...row.getRowProps()} className={classes.row}>
+                  {row.cells.map(cell => (
+                    <TableCell {...cell.getCellProps()}>{cell.render('Cell')}</TableCell>
+                  ))}
+                </TableRow>
+              );
+            })}
         </TableBody>
       </Table>
     </div>
