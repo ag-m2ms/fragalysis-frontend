@@ -123,8 +123,8 @@ export const useTableColumns = maxNoSteps => {
   const columns = useMemo(() => {
     return [
       {
-        id: 'cost',
         accessor: 'estimatecost',
+        sortLabel: 'cost',
         disableFilters: true,
         Header: () => {
           return <IconComponent Component={GiMoneyStack} />;
@@ -161,8 +161,8 @@ export const useTableColumns = maxNoSteps => {
       },
       ...new Array(maxNoSteps).fill(0).map((_, index) => {
         return {
-          id: `reaction step ${index + 1}`,
           accessor: `reactions[${index}].reactionclass`,
+          sortLabel: `reaction step ${index + 1}`,
           Header: () => {
             return (
               <div className={classes.flexCell}>

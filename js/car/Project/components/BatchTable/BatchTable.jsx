@@ -105,6 +105,7 @@ export const BatchTable = () => {
         filters,
         hiddenColumns: [
           'catalogentries',
+          'otchem',
           'target-vendor',
           'target-leadtime',
           'target-price',
@@ -148,7 +149,7 @@ export const BatchTable = () => {
                   const { title, ...rest } = column.getSortByToggleProps();
 
                   return (
-                    <Tooltip title={`Sort by ${column.id}`} {...column.getHeaderProps()}>
+                    <Tooltip title={`Sort by ${column.sortLabel}`} {...column.getHeaderProps()}>
                       <TableCell {...rest}>
                         <div className={classes.flexCell}>
                           {column.render('Header')}
