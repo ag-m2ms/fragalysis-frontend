@@ -10,11 +10,11 @@ export const YesNoFilter = ({ id, label, filterValue, setFilter }) => {
       <Select
         labelId={labelId}
         id={id}
-        value={filterValue}
+        value={filterValue ?? ''}
         onChange={event => setFilter(event.target.value)}
         label={label}
       >
-        <MenuItem value={null}>
+        <MenuItem value={''}>
           <i>None</i>
         </MenuItem>
         <MenuItem value={true}>Yes</MenuItem>

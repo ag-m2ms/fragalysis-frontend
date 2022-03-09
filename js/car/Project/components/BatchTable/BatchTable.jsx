@@ -99,7 +99,25 @@ export const BatchTable = () => {
       data: tableData,
       getRowId,
       getSubRows,
-      initialState: { expanded, selectedRowIds: selected, filters }
+      initialState: {
+        expanded,
+        selectedRowIds: selected,
+        filters,
+        hiddenColumns: [
+          'catalogentries',
+          'target-vendor',
+          'target-leadtime',
+          'target-price',
+          ...new Array(maxNoSteps)
+            .fill(0)
+            .map((_, index) => [
+              `reactant-vendor-step-${index}`,
+              `reactant-leadtime-step-${index}`,
+              `reactant-price-step-${index}`
+            ])
+            .flat()
+        ]
+      }
     },
     useFilters,
     useSortBy,
