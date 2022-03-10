@@ -67,8 +67,6 @@ const getRowId = (row, relativeIndex, parent) => {
   return parent ? [parent.id, row.id].join('.') : String(row.id);
 };
 
-const getSubRows = row => row.methods;
-
 export const BatchTable = () => {
   const tableData = useGetTableData();
 
@@ -81,9 +79,9 @@ export const BatchTable = () => {
   const maxNoSteps = tableData.length
     ? Math.max(
         ...tableData
-          .map(({ methods }) => {
-            if (methods.length) {
-              return methods.map(({ reactions }) => reactions.length);
+          .map(({ subRows }) => {
+            if (subRows.length) {
+              return subRows.map(({ reactions }) => reactions.length);
             }
             return 0;
           })
@@ -98,11 +96,11 @@ export const BatchTable = () => {
       columns,
       data: tableData,
       getRowId,
-      getSubRows,
       initialState: {
         expanded,
         selectedRowIds: selected,
         filters,
+        paginateExpandedRows: true,
         hiddenColumns: [
           'catalogentries',
           'otchem',
@@ -172,7 +170,9 @@ export const BatchTable = () => {
           {rows
             // When filters are applied, there might be a case where children partially match multiple filters but not all.
             // In that case react-library still displays the parent row even though there are no subRows.
-            .filter(row => (row.depth === 0 && row.subRows.length !== row.originalSubRows ? row.subRows.length : true))
+            .filter(row =>
+              row.depth === 0 && row.subRows.length !== row.originalSubRows.length ? row.subRows.length : true
+            )
             .map(row => {
               prepareRow(row);
 

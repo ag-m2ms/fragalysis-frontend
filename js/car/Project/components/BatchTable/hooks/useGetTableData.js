@@ -12,7 +12,12 @@ export const useGetTableData = () => {
       return [];
     }
 
-    return targets;
+    // There's a bug in react-table library which prevents subRows from being selected when parent is being selected if
+    // the subRows aren't located in the subRows field.
+    return targets.map(target => {
+      const { methods, ...rest } = target;
+      return { ...rest, subRows: methods };
+    });
   }, [targets]);
 
   return tableData;
