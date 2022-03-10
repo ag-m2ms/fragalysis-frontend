@@ -1,12 +1,10 @@
 import React from 'react';
-import { useBatchesNavigation } from './hooks/useBatchesNavigation';
-import { useGetBatches } from '../../../common/hooks/useGetBatches';
+import { useBatchNavigation } from './hooks/useBatchNavigation';
 import { TreeView } from '@material-ui/lab';
 import { ChevronRight, ExpandMore } from '@material-ui/icons';
 import { NavigationItem } from './components/NavigationItem';
 import { makeStyles } from '@material-ui/core';
 import { useBatchesToDisplayStore } from '../../../common/stores/batchesToDisplayStore';
-import { useCurrentProjectStore } from '../../../common/stores/currentProjectStore';
 
 const useStyles = makeStyles(theme => ({
   icon: {
@@ -32,10 +30,7 @@ const renderTree = node => {
 export const BatchNavigation = () => {
   const classes = useStyles();
 
-  const currentProject = useCurrentProjectStore.useCurrentProject();
-
-  const { data: batches } = useGetBatches({ project_id: currentProject.id });
-  const navigation = useBatchesNavigation(batches);
+  const navigation = useBatchNavigation();
 
   const selectedBatchesIds = useBatchesToDisplayStore(selectedBatchesIdsSelector);
 
