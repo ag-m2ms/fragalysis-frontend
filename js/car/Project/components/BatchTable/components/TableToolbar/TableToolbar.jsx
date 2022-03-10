@@ -3,6 +3,7 @@ import { Button, makeStyles, Typography } from '@material-ui/core';
 import { setRowsExpanded, useBatchesTableStateStore } from '../../../../../common/stores/batchesTableStateStore';
 import { useBatchContext } from '../../../../hooks/useBatchContext';
 import { ToolbarSection } from '../ToolbarSection/ToolbarSection';
+import { useCreateSubBatch } from './hooks/useCreateSubBatch';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -33,6 +34,8 @@ export const TableToolbar = ({ tableInstance }) => {
   const selectedMethodRowsCount = useBatchesTableStateStore(
     useCallback(state => Object.values(state.selected[batch.id] || {}).filter(value => value).length, [batch.id])
   );
+
+  const { mutate: createSubBatch } = useCreateSubBatch();
 
   return (
     <div className={classes.root}>
@@ -70,6 +73,16 @@ export const TableToolbar = ({ tableInstance }) => {
             }}
           >
             Collapse rows
+          </Button>
+          <Button
+            fullWidth
+            variant="contained"
+            color="secondary"
+            onClick={() => {
+              createSubBatch();
+            }}
+          >
+            Create SubBatch
           </Button>
         </ToolbarSection>
       </div>

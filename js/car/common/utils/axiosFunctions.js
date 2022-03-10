@@ -19,6 +19,11 @@ export const axiosGet = async (queryKey, ...params) => {
   return response.data.results;
 };
 
+export const axiosPost = async (...params) => {
+  const response = await axiosInstance.post(...params);
+  return response;
+};
+
 export const axiosPatch = async (...params) => {
   const response = await axiosInstance.patch(...params);
   return response;
