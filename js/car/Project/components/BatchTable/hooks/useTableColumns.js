@@ -46,6 +46,10 @@ const filterByMethodReactionName = createTableMethodAutocompleteFilter((row, ids
   filterValue.includes(row.values[ids[0]])
 );
 
+const filterByMethodOTExecutable = createTableMethodYesNoFilter(
+  (row, ids, filterValue) => row.values[ids[0]] === filterValue
+);
+
 const filterByTargetCatalogEntry = createTableTargetYesNoFilter(
   (row, ids, filterValue) => !!row.values[ids[0]].length === filterValue
 );
@@ -66,10 +70,6 @@ const filterByTargetPrice = createTableTargetRangeFilter((row, ids, filterValue)
   const [min, max] = filterValue;
   return prices.some(price => price >= min && price <= max);
 });
-
-const filterByMethodOTExecutable = createTableMethodYesNoFilter(
-  (row, ids, filterValue) => row.values[ids[0]] === filterValue
-);
 
 const filterByMethodReactantVendor = index =>
   createTableMethodAutocompleteFilter((row, ids, filterValue) => {
@@ -163,6 +163,7 @@ export const useTableColumns = maxNoSteps => {
         return {
           accessor: `reactions[${index}].reactionclass`,
           sortLabel: `reaction step ${index + 1}`,
+          filterOrder: 6,
           Header: () => {
             return (
               <div className={classes.flexCell}>
@@ -219,7 +220,23 @@ export const useTableColumns = maxNoSteps => {
         };
       }),
       {
+        accessor: 'otchem',
+        filterOrder: 1,
+        Filter: ({ column: { filterValue, setFilter } }) => {
+          return (
+            <YesNoFilter
+              id="otchem-filter"
+              label="Executable on OpenTrons"
+              filterValue={filterValue}
+              setFilter={setFilter}
+            />
+          );
+        },
+        filter: filterByMethodOTExecutable
+      },
+      {
         accessor: 'catalogentries',
+        filterOrder: 2,
         Filter: ({ column: { filterValue, setFilter } }) => {
           return (
             <YesNoFilter
@@ -235,6 +252,7 @@ export const useTableColumns = maxNoSteps => {
       {
         id: 'target-vendor',
         defaultCanFilter: true,
+        filterOrder: 3,
         Filter: ({ column: { filterValue, setFilter }, preFilteredFlatRows }) => {
           return (
             <AutocompleteFilter
@@ -259,6 +277,7 @@ export const useTableColumns = maxNoSteps => {
       {
         id: 'target-leadtime',
         defaultCanFilter: true,
+        filterOrder: 4,
         Filter: ({ column: { filterValue, setFilter }, preFilteredFlatRows }) => {
           const leadTimes = preFilteredFlatRows
             .filter(row => row.depth === 0)
@@ -280,6 +299,7 @@ export const useTableColumns = maxNoSteps => {
       {
         id: 'target-price',
         defaultCanFilter: true,
+        filterOrder: 5,
         Filter: ({ column: { filterValue, setFilter }, preFilteredFlatRows }) => {
           const prices = preFilteredFlatRows
             .filter(row => row.depth === 0)
@@ -299,24 +319,11 @@ export const useTableColumns = maxNoSteps => {
         },
         filter: filterByTargetPrice
       },
-      {
-        accessor: 'otchem',
-        Filter: ({ column: { filterValue, setFilter } }) => {
-          return (
-            <YesNoFilter
-              id="otchem-filter"
-              label="Executable on OpenTrons"
-              filterValue={filterValue}
-              setFilter={setFilter}
-            />
-          );
-        },
-        filter: filterByMethodOTExecutable
-      },
       ...new Array(maxNoSteps).fill(0).map((_, index) => {
         return {
           id: `reactant-vendor-step-${index}`,
           defaultCanFilter: true,
+          filterOrder: 7,
           Filter: ({ column: { filterValue, setFilter }, preFilteredFlatRows }) => {
             return (
               <AutocompleteFilter
@@ -348,6 +355,7 @@ export const useTableColumns = maxNoSteps => {
         return {
           id: `reactant-leadtime-step-${index}`,
           defaultCanFilter: true,
+          filterOrder: 8,
           Filter: ({ column: { filterValue, setFilter }, preFilteredFlatRows }) => {
             const leadTimes = preFilteredFlatRows
               .filter(row => row.depth === 1)
@@ -377,6 +385,7 @@ export const useTableColumns = maxNoSteps => {
         return {
           id: `reactant-price-step-${index}`,
           defaultCanFilter: true,
+          filterOrder: 9,
           Filter: ({ column: { filterValue, setFilter }, preFilteredFlatRows }) => {
             const prices = preFilteredFlatRows
               .filter(row => row.depth === 1)

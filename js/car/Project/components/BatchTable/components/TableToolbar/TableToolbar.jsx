@@ -76,6 +76,7 @@ export const TableToolbar = ({ tableInstance }) => {
       <ToolbarSection title="Filters">
         {columns
           .filter(column => column.canFilter)
+          .sort((a, b) => a.filterOrder - b.filterOrder)
           .map(column => (
             <Fragment key={column.id}>{column.render('Filter')}</Fragment>
           ))}
