@@ -1,6 +1,7 @@
 import React, { useCallback, useLayoutEffect } from 'react';
 import {
   colors,
+  Divider,
   makeStyles,
   Table,
   TableBody,
@@ -137,6 +138,7 @@ export const BatchTable = () => {
   return (
     <div className={classes.root}>
       <TableToolbar tableInstance={tableInstance} />
+      <Divider />
       <Table className={classes.table} {...getTableProps()}>
         <TableHead>
           {headerGroups.map(headerGroup => (
