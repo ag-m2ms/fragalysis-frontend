@@ -19,14 +19,18 @@ export const RangeFilter = ({ id, label, min, max, filterValue, setFilter }) => 
 
   const labelId = `${id}-label`;
 
-  // In case there are no numbers to take min and max from the STD returns +/-Infinity
-  const valid = Number.isFinite(min) && Number.isFinite(max);
-
   const [value, setValue] = useState(filterValue);
 
   useLayoutEffect(() => {
     setValue(filterValue);
   }, [filterValue]);
+
+  // In case there are no numbers to take min and max from the STD returns +/-Infinity
+  const valid = Number.isFinite(min) && Number.isFinite(max);
+
+  const active = !!filterValue;
+
+  const clearEnabled = valid && active;
 
   return (
     <div className={classes.root}>
@@ -34,7 +38,7 @@ export const RangeFilter = ({ id, label, min, max, filterValue, setFilter }) => 
         <FormLabel>{label}</FormLabel>
         <Slider
           className={classes.slider}
-          value={value || null}
+          value={value || [min, max]}
           onChange={(_, value) => setValue(Array.isArray(value) ? value : [value, value])}
           aria-labelledby={labelId}
           id={id}
@@ -55,10 +59,11 @@ export const RangeFilter = ({ id, label, min, max, filterValue, setFilter }) => 
           }
           onChangeCommitted={(_, value) => setFilter(value)}
           disabled={!valid}
+          color={active ? 'primary' : 'secondary'}
         />
       </FormControl>
-      <Tooltip title={valid ? 'Clear filter' : ''}>
-        <IconButton size="small" onClick={() => setFilter()} disabled={!valid}>
+      <Tooltip title={clearEnabled ? 'Clear filter' : ''}>
+        <IconButton size="small" onClick={() => setFilter()} disabled={!clearEnabled}>
           <Cancel />
         </IconButton>
       </Tooltip>
