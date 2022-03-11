@@ -121,10 +121,10 @@ export const NavigationItem = ({ node, children }) => {
       <ConfirmationDialog
         id="delete-subbatch-dialog"
         open={deleteDialogOpen}
-        title="Delete SubBatch"
+        title="Delete subbatch"
         text={
           <>
-            Are you sure you want to delete <b>{batch.batch_tag}</b>?
+            Are you sure you want to delete batch <b>{batch.batch_tag}</b>?
           </>
         }
         onCancel={() => setDeleteDialogOpen(false)}

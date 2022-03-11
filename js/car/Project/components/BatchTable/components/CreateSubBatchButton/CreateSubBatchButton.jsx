@@ -39,7 +39,7 @@ export const CreateSubBatchButton = ({ selectedMethods }) => {
             }}
             disabled={!createSubBatchEnabled}
           >
-            Create SubBatch
+            Create subbatch
           </Button>
         </span>
       </Tooltip>
@@ -66,12 +66,19 @@ export const CreateSubBatchButton = ({ selectedMethods }) => {
           <SubmitDialog
             id="create-subbatch-dialog"
             open={dialogOpen}
-            title="Create SubBatch"
+            title="Create subbatch"
             content={
               <Form className={classes.form}>
                 <Typography className={classes.heading}>Batch information</Typography>
                 <Typography>Please provide following information:</Typography>
-                <Field component={TextField} label="Name" name="batchtag" variant="outlined" fullWidth />
+                <Field
+                  component={TextField}
+                  label="Name"
+                  name="batchtag"
+                  variant="outlined"
+                  placeholder="Name (can include a-z, A-Z, 0-9, -, _ or space)"
+                  fullWidth
+                />
               </Form>
             }
             onCancel={() => {

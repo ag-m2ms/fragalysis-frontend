@@ -5,10 +5,10 @@ import { deleteProjectKey, getProjectsQueryKey } from '../../../../../../common/
 export const useDeleteProject = () => {
   const queryClient = useQueryClient();
 
+  const projectsQueryKey = getProjectsQueryKey();
+
   return useMutation(({ project }) => axiosDelete(deleteProjectKey(project.id)), {
     onMutate: async ({ project }) => {
-      const projectsQueryKey = getProjectsQueryKey();
-
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
       await queryClient.cancelQueries(projectsQueryKey);
 
@@ -32,11 +32,11 @@ export const useDeleteProject = () => {
     onError: (err, vars, context) => {
       console.error(err);
 
-      queryClient.setQueryData(getProjectsQueryKey(), context.previousProjects);
+      queryClient.setQueryData(projectsQueryKey, context.previousProjects);
     },
     // Always refetch after error or success:
     onSettled: () => {
-      queryClient.invalidateQueries(getProjectsQueryKey());
+      queryClient.invalidateQueries(projectsQueryKey);
     }
   });
 };
