@@ -1,5 +1,13 @@
 import React, { Fragment, useCallback, useState } from 'react';
-import { Accordion, AccordionDetails, AccordionSummary, Button, makeStyles, Typography } from '@material-ui/core';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Button,
+  makeStyles,
+  Tooltip,
+  Typography
+} from '@material-ui/core';
 import { setRowsExpanded, useBatchesTableStateStore } from '../../../../../common/stores/batchesTableStateStore';
 import { useBatchContext } from '../../../../hooks/useBatchContext';
 import { ToolbarSection } from '../ToolbarSection/ToolbarSection';
@@ -36,7 +44,7 @@ export const TableToolbar = ({ tableInstance }) => {
 
   const batch = useBatchContext();
 
-  const { flatRows, toggleAllRowsExpanded, columns } = tableInstance;
+  const { flatRows, toggleAllRowsExpanded, columns, preFilteredFlatRows, setAllFilters } = tableInstance;
 
   const selectedMethodRowsCount = useBatchesTableStateStore(
     useCallback(state => Object.values(state.selected[batch.id] || {}).filter(value => value).length, [batch.id])
@@ -45,6 +53,9 @@ export const TableToolbar = ({ tableInstance }) => {
   const { mutate: createSubBatch } = useCreateSubBatch();
 
   const [accordionOpen, setAccordionOpen] = useState(false);
+
+  const createSubBatchEnabled = !!selectedMethodRowsCount;
+  const filtersApplied = flatRows.length !== preFilteredFlatRows.length;
 
   return (
     <Accordion
@@ -94,16 +105,38 @@ export const TableToolbar = ({ tableInstance }) => {
             >
               Collapse rows
             </Button>
-            <Button
-              fullWidth
-              variant="contained"
-              color="secondary"
-              onClick={() => {
-                createSubBatch();
-              }}
+            <Tooltip
+              title={!createSubBatchEnabled ? 'In order to create a SubBatch some methods have to be selected' : ''}
             >
-              Create SubBatch
-            </Button>
+              <span>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => {
+                    createSubBatch();
+                  }}
+                  disabled={!createSubBatchEnabled}
+                >
+                  Create SubBatch
+                </Button>
+              </span>
+            </Tooltip>
+            <Tooltip title={!filtersApplied ? 'No filters are active' : ''}>
+              <span>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => {
+                    setAllFilters([]);
+                  }}
+                  disabled={!filtersApplied}
+                >
+                  Clear filters
+                </Button>
+              </span>
+            </Tooltip>
           </ToolbarSection>
         </div>
         <ToolbarSection title="Filters">

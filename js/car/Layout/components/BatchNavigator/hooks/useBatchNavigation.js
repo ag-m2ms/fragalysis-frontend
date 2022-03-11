@@ -23,6 +23,5 @@ export const useBatchNavigation = () => {
     }
   });
 
-  console.log(parentNodes);
   return parentNodes;
 };
