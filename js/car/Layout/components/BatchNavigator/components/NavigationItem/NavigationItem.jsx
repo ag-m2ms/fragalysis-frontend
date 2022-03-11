@@ -1,11 +1,12 @@
 import React, { useCallback } from 'react';
 import { TreeItem } from '@material-ui/lab';
-import { Checkbox, Fab, makeStyles, Tooltip, Typography } from '@material-ui/core';
+import { Checkbox, CircularProgress, Fab, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { setDisplayBatch, useBatchesToDisplayStore } from '../../../../../common/stores/batchesToDisplayStore';
 import { useBatchViewsRefs } from '../../../../../common/stores/batchViewsRefsStore';
 import { CgArrowsScrollV } from 'react-icons/cg';
 import { IconComponent } from '../../../../../common/components/IconComponent';
 import classNames from 'classnames';
+import { useTemporaryId } from '../../../../../common/hooks/useTemporaryId';
 
 const useStyles = makeStyles(theme => ({
   label: {
@@ -29,8 +30,13 @@ const useStyles = makeStyles(theme => ({
     boxShadow: 'none'
   },
   icon: {
-    width: '1.2em',
-    height: '1.2em'
+    width: '1.2em !important',
+    height: '1.2em !important'
+  },
+  actions: {
+    display: 'flex',
+    gap: theme.spacing(1 / 4),
+    alignItems: 'center'
   }
 }));
 
@@ -43,6 +49,10 @@ export const NavigationItem = ({ batch, children }) => {
 
   const elementRef = useBatchViewsRefs(useCallback(state => state.refs[batch.id], [batch.id]));
 
+  // Used when newly created batch is loading
+  const { isTemporaryId } = useTemporaryId();
+  const isTemporaryBatch = isTemporaryId(batch.id);
+
   return (
     <TreeItem
       classes={{ label: classes.label, content: !children.length && classes.leaf }}
@@ -52,29 +62,33 @@ export const NavigationItem = ({ batch, children }) => {
           <Typography className={classes.name} noWrap>
             {batch.batch_tag}
           </Typography>
-          {!!elementRef && (
-            <Tooltip title="Scroll to batch">
-              <Fab
-                className={classNames(classes.action, classes.button)}
-                size="small"
-                onClick={event => {
-                  event.stopPropagation();
-                  elementRef.scrollIntoView({ behavior: 'smooth' });
-                }}
-                color="secondary"
-              >
-                <IconComponent className={classes.icon} Component={CgArrowsScrollV} />
-              </Fab>
+          <div className={classes.actions}>
+            {!!elementRef && (
+              <Tooltip title="Scroll to batch">
+                <Fab
+                  className={classNames(classes.action, classes.button)}
+                  size="small"
+                  onClick={event => {
+                    event.stopPropagation();
+                    elementRef.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  color="secondary"
+                >
+                  <IconComponent className={classes.icon} Component={CgArrowsScrollV} />
+                </Fab>
+              </Tooltip>
+            )}
+            {isTemporaryBatch && <CircularProgress className={classes.icon} />}
+            <Tooltip title={displayed ? 'Hide batch' : 'Display batch'}>
+              <Checkbox
+                disabled={isTemporaryBatch}
+                checked={displayed}
+                className={classes.action}
+                onClick={e => e.stopPropagation()}
+                onChange={(_, checked) => setDisplayBatch(batch.id, checked)}
+              />
             </Tooltip>
-          )}
-          <Tooltip title={displayed ? 'Hide batch' : 'Display batch'}>
-            <Checkbox
-              checked={displayed}
-              className={classes.action}
-              onClick={e => e.stopPropagation()}
-              onChange={(_, checked) => setDisplayBatch(batch.id, checked)}
-            />
-          </Tooltip>
+          </div>
         </>
       }
     >

@@ -114,7 +114,7 @@ export const TableToolbar = ({ tableInstance }) => {
                   variant="contained"
                   color="secondary"
                   onClick={() => {
-                    createSubBatch();
+                    createSubBatch({});
                   }}
                   disabled={!createSubBatchEnabled}
                 >
