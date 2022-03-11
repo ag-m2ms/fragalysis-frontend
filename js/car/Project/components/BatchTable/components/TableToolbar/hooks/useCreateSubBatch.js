@@ -1,7 +1,6 @@
 import { useQueryClient, useMutation } from 'react-query';
 import { createSubBatchKey, getBatchesQueryKey } from '../../../../../../common/api/batchesQueryKeys';
 import { useTemporaryId } from '../../../../../../common/hooks/useTemporaryId';
-import { useBatchesTableStateStore } from '../../../../../../common/stores/batchesTableStateStore';
 import { useCurrentProjectStore } from '../../../../../../common/stores/currentProjectStore';
 import { axiosPost } from '../../../../../../common/utils/axiosFunctions';
 import { useBatchContext } from '../../../../../hooks/useBatchContext';
@@ -19,13 +18,11 @@ export const useCreateSubBatch = () => {
   return useMutation(
     ({ batchtag, methodids }) =>
       axiosPost(createSubBatchKey(), {
-        batchtag: 'test',
-        methodids: Object.entries(useBatchesTableStateStore.getState().selected[batch.id])
-          .filter(([_, value]) => value)
-          .map(([key]) => Number(key.split('.')[1]))
+        batchtag,
+        methodids
       }),
     {
-      onMutate: async ({ batchtag, methodids }) => {
+      onMutate: async ({ batchtag }) => {
         // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
         await queryClient.cancelQueries(batchesQueryKey);
 
@@ -34,7 +31,7 @@ export const useCreateSubBatch = () => {
 
         // Optimistically update to the new value
         queryClient.setQueryData(batchesQueryKey, batches => {
-          const newBatch = { id: generateId(), batch_id: batch.id, project_id: currentProject.id, batch_tag: 'test' };
+          const newBatch = { id: generateId(), batch_id: batch.id, project_id: currentProject.id, batch_tag: batchtag };
 
           return [...batches, newBatch];
         });

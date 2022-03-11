@@ -46,15 +46,23 @@ export const TableToolbar = ({ tableInstance }) => {
 
   const { flatRows, toggleAllRowsExpanded, columns, preFilteredFlatRows, setAllFilters } = tableInstance;
 
-  const selectedMethodRowsCount = useBatchesTableStateStore(
-    useCallback(state => Object.values(state.selected[batch.id] || {}).filter(value => value).length, [batch.id])
+  const selectedMethods = useBatchesTableStateStore(
+    useCallback(
+      state =>
+        Object.entries(state.selected[batch.id] || {})
+          .filter(([_, value]) => value)
+          // Method row ids are in a form targetId.methodId
+          .map(([key]) => Number(key.split('.')[1])),
+      [batch.id]
+    )
   );
+  console.log(selectedMethods);
 
   const { mutate: createSubBatch } = useCreateSubBatch();
 
   const [accordionOpen, setAccordionOpen] = useState(false);
 
-  const createSubBatchEnabled = !!selectedMethodRowsCount;
+  const createSubBatchEnabled = !!selectedMethods.length;
   const filtersApplied = flatRows.length !== preFilteredFlatRows.length;
 
   return (
@@ -72,7 +80,7 @@ export const TableToolbar = ({ tableInstance }) => {
       <AccordionDetails className={classes.details}>
         <div className={classes.firstColumn}>
           <ToolbarSection title="Summary">
-            <Typography>Selected methods: {selectedMethodRowsCount}</Typography>
+            <Typography>Selected methods: {selectedMethods.length}</Typography>
           </ToolbarSection>
           <ToolbarSection title="Actions">
             <Button
