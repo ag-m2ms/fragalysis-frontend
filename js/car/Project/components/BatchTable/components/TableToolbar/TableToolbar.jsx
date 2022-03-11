@@ -11,8 +11,8 @@ import {
 import { setRowsExpanded, useBatchesTableStateStore } from '../../../../../common/stores/batchesTableStateStore';
 import { useBatchContext } from '../../../../hooks/useBatchContext';
 import { ToolbarSection } from '../ToolbarSection/ToolbarSection';
-import { useCreateSubBatch } from './hooks/useCreateSubBatch';
 import { ExpandMore } from '@material-ui/icons';
+import { CreateSubBatchButton } from '../CreateSubBatchButton';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -56,13 +56,9 @@ export const TableToolbar = ({ tableInstance }) => {
       [batch.id]
     )
   );
-  console.log(selectedMethods);
-
-  const { mutate: createSubBatch } = useCreateSubBatch();
 
   const [accordionOpen, setAccordionOpen] = useState(false);
 
-  const createSubBatchEnabled = !!selectedMethods.length;
   const filtersApplied = flatRows.length !== preFilteredFlatRows.length;
 
   return (
@@ -113,23 +109,7 @@ export const TableToolbar = ({ tableInstance }) => {
             >
               Collapse rows
             </Button>
-            <Tooltip
-              title={!createSubBatchEnabled ? 'In order to create a SubBatch some methods have to be selected' : ''}
-            >
-              <span>
-                <Button
-                  fullWidth
-                  variant="contained"
-                  color="secondary"
-                  onClick={() => {
-                    createSubBatch({});
-                  }}
-                  disabled={!createSubBatchEnabled}
-                >
-                  Create SubBatch
-                </Button>
-              </span>
-            </Tooltip>
+            <CreateSubBatchButton selectedMethods={selectedMethods} />
             <Tooltip title={!filtersApplied ? 'No filters are active' : ''}>
               <span>
                 <Button

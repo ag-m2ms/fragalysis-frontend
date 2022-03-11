@@ -35,8 +35,8 @@ export const DeleteProjectButton = () => {
             Are you sure you want to delete <b>{projectToDelete?.name}</b>?
           </>
         }
-        handleCancel={() => setDialogOpen(false)}
-        handleOk={() => {
+        onCancel={() => setDialogOpen(false)}
+        onOk={() => {
           if (currentProject?.id === projectToDelete.id) {
             setCurrentProject(null);
           }
