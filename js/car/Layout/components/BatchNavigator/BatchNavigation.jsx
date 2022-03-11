@@ -21,7 +21,7 @@ const renderTree = node => {
   const { batch } = node;
 
   return (
-    <NavigationItem key={batch.id} batch={batch}>
+    <NavigationItem key={batch.id} node={node}>
       {Array.isArray(node.children) ? node.children.map(node => renderTree(node)) : null}
     </NavigationItem>
   );
