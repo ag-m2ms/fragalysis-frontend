@@ -74,7 +74,7 @@ export const BatchNavigation = () => {
           setDialogOpen(false);
         }}
         TransitionProps={{
-          // Prevents project name from suddenly disappearing when the dialog is closing
+          // Prevents batch name from suddenly disappearing when the dialog is closing
           onExited: () => setBatchToDelete(null)
         }}
       />

@@ -1,13 +1,19 @@
 import { Button, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import React, { useState } from 'react';
-import { SubmitDialog } from '../../../../../common/components/SubmitDialog/SubmitDialog';
+import { SubmitDialog } from '../../../../../common/components/SubmitDialog';
+import { SuspenseWithBoundary } from '../../../../../common/components/SuspenseWithBoundary';
 import { useCreateSubBatch } from './hooks/useCreateSubBatch';
 import { Formik, Field, Form } from 'formik';
 import { TextField } from 'formik-material-ui';
 import * as yup from 'yup';
+import { CreateSubBatchSelectedTargetsList } from '../CreateSubBatchSelectedTargetsList';
 
 const useStyles = makeStyles(theme => ({
   form: {
+    display: 'grid',
+    gap: theme.spacing(2)
+  },
+  section: {
     display: 'grid',
     gap: theme.spacing()
   },
@@ -17,10 +23,10 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export const CreateSubBatchButton = ({ selectedMethods }) => {
+export const CreateSubBatchButton = ({ selectedMethodsIds }) => {
   const classes = useStyles();
 
-  const createSubBatchEnabled = !!selectedMethods.length;
+  const createSubBatchEnabled = !!selectedMethodsIds.length;
 
   const { mutate: createSubBatch } = useCreateSubBatch();
 
@@ -57,7 +63,7 @@ export const CreateSubBatchButton = ({ selectedMethods }) => {
             .required('Required')
         })}
         onSubmit={({ batchtag }) => {
-          createSubBatch({ batchtag: batchtag, methodids: selectedMethods });
+          createSubBatch({ batchtag: batchtag, methodids: selectedMethodsIds });
           setDialogOpen(false);
         }}
         validateOnMount
@@ -69,16 +75,26 @@ export const CreateSubBatchButton = ({ selectedMethods }) => {
             title="Create subbatch"
             content={
               <Form className={classes.form}>
-                <Typography className={classes.heading}>Batch information</Typography>
-                <Typography>Please provide following information:</Typography>
-                <Field
-                  component={TextField}
-                  label="Name"
-                  name="batchtag"
-                  variant="outlined"
-                  placeholder="Name (can include a-z, A-Z, 0-9, -, _ or space)"
-                  fullWidth
-                />
+                <section className={classes.section}>
+                  <Typography className={classes.heading}>Batch information</Typography>
+                  <Typography>Please provide following information:</Typography>
+                  <Field
+                    component={TextField}
+                    label="Name"
+                    name="batchtag"
+                    variant="outlined"
+                    placeholder="Name (can include a-z, A-Z, 0-9, -, _ or space)"
+                    fullWidth
+                  />
+                </section>
+
+                <section className={classes.section}>
+                  <Typography className={classes.heading}>Targets</Typography>
+                  <Typography>These targets (with methods) will be added to the batch:</Typography>
+                  <SuspenseWithBoundary>
+                    <CreateSubBatchSelectedTargetsList />
+                  </SuspenseWithBoundary>
+                </section>
               </Form>
             }
             onCancel={() => {

@@ -46,7 +46,7 @@ export const TableToolbar = ({ tableInstance }) => {
 
   const { flatRows, toggleAllRowsExpanded, columns, preFilteredFlatRows, setAllFilters } = tableInstance;
 
-  const selectedMethods = useBatchesTableStateStore(
+  const selectedMethodsIds = useBatchesTableStateStore(
     useCallback(
       state =>
         Object.entries(state.selected[batch.id] || {})
@@ -76,7 +76,7 @@ export const TableToolbar = ({ tableInstance }) => {
       <AccordionDetails className={classes.details}>
         <div className={classes.firstColumn}>
           <ToolbarSection title="Summary">
-            <Typography>Selected methods: {selectedMethods.length}</Typography>
+            <Typography>Selected methods: {selectedMethodsIds.length}</Typography>
           </ToolbarSection>
           <ToolbarSection title="Actions">
             <Button
@@ -109,7 +109,7 @@ export const TableToolbar = ({ tableInstance }) => {
             >
               Collapse rows
             </Button>
-            <CreateSubBatchButton selectedMethods={selectedMethods} />
+            <CreateSubBatchButton selectedMethodsIds={selectedMethodsIds} />
             <Tooltip title={!filtersApplied ? 'No filters are active' : ''}>
               <span>
                 <Button
