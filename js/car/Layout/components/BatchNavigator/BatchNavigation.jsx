@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useBatchNavigation } from './hooks/useBatchNavigation';
+import { useDeleteBatch } from './hooks/useDeleteBatch';
 import { TreeView } from '@material-ui/lab';
 import { ChevronRight, ExpandMore } from '@material-ui/icons';
 import { NavigationItem } from './components/NavigationItem';
 import { makeStyles } from '@material-ui/core';
 import { useBatchesToDisplayStore } from '../../../common/stores/batchesToDisplayStore';
+import { ConfirmationDialog } from '../../../common/components/ConfirmationDialog';
 
 const useStyles = makeStyles(theme => ({
   icon: {
@@ -17,16 +19,6 @@ const selectedBatchesIdsSelector = state =>
     .filter(([_, value]) => value)
     .map(([batchId]) => String(batchId));
 
-const renderTree = node => {
-  const { batch } = node;
-
-  return (
-    <NavigationItem key={batch.id} node={node}>
-      {Array.isArray(node.children) ? node.children.map(node => renderTree(node)) : null}
-    </NavigationItem>
-  );
-};
-
 export const BatchNavigation = () => {
   const classes = useStyles();
 
@@ -34,15 +26,58 @@ export const BatchNavigation = () => {
 
   const selectedBatchesIds = useBatchesToDisplayStore(selectedBatchesIdsSelector);
 
+  const [batchToDelete, setBatchToDelete] = useState(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const { mutate: deleteBatch } = useDeleteBatch();
+
+  const renderTree = node => {
+    const { batch } = node;
+
+    return (
+      <NavigationItem
+        key={batch.id}
+        node={node}
+        onDelete={batch => {
+          setBatchToDelete(batch);
+          setDialogOpen(true);
+        }}
+      >
+        {Array.isArray(node.children) ? node.children.map(node => renderTree(node)) : null}
+      </NavigationItem>
+    );
+  };
+
   return (
-    <TreeView
-      defaultCollapseIcon={<ExpandMore className={classes.icon} />}
-      defaultExpandIcon={<ChevronRight className={classes.icon} />}
-      selected={selectedBatchesIds}
-      disableSelection
-      multiSelect
-    >
-      {navigation.map(item => renderTree(item))}
-    </TreeView>
+    <>
+      <TreeView
+        defaultCollapseIcon={<ExpandMore className={classes.icon} />}
+        defaultExpandIcon={<ChevronRight className={classes.icon} />}
+        selected={selectedBatchesIds}
+        disableSelection
+        multiSelect
+      >
+        {navigation.map(item => renderTree(item))}
+      </TreeView>
+
+      <ConfirmationDialog
+        id="delete-subbatch-dialog"
+        open={dialogOpen}
+        title="Delete subbatch"
+        text={
+          <>
+            Are you sure you want to delete batch <b>{batchToDelete?.batch_tag}</b>?
+          </>
+        }
+        onCancel={() => setDialogOpen(false)}
+        onOk={() => {
+          deleteBatch({ batch: batchToDelete });
+          setDialogOpen(false);
+        }}
+        TransitionProps={{
+          // Prevents project name from suddenly disappearing when the dialog is closing
+          onExited: () => setBatchToDelete(null)
+        }}
+      />
+    </>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import { TreeItem } from '@material-ui/lab';
 import { Checkbox, CircularProgress, Fab, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { setDisplayBatch, useBatchesToDisplayStore } from '../../../../../common/stores/batchesToDisplayStore';
@@ -8,8 +8,6 @@ import { IconComponent } from '../../../../../common/components/IconComponent';
 import classNames from 'classnames';
 import { useTemporaryId } from '../../../../../common/hooks/useTemporaryId';
 import { DeleteForever } from '@material-ui/icons';
-import { ConfirmationDialog } from '../../../../../common/components/ConfirmationDialog';
-import { useDeleteBatch } from './hooks/useDeleteBatch';
 
 const useStyles = makeStyles(theme => ({
   label: {
@@ -46,7 +44,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export const NavigationItem = ({ node, children }) => {
+export const NavigationItem = ({ node, children, onDelete }) => {
   const classes = useStyles();
 
   const { batch, children: subBatchNodes } = node;
@@ -60,9 +58,7 @@ export const NavigationItem = ({ node, children }) => {
   const isTemporaryBatch = useTemporaryId().isTemporaryId(batch.id);
 
   // Only subBatches without children subBatches can be deleted
-  const deleteEnabled = !!batch.batch_id && !subBatchNodes.length && !isTemporaryBatch;
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const { mutate: deleteBatch } = useDeleteBatch();
+  const deleteEnabled = !!batch.batch_id && !subBatchNodes.length;
 
   return (
     <>
@@ -75,64 +71,52 @@ export const NavigationItem = ({ node, children }) => {
               {batch.batch_tag}
             </Typography>
             <div className={classes.actions}>
-              {deleteEnabled && (
-                <Tooltip title="Delete batch">
-                  <Fab
-                    className={classNames(classes.action, classes.button, classes.deleteButton)}
-                    size="small"
-                    onClick={() => setDeleteDialogOpen(true)}
-                  >
-                    <DeleteForever className={classes.icon} fontSize="inherit" />
-                  </Fab>
-                </Tooltip>
+              {isTemporaryBatch ? (
+                <CircularProgress className={classes.icon} />
+              ) : (
+                <>
+                  {deleteEnabled && (
+                    <Tooltip title="Delete batch">
+                      <Fab
+                        className={classNames(classes.action, classes.button, classes.deleteButton)}
+                        size="small"
+                        onClick={() => onDelete(batch)}
+                      >
+                        <DeleteForever className={classes.icon} fontSize="inherit" />
+                      </Fab>
+                    </Tooltip>
+                  )}
+                  {!!elementRef && (
+                    <Tooltip title="Scroll to batch">
+                      <Fab
+                        className={classNames(classes.action, classes.button)}
+                        size="small"
+                        onClick={event => {
+                          event.stopPropagation();
+                          elementRef.scrollIntoView({ behavior: 'smooth' });
+                        }}
+                        color="secondary"
+                      >
+                        <IconComponent className={classes.icon} Component={CgArrowsScrollV} />
+                      </Fab>
+                    </Tooltip>
+                  )}
+                  <Tooltip title={displayed ? 'Hide batch' : 'Display batch'}>
+                    <Checkbox
+                      checked={displayed}
+                      className={classes.action}
+                      onClick={e => e.stopPropagation()}
+                      onChange={(_, checked) => setDisplayBatch(batch.id, checked)}
+                    />
+                  </Tooltip>
+                </>
               )}
-              {!!elementRef && (
-                <Tooltip title="Scroll to batch">
-                  <Fab
-                    className={classNames(classes.action, classes.button)}
-                    size="small"
-                    onClick={event => {
-                      event.stopPropagation();
-                      elementRef.scrollIntoView({ behavior: 'smooth' });
-                    }}
-                    color="secondary"
-                  >
-                    <IconComponent className={classes.icon} Component={CgArrowsScrollV} />
-                  </Fab>
-                </Tooltip>
-              )}
-              {isTemporaryBatch && <CircularProgress className={classes.icon} />}
-              <Tooltip title={displayed ? 'Hide batch' : 'Display batch'}>
-                <Checkbox
-                  disabled={isTemporaryBatch}
-                  checked={displayed}
-                  className={classes.action}
-                  onClick={e => e.stopPropagation()}
-                  onChange={(_, checked) => setDisplayBatch(batch.id, checked)}
-                />
-              </Tooltip>
             </div>
           </>
         }
       >
         {children}
       </TreeItem>
-
-      <ConfirmationDialog
-        id="delete-subbatch-dialog"
-        open={deleteDialogOpen}
-        title="Delete subbatch"
-        text={
-          <>
-            Are you sure you want to delete batch <b>{batch.batch_tag}</b>?
-          </>
-        }
-        onCancel={() => setDeleteDialogOpen(false)}
-        onOk={() => {
-          deleteBatch({ batch });
-          setDeleteDialogOpen(false);
-        }}
-      />
     </>
   );
 };

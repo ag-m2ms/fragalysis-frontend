@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from 'react-query';
-import { deleteBatchKey, getBatchesQueryKey } from '../../../../../../common/api/batchesQueryKeys';
-import { useCurrentProjectStore } from '../../../../../../common/stores/currentProjectStore';
-import { axiosDelete } from '../../../../../../common/utils/axiosFunctions';
+import { deleteBatchKey, getBatchesQueryKey } from '../../../../common/api/batchesQueryKeys';
+import { useCurrentProjectStore } from '../../../../common/stores/currentProjectStore';
+import { axiosDelete } from '../../../../common/utils/axiosFunctions';
 
 export const useDeleteBatch = () => {
   const queryClient = useQueryClient();
