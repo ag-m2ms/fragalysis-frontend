@@ -61,62 +61,60 @@ export const NavigationItem = ({ node, children, onDelete }) => {
   const deleteEnabled = !!batch.batch_id && !subBatchNodes.length;
 
   return (
-    <>
-      <TreeItem
-        classes={{ label: classes.label, content: !children.length && classes.leaf }}
-        nodeId={String(batch.id)}
-        label={
-          <>
-            <Typography className={classes.name} noWrap>
-              {batch.batch_tag}
-            </Typography>
-            <div className={classes.actions}>
-              {isTemporaryBatch ? (
-                <CircularProgress className={classes.icon} />
-              ) : (
-                <>
-                  {deleteEnabled && (
-                    <Tooltip title="Delete batch">
-                      <Fab
-                        className={classNames(classes.action, classes.button, classes.deleteButton)}
-                        size="small"
-                        onClick={() => onDelete(batch)}
-                      >
-                        <DeleteForever className={classes.icon} fontSize="inherit" />
-                      </Fab>
-                    </Tooltip>
-                  )}
-                  {!!elementRef && (
-                    <Tooltip title="Scroll to batch">
-                      <Fab
-                        className={classNames(classes.action, classes.button)}
-                        size="small"
-                        onClick={event => {
-                          event.stopPropagation();
-                          elementRef.scrollIntoView({ behavior: 'smooth' });
-                        }}
-                        color="secondary"
-                      >
-                        <IconComponent className={classes.icon} Component={CgArrowsScrollV} />
-                      </Fab>
-                    </Tooltip>
-                  )}
-                  <Tooltip title={displayed ? 'Hide batch' : 'Display batch'}>
-                    <Checkbox
-                      checked={displayed}
-                      className={classes.action}
-                      onClick={e => e.stopPropagation()}
-                      onChange={(_, checked) => setDisplayBatch(batch.id, checked)}
-                    />
+    <TreeItem
+      classes={{ label: classes.label, content: !children.length && classes.leaf }}
+      nodeId={String(batch.id)}
+      label={
+        <>
+          <Typography className={classes.name} noWrap>
+            {batch.batch_tag}
+          </Typography>
+          <div className={classes.actions}>
+            {isTemporaryBatch ? (
+              <CircularProgress className={classes.icon} />
+            ) : (
+              <>
+                {deleteEnabled && (
+                  <Tooltip title="Delete batch">
+                    <Fab
+                      className={classNames(classes.action, classes.button, classes.deleteButton)}
+                      size="small"
+                      onClick={() => onDelete(batch)}
+                    >
+                      <DeleteForever className={classes.icon} fontSize="inherit" />
+                    </Fab>
                   </Tooltip>
-                </>
-              )}
-            </div>
-          </>
-        }
-      >
-        {children}
-      </TreeItem>
-    </>
+                )}
+                {!!elementRef && (
+                  <Tooltip title="Scroll to batch">
+                    <Fab
+                      className={classNames(classes.action, classes.button)}
+                      size="small"
+                      onClick={event => {
+                        event.stopPropagation();
+                        elementRef.scrollIntoView({ behavior: 'smooth' });
+                      }}
+                      color="secondary"
+                    >
+                      <IconComponent className={classes.icon} Component={CgArrowsScrollV} />
+                    </Fab>
+                  </Tooltip>
+                )}
+                <Tooltip title={displayed ? 'Hide batch' : 'Display batch'}>
+                  <Checkbox
+                    checked={displayed}
+                    className={classes.action}
+                    onClick={e => e.stopPropagation()}
+                    onChange={(_, checked) => setDisplayBatch(batch.id, checked)}
+                  />
+                </Tooltip>
+              </>
+            )}
+          </div>
+        </>
+      }
+    >
+      {children}
+    </TreeItem>
   );
 };

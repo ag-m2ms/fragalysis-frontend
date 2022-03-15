@@ -1,7 +1,7 @@
-import { useGetBatches } from '../../../../common/hooks/useGetBatches';
-import { useCurrentProjectStore } from '../../../../common/stores/currentProjectStore';
+import { useGetBatches } from './useGetBatches';
+import { useCurrentProjectStore } from '../stores/currentProjectStore';
 
-export const useBatchNavigation = () => {
+export const useBatchTree = () => {
   const currentProject = useCurrentProjectStore.useCurrentProject();
 
   const { data: batches } = useGetBatches({ project_id: currentProject.id });

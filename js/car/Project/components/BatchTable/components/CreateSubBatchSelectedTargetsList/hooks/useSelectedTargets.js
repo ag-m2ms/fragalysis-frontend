@@ -28,7 +28,5 @@ export const useSelectedTargets = () => {
     .filter(target => !!selectedTargetsIdsWithCount[target.id])
     .map(target => ({ target, methodsCount: selectedTargetsIdsWithCount[target.id] }));
 
-  console.log(selectedTargets);
-
   return selectedTargets;
 };

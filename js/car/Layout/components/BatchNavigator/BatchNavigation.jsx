@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useBatchNavigation } from './hooks/useBatchNavigation';
+import { useBatchTree } from '../../../common/hooks/useBatchTree';
 import { useDeleteBatch } from './hooks/useDeleteBatch';
 import { TreeView } from '@material-ui/lab';
 import { ChevronRight, ExpandMore } from '@material-ui/icons';
@@ -22,7 +22,7 @@ const selectedBatchesIdsSelector = state =>
 export const BatchNavigation = () => {
   const classes = useStyles();
 
-  const navigation = useBatchNavigation();
+  const batchTree = useBatchTree();
 
   const selectedBatchesIds = useBatchesToDisplayStore(selectedBatchesIdsSelector);
 
@@ -56,7 +56,7 @@ export const BatchNavigation = () => {
         disableSelection
         multiSelect
       >
-        {navigation.map(item => renderTree(item))}
+        {batchTree.map(item => renderTree(item))}
       </TreeView>
 
       <ConfirmationDialog
