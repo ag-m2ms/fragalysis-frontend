@@ -3,6 +3,7 @@ import { axiosPatch } from '../../../../common/utils/axiosFunctions';
 import { patchReactionKey } from '../../../../common/api/reactionsQueryKeys';
 import { getTargetsQueryKey } from '../../../../common/api/targetsQueryKeys';
 import { useBatchContext } from '../../../hooks/useBatchContext';
+import { useSnackbar } from 'notistack';
 
 export const useAdjustReactionSuccessRate = () => {
   const queryClient = useQueryClient();
@@ -10,6 +11,8 @@ export const useAdjustReactionSuccessRate = () => {
   const batch = useBatchContext();
 
   const targetsQueryKey = getTargetsQueryKey({ batch_id: batch.id, fetchall: 'yes' });
+
+  const { enqueueSnackbar } = useSnackbar();
 
   return useMutation(
     ({ reaction, successrate }) =>
@@ -45,10 +48,11 @@ export const useAdjustReactionSuccessRate = () => {
         return { previousTargets };
       },
       // If the mutation fails, use the context returned from onMutate to roll back
-      onError: (err, _, context) => {
+      onError: (err, _, { previousTargets }) => {
         console.error(err);
+        enqueueSnackbar(err.message, { variant: 'error' });
 
-        queryClient.setQueryData(targetsQueryKey, context.previousTargets);
+        queryClient.setQueryData(targetsQueryKey, previousTargets);
       },
       // Always refetch after error or success:
       onSettled: () => {

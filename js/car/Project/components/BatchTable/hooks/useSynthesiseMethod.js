@@ -3,6 +3,7 @@ import { axiosPatch } from '../../../../common/utils/axiosFunctions';
 import { patchMethodsKey } from '../../../../common/api/methodsQueryKeys';
 import { useBatchContext } from '../../../hooks/useBatchContext';
 import { getTargetsQueryKey } from '../../../../common/api/targetsQueryKeys';
+import { useSnackbar } from 'notistack';
 
 export const useSynthesiseMethod = () => {
   const queryClient = useQueryClient();
@@ -10,6 +11,8 @@ export const useSynthesiseMethod = () => {
   const batch = useBatchContext();
 
   const targetsQueryKey = getTargetsQueryKey({ batch_id: batch.id, fetchall: 'yes' });
+
+  const { enqueueSnackbar } = useSnackbar();
 
   return useMutation(({ method, synthesise }) => axiosPatch(patchMethodsKey(method.id), { synthesise }), {
     onMutate: async ({ method: methodToUpdate, synthesise }) => {
@@ -37,10 +40,11 @@ export const useSynthesiseMethod = () => {
       return { previousTargets };
     },
     // If the mutation fails, use the context returned from onMutate to roll back
-    onError: (err, vars, context) => {
+    onError: (err, vars, { previousTargets }) => {
       console.error(err);
+      enqueueSnackbar(err.message, { variant: 'error' });
 
-      queryClient.setQueryData(targetsQueryKey, context.previousTargets);
+      queryClient.setQueryData(targetsQueryKey, previousTargets);
     },
     // Always refetch after error or success:
     onSettled: () => {

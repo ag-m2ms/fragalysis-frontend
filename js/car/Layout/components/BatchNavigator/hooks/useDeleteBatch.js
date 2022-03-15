@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from 'react-query';
 import { deleteBatchKey, getBatchesQueryKey } from '../../../../common/api/batchesQueryKeys';
 import { useCurrentProjectStore } from '../../../../common/stores/currentProjectStore';
 import { axiosDelete } from '../../../../common/utils/axiosFunctions';
+import { useSnackbar } from 'notistack';
 
 export const useDeleteBatch = () => {
   const queryClient = useQueryClient();
@@ -9,6 +10,8 @@ export const useDeleteBatch = () => {
   const currentProject = useCurrentProjectStore.useCurrentProject();
 
   const batchesQueryKey = getBatchesQueryKey({ project_id: currentProject.id });
+
+  const { enqueueSnackbar } = useSnackbar();
 
   return useMutation(({ batch }) => axiosDelete(deleteBatchKey(batch.id)), {
     onMutate: async ({ batch }) => {
@@ -32,10 +35,11 @@ export const useDeleteBatch = () => {
       return { previousBatches };
     },
     // If the mutation fails, use the context returned from onMutate to roll back
-    onError: (err, vars, context) => {
+    onError: (err, vars, { previousBatches }) => {
       console.error(err);
+      enqueueSnackbar(err.message, { variant: 'error' });
 
-      queryClient.setQueryData(batchesQueryKey, context.previousBatches);
+      queryClient.setQueryData(batchesQueryKey, previousBatches);
     },
     // Always refetch after error or success:
     onSettled: () => {

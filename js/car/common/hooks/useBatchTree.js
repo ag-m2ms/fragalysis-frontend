@@ -12,16 +12,18 @@ export const useBatchTree = () => {
 
   const mappedNodes = {};
   const parentNodes = [];
-  batches.forEach(batch => {
-    const node = { batch, children: [] };
-    mappedNodes[batch.id] = node;
+  batches
+    .sort((a, b) => a.id - b.id)
+    .forEach(batch => {
+      const node = { batch, children: [] };
+      mappedNodes[batch.id] = node;
 
-    if (batch.batch_id) {
-      mappedNodes[batch.batch_id].children.push(node);
-    } else {
-      parentNodes.push(node);
-    }
-  });
+      if (batch.batch_id) {
+        mappedNodes[batch.batch_id].children.push(node);
+      } else {
+        parentNodes.push(node);
+      }
+    });
 
   return parentNodes;
 };
