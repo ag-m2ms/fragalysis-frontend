@@ -1,7 +1,11 @@
 import { Button, makeStyles } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useRef } from 'react';
-import { setDisplayBatch } from '../../../../../common/stores/batchesToDisplayStore';
+import {
+  setBatchesExpanded,
+  setBatchSelected,
+  useBatchNavigationStore
+} from '../../../../../common/stores/batchNavigationStore';
 import { useBatchViewsRefs } from '../../../../../common/stores/batchViewsRefsStore';
 
 const useStyles = makeStyles(theme => ({
@@ -10,8 +14,10 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export const DisplaySubBatchButton = ({ messageId, batchId }) => {
+export const DisplaySubBatchButton = ({ batches, messageId, batchId }) => {
   const classes = useStyles();
+
+  const expanded = useBatchNavigationStore.useExpanded();
 
   // Stores the zustand subscription
   const storeSubscription = useRef();
@@ -33,8 +39,19 @@ export const DisplaySubBatchButton = ({ messageId, batchId }) => {
       variant="outlined"
       color="inherit"
       onClick={() => {
+        // Expand the path to the subbatch recursively
+        const newExpanded = new Set(expanded);
+        let batch = batches.find(b => b.id === batchId);
+        while (!!batch?.batch_id) {
+          // eslint-disable-next-line no-loop-func
+          const parent = batches.find(b => b.id === batch.batch_id);
+          newExpanded.add(String(parent.id));
+          batch = parent;
+        }
+        setBatchesExpanded([...newExpanded]);
+
         // Select the batch to be displayed
-        setDisplayBatch(batchId, true);
+        setBatchSelected(batchId, true);
 
         // Check if the batch has already been selected before the step above, and if so, scroll to it
         const batchRef = useBatchViewsRefs.getState().refs[batchId];

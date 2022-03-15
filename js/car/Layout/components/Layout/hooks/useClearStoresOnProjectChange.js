@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { clearBatchViewsRefsStore } from '../../../../common/stores/batchViewsRefsStore';
 import { clearBatchesTableStateStore } from '../../../../common/stores/batchesTableStateStore';
-import { clearBatchesToDisplayStore } from '../../../../common/stores/batchesToDisplayStore';
+import { clearBatchNavigationStore } from '../../../../common/stores/batchNavigationStore';
 import { useCurrentProjectStore } from '../../../../common/stores/currentProjectStore';
 import { clearLayoutStore } from '../../../../common/stores/layoutStore';
 
@@ -14,7 +14,7 @@ export const useClearStoresOnProjectChange = () => {
       useCurrentProjectStore.subscribe(
         state => state.currentProject?.id,
         () => {
-          clearBatchesToDisplayStore();
+          clearBatchNavigationStore();
           clearBatchesTableStateStore();
           clearBatchViewsRefsStore();
           clearLayoutStore();

@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { TreeItem } from '@material-ui/lab';
 import { Checkbox, CircularProgress, Fab, makeStyles, Tooltip, Typography } from '@material-ui/core';
-import { setDisplayBatch, useBatchesToDisplayStore } from '../../../../../common/stores/batchesToDisplayStore';
+import { setBatchSelected, useBatchNavigationStore } from '../../../../../common/stores/batchNavigationStore';
 import { useBatchViewsRefs } from '../../../../../common/stores/batchViewsRefsStore';
 import { CgArrowsScrollV } from 'react-icons/cg';
 import { IconComponent } from '../../../../../common/components/IconComponent';
@@ -49,9 +49,7 @@ export const NavigationItem = ({ node, children, onDelete }) => {
 
   const { batch, children: subBatchNodes } = node;
 
-  const displayed = useBatchesToDisplayStore(
-    useCallback(state => state.batchesToDisplay[batch.id] || false, [batch.id])
-  );
+  const displayed = useBatchNavigationStore(useCallback(state => state.selected[batch.id] || false, [batch.id]));
   const elementRef = useBatchViewsRefs(useCallback(state => state.refs[batch.id], [batch.id]));
 
   // Used when newly created batch is loading
@@ -105,7 +103,7 @@ export const NavigationItem = ({ node, children, onDelete }) => {
                     checked={displayed}
                     className={classes.action}
                     onClick={e => e.stopPropagation()}
-                    onChange={(_, checked) => setDisplayBatch(batch.id, checked)}
+                    onChange={(_, checked) => setBatchSelected(batch.id, checked)}
                   />
                 </Tooltip>
               </>

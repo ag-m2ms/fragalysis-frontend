@@ -5,7 +5,7 @@ import { TreeView } from '@material-ui/lab';
 import { ChevronRight, ExpandMore } from '@material-ui/icons';
 import { NavigationItem } from './components/NavigationItem';
 import { makeStyles } from '@material-ui/core';
-import { useBatchesToDisplayStore } from '../../../common/stores/batchesToDisplayStore';
+import { setBatchesExpanded, useBatchNavigationStore } from '../../../common/stores/batchNavigationStore';
 import { ConfirmationDialog } from '../../../common/components/ConfirmationDialog';
 
 const useStyles = makeStyles(theme => ({
@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const selectedBatchesIdsSelector = state =>
-  Object.entries(state.batchesToDisplay)
+  Object.entries(state.selected)
     .filter(([_, value]) => value)
     .map(([batchId]) => String(batchId));
 
@@ -24,7 +24,8 @@ export const BatchNavigation = () => {
 
   const batchTree = useBatchTree();
 
-  const selectedBatchesIds = useBatchesToDisplayStore(selectedBatchesIdsSelector);
+  const selected = useBatchNavigationStore(selectedBatchesIdsSelector);
+  const expanded = useBatchNavigationStore.useExpanded();
 
   const [batchToDelete, setBatchToDelete] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -52,7 +53,9 @@ export const BatchNavigation = () => {
       <TreeView
         defaultCollapseIcon={<ExpandMore className={classes.icon} />}
         defaultExpandIcon={<ChevronRight className={classes.icon} />}
-        selected={selectedBatchesIds}
+        selected={selected}
+        expanded={expanded}
+        onNodeToggle={(event, nodeIds) => setBatchesExpanded(nodeIds)}
         disableSelection
         multiSelect
       >

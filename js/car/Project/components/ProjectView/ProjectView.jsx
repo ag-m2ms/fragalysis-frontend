@@ -1,7 +1,7 @@
 import React from 'react';
 import { BatchView } from '../BatchView';
 import { BatchContext } from '../../context/BatchContext';
-import { useBatchesToDisplayStore } from '../../../common/stores/batchesToDisplayStore';
+import { useBatchNavigationStore } from '../../../common/stores/batchNavigationStore';
 import { useCurrentProjectStore } from '../../../common/stores/currentProjectStore';
 import { useGetBatches } from '../../../common/hooks/useGetBatches';
 
@@ -10,12 +10,12 @@ export const ProjectView = () => {
 
   const { data: batches } = useGetBatches({ project_id: currentProject.id });
 
-  const batchesToDisplay = useBatchesToDisplayStore.useBatchesToDisplay();
+  const selected = useBatchNavigationStore.useSelected();
 
   return (
     <>
       {batches
-        ?.filter(batch => batchesToDisplay[batch.id])
+        ?.filter(batch => selected[batch.id])
         .map(batch => {
           return (
             <BatchContext.Provider key={batch.id} value={batch}>

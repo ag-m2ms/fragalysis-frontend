@@ -2,7 +2,7 @@ import React from 'react';
 import { ProjectView } from '../../../Project';
 import { Header } from '../Header';
 import { makeStyles } from '@material-ui/styles';
-import { BatchNavigation } from '../BatchNavigator';
+import { BatchNavigation } from '../BatchNavigation';
 import { ContentBox } from '../../../common/components/ContentBox';
 import { useClearStoresOnProjectChange } from './hooks/useClearStoresOnProjectChange';
 import { useCurrentProjectStore } from '../../../common/stores/currentProjectStore';

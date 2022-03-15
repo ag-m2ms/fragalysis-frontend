@@ -71,7 +71,13 @@ export const useCreateSubBatch = () => {
 
         enqueueSnackbar('The subbatch was created successfully', {
           variant: 'success',
-          action: key => <DisplaySubBatchButton messageId={key} batchId={batchId} />
+          action: key => (
+            <DisplaySubBatchButton
+              batches={queryClient.getQueryData(batchesQueryKey)}
+              messageId={key}
+              batchId={batchId}
+            />
+          )
         });
       },
       // Always refetch after error or success:
