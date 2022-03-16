@@ -13,6 +13,7 @@ export const DeleteProjectButton = () => {
   const [menuAnchorEl, setMenuAnchorEl] = useState(null);
   const [projectToDelete, setProjectToDelete] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [okDisabled, setOkDisabled] = useState(false);
 
   return (
     <>
@@ -37,6 +38,8 @@ export const DeleteProjectButton = () => {
         }
         onCancel={() => setDialogOpen(false)}
         onOk={() => {
+          setOkDisabled(true);
+
           if (currentProject?.id === projectToDelete.id) {
             setCurrentProject(null);
           }
@@ -45,9 +48,13 @@ export const DeleteProjectButton = () => {
           setMenuAnchorEl(null);
           deleteProject({ project: projectToDelete });
         }}
+        okDisabled={okDisabled}
         TransitionProps={{
-          // Prevents project name from suddenly disappearing when the dialog is closing
-          onExited: () => setProjectToDelete(null)
+          onExited: () => {
+            // Prevents project name from suddenly disappearing when the dialog is closing
+            setProjectToDelete(null);
+            setOkDisabled(false);
+          }
         }}
       />
     </>

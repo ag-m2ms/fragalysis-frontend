@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@material-ui/core';
 
-export const ConfirmationDialog = ({ open, onCancel, onOk, id, title, text, ...other }) => {
+export const ConfirmationDialog = ({ open, onCancel, cancelDisabled, onOk, okDisabled, id, title, text, ...other }) => {
   return (
     <Dialog aria-labelledby={id} open={open} {...other}>
       <DialogTitle id={id}>{title}</DialogTitle>
@@ -9,10 +9,10 @@ export const ConfirmationDialog = ({ open, onCancel, onOk, id, title, text, ...o
         <Typography>{text}</Typography>
       </DialogContent>
       <DialogActions>
-        <Button autoFocus onClick={onCancel} color="primary">
+        <Button autoFocus onClick={onCancel} disabled={cancelDisabled} color="primary">
           Cancel
         </Button>
-        <Button onClick={onOk} color="primary">
+        <Button onClick={onOk} disabled={okDisabled} color="primary">
           Ok
         </Button>
       </DialogActions>

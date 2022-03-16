@@ -29,6 +29,7 @@ export const BatchNavigation = () => {
 
   const [batchToDelete, setBatchToDelete] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [okDisabled, setOkDisabled] = useState(false);
   const { mutate: deleteBatch } = useDeleteBatch();
 
   const renderTree = node => {
@@ -73,12 +74,17 @@ export const BatchNavigation = () => {
         }
         onCancel={() => setDialogOpen(false)}
         onOk={() => {
+          setOkDisabled(true);
           deleteBatch({ batch: batchToDelete });
           setDialogOpen(false);
         }}
+        okDisabled={okDisabled}
         TransitionProps={{
-          // Prevents batch name from suddenly disappearing when the dialog is closing
-          onExited: () => setBatchToDelete(null)
+          onExited: () => {
+            // Prevents batch name from suddenly disappearing when the dialog is closing
+            setBatchToDelete(null);
+            setOkDisabled(false);
+          }
         }}
       />
     </>

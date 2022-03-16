@@ -18,7 +18,7 @@ export const useCreateSubBatch = () => {
 
   const { generateId } = useTemporaryId();
 
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   return useMutation(
     ({ batchtag, methodids }) =>
@@ -28,6 +28,8 @@ export const useCreateSubBatch = () => {
       }),
     {
       onMutate: async ({ batchtag }) => {
+        const creatingMessageId = enqueueSnackbar('A new subbatch is being created...', { variant: 'info' });
+
         // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
         await queryClient.cancelQueries(batchesQueryKey);
 
@@ -45,16 +47,20 @@ export const useCreateSubBatch = () => {
         });
 
         // Return a context object with the snapshotted value
-        return { previousBatches, temporaryId };
+        return { previousBatches, temporaryId, creatingMessageId };
       },
       // If the mutation fails, use the context returned from onMutate to roll back
-      onError: (err, vars, { previousBatches }) => {
+      onError: (err, vars, { previousBatches, creatingMessageId }) => {
+        closeSnackbar(creatingMessageId);
+
         console.error(err);
         enqueueSnackbar(err.message, { variant: 'error' });
 
         queryClient.setQueryData(batchesQueryKey, previousBatches);
       },
-      onSuccess: (response, vars, { temporaryId }) => {
+      onSuccess: (response, vars, { temporaryId, creatingMessageId }) => {
+        closeSnackbar(creatingMessageId);
+
         // Real batch ID
         const batchId = response.data.id;
 
