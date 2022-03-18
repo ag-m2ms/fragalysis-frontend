@@ -25,14 +25,19 @@ export const useGetIncompatibleTargets = selectedBatchesMap => {
   );
 
   const allSelectedTargets = allTargetsResponses
+    // Pair batches with their appropriate target response
     .map((response, index) => ({ batch: batches[index], response }))
+    // Get only the ones selected
     .filter((_, index) => !!selectedBatchesMap[batches[index].id])
+    // Get only target responses which has finished successfully
     .filter(({ response }) => response.isSuccess)
+    // Pair the batch with the data about targets
     .map(({ batch, response }) => ({ batch, targets: response.data }));
 
   const incompatibleTargets = allSelectedTargets
     .map(({ batch, targets }) => ({
       batch,
+      // Get only targets whose every method is not compatible with OT
       targets: targets.filter(target => target.methods.every(method => !method.otchem))
     }))
     .filter(({ targets }) => !!targets.length);
