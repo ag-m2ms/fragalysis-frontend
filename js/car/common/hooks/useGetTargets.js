@@ -5,5 +5,5 @@ import { axiosGet } from '../utils/axiosFunctions';
 export const useGetTargets = params => {
   const queryKey = getTargetsQueryKey(params);
 
-  return useQuery(queryKey, () => axiosGet(queryKey));
+  return useQuery(queryKey, async () => (await axiosGet(queryKey)).results);
 };

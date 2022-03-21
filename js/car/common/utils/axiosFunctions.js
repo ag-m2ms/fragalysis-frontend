@@ -16,20 +16,20 @@ const createQueryEndpoint = (endpoint, queryParams) => {
 export const axiosGet = async (queryKey, ...params) => {
   const endpoint = createQueryEndpoint(queryKey[0], queryKey[1]);
   const response = await axiosInstance.get(endpoint, ...params);
-  return response.data.results;
+  return response.data;
 };
 
 export const axiosPost = async (...params) => {
   const response = await axiosInstance.post(...params);
-  return response;
+  return response.data;
 };
 
 export const axiosPatch = async (...params) => {
   const response = await axiosInstance.patch(...params);
-  return response;
+  return response.data;
 };
 
 export const axiosDelete = async (...params) => {
   const response = await axiosInstance.delete(...params);
-  return response;
+  return response.data;
 };

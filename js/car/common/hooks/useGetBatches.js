@@ -5,5 +5,5 @@ import { axiosGet } from '../utils/axiosFunctions';
 export const useGetBatches = params => {
   const queryKey = getBatchesQueryKey(params);
 
-  return useQuery(queryKey, () => axiosGet(queryKey));
+  return useQuery(queryKey, async () => (await axiosGet(queryKey)).results);
 };

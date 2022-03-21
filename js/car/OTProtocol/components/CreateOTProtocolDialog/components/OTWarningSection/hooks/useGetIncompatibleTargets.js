@@ -17,7 +17,7 @@ export const useGetIncompatibleTargets = selectedBatchesMap => {
 
           return {
             queryKey,
-            queryFn: () => axiosGet(queryKey)
+            queryFn: async () => (await axiosGet(queryKey)).results
           };
         }),
       [batches]

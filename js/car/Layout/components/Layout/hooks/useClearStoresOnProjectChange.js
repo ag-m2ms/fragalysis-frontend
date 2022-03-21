@@ -4,6 +4,7 @@ import { clearBatchesTableStateStore } from '../../../../common/stores/batchesTa
 import { clearBatchNavigationStore } from '../../../../common/stores/batchNavigationStore';
 import { useCurrentProjectStore } from '../../../../common/stores/currentProjectStore';
 import { clearLayoutStore } from '../../../../common/stores/layoutStore';
+import { clearCeleryTasksStore } from '../../../../common/stores/celeryTasksStore';
 
 /**
  * Clears zustand stores which are dependent on project's data
@@ -18,6 +19,7 @@ export const useClearStoresOnProjectChange = () => {
           clearBatchesTableStateStore();
           clearBatchViewsRefsStore();
           clearLayoutStore();
+          clearCeleryTasksStore();
         }
       ),
     []

@@ -36,9 +36,9 @@ export const Header = () => {
           </Button>
           <LoadProjectButton />
           <DeleteProjectButton />
-          <CreateOTProtocolButton />
           {!!currentProject && (
             <>
+              <CreateOTProtocolButton />
               <LayoutSwitch checked={navigationDisplayed} onChange={setNavigationDisplayed} label="Navigation" />
               <LayoutSwitch checked={projectViewDisplayed} onChange={setProjectViewDisplayed} label="Project view" />
             </>

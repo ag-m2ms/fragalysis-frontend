@@ -4,6 +4,7 @@ import { SuspenseWithBoundary } from '../../../common/components/SuspenseWithBou
 import { makeStyles, Typography } from '@material-ui/core';
 import { BatchSelector } from '../BatchSelector';
 import { OTWarningSection } from './components/OTWarningSection';
+import { useCreateOTProtocol } from './components/OTWarningSection/hooks/useCreateOTProtocol';
 
 const useStyles = makeStyles(theme => ({
   section: {
@@ -20,6 +21,11 @@ export const CreateOTProtocolDialog = ({ open, onClose }) => {
   const classes = useStyles();
 
   const [selectedBatchesMap, setSelectedBatchesMap] = useState({});
+  const selectedBatchesIds = Object.entries(selectedBatchesMap)
+    .filter(([_, value]) => value)
+    .map(([key]) => Number(key));
+
+  const { mutate: createOTProtocol } = useCreateOTProtocol();
 
   return (
     <SubmitDialog
@@ -44,7 +50,7 @@ export const CreateOTProtocolDialog = ({ open, onClose }) => {
       onCancel={() => {
         onClose();
       }}
-      onSubmit={() => {}}
+      onSubmit={() => createOTProtocol({ batchids: selectedBatchesIds })}
       submitDisabled={!Object.entries(selectedBatchesMap).length}
       TransitionProps={{
         // Clear the selection when dialog closes

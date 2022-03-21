@@ -3,7 +3,8 @@ import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { getTheme } from '../../../../theme';
 import Layout from '../../../Layout';
-import { CustomSnackbarProvider } from './components/CustomSnackbarProvider';
+import { CeleryTasksChecker } from '../CeleryTasksChecker/CeleryTasksChecker';
+import { CustomSnackbarProvider } from '../CustomSnackbarProvider';
 
 const theme = createTheme({
   ...getTheme(),
@@ -39,6 +40,7 @@ export const App = () => {
       <CustomSnackbarProvider>
         <QueryClientProvider client={queryClient}>
           <Layout />
+          <CeleryTasksChecker />
         </QueryClientProvider>
       </CustomSnackbarProvider>
     </ThemeProvider>
