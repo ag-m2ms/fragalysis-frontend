@@ -3,7 +3,7 @@ import { axiosPatch } from '../../../../common/utils/axiosFunctions';
 import { patchReactionKey } from '../../../../common/api/reactionsQueryKeys';
 import { getTargetsQueryKey } from '../../../../common/api/targetsQueryKeys';
 import { useBatchContext } from '../../../hooks/useBatchContext';
-import { useSnackbar } from 'notistack';
+import { useProjectSnackbar } from '../../../../common/hooks/useProjectSnackbar';
 
 export const useAdjustReactionSuccessRate = () => {
   const queryClient = useQueryClient();
@@ -12,7 +12,7 @@ export const useAdjustReactionSuccessRate = () => {
 
   const targetsQueryKey = getTargetsQueryKey({ batch_id: batch.id, fetchall: 'yes' });
 
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useProjectSnackbar();
 
   return useMutation(
     ({ reaction, successrate }) =>

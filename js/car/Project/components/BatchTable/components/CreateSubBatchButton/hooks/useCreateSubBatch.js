@@ -5,8 +5,9 @@ import { useTemporaryId } from '../../../../../../common/hooks/useTemporaryId';
 import { useCurrentProjectStore } from '../../../../../../common/stores/currentProjectStore';
 import { axiosPost } from '../../../../../../common/utils/axiosFunctions';
 import { useBatchContext } from '../../../../../hooks/useBatchContext';
-import { useSnackbar } from 'notistack';
 import { DisplaySubBatchButton } from '../../DisplaySubBatchButton';
+import { HideNotificationButton } from '../../../../../../common/components/HideNotificationButton';
+import { useProjectSnackbar } from '../../../../../../common/hooks/useProjectSnackbar';
 
 export const useCreateSubBatch = () => {
   const queryClient = useQueryClient();
@@ -18,7 +19,7 @@ export const useCreateSubBatch = () => {
 
   const { generateId } = useTemporaryId();
 
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar, closeSnackbar } = useProjectSnackbar();
 
   return useMutation(
     ({ batchtag, methodids }) =>
@@ -77,12 +78,16 @@ export const useCreateSubBatch = () => {
 
         enqueueSnackbar('The subbatch was created successfully', {
           variant: 'success',
+          autoHideDuration: null,
           action: key => (
-            <DisplaySubBatchButton
-              batches={queryClient.getQueryData(batchesQueryKey)}
-              messageId={key}
-              batchId={batchId}
-            />
+            <>
+              <DisplaySubBatchButton
+                batches={queryClient.getQueryData(batchesQueryKey)}
+                messageId={key}
+                batchId={batchId}
+              />
+              <HideNotificationButton messageId={key} />
+            </>
           )
         });
       },

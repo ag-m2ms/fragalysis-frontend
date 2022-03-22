@@ -4,7 +4,7 @@ import { SuspenseWithBoundary } from '../../../common/components/SuspenseWithBou
 import { makeStyles, Typography } from '@material-ui/core';
 import { BatchSelector } from '../BatchSelector';
 import { OTWarningSection } from './components/OTWarningSection';
-import { useCreateOTProtocol } from './components/OTWarningSection/hooks/useCreateOTProtocol';
+import { useCreateOTProtocol } from './hooks/useCreateOTProtocol';
 
 const useStyles = makeStyles(theme => ({
   section: {
@@ -26,6 +26,7 @@ export const CreateOTProtocolDialog = ({ open, onClose }) => {
     .map(([key]) => Number(key));
 
   const { mutate: createOTProtocol } = useCreateOTProtocol();
+  const [submitDisabled, setSubmitDisabled] = useState(false);
 
   return (
     <SubmitDialog
@@ -50,11 +51,18 @@ export const CreateOTProtocolDialog = ({ open, onClose }) => {
       onCancel={() => {
         onClose();
       }}
-      onSubmit={() => createOTProtocol({ batchids: selectedBatchesIds })}
-      submitDisabled={!Object.entries(selectedBatchesMap).length}
+      onSubmit={() => {
+        setSubmitDisabled(true);
+        createOTProtocol({ batchids: selectedBatchesIds });
+        onClose();
+      }}
+      submitDisabled={!Object.entries(selectedBatchesMap).length || submitDisabled}
       TransitionProps={{
-        // Clear the selection when dialog closes
-        onExited: () => setSelectedBatchesMap({})
+        onExited: () => {
+          // Clear the selection when dialog closes
+          setSelectedBatchesMap({});
+          setSubmitDisabled(false);
+        }
       }}
     />
   );

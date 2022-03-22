@@ -3,7 +3,7 @@ import { axiosPatch } from '../../../../common/utils/axiosFunctions';
 import { patchMethodsKey } from '../../../../common/api/methodsQueryKeys';
 import { useBatchContext } from '../../../hooks/useBatchContext';
 import { getTargetsQueryKey } from '../../../../common/api/targetsQueryKeys';
-import { useSnackbar } from 'notistack';
+import { useProjectSnackbar } from '../../../../common/hooks/useProjectSnackbar';
 
 export const useSynthesiseMethod = () => {
   const queryClient = useQueryClient();
@@ -12,7 +12,7 @@ export const useSynthesiseMethod = () => {
 
   const targetsQueryKey = getTargetsQueryKey({ batch_id: batch.id, fetchall: 'yes' });
 
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useProjectSnackbar();
 
   return useMutation(({ method, synthesise }) => axiosPatch(patchMethodsKey(method.id), { synthesise }), {
     onMutate: async ({ method: methodToUpdate, synthesise }) => {

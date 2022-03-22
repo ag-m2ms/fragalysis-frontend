@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from 'react-query';
 import { deleteBatchKey, getBatchesQueryKey } from '../../../../common/api/batchesQueryKeys';
 import { useCurrentProjectStore } from '../../../../common/stores/currentProjectStore';
 import { axiosDelete } from '../../../../common/utils/axiosFunctions';
-import { useSnackbar } from 'notistack';
+import { useProjectSnackbar } from '../../../../common/hooks/useProjectSnackbar';
 
 export const useDeleteBatch = () => {
   const queryClient = useQueryClient();
@@ -11,7 +11,7 @@ export const useDeleteBatch = () => {
 
   const batchesQueryKey = getBatchesQueryKey({ project_id: currentProject.id });
 
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useProjectSnackbar();
 
   return useMutation(({ batch }) => axiosDelete(deleteBatchKey(batch.id)), {
     onMutate: async ({ batch }) => {
