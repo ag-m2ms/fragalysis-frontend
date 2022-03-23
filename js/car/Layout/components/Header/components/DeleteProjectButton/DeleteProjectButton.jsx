@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Button } from '@material-ui/core';
-import { ProjectMenu } from '../ProjectMenu';
+import { Button, Typography } from '@material-ui/core';
+import { CategoryMenu } from '../CategoryMenu';
+import { ProjectMenuContents } from '../ProjectMenuContents';
 import { useDeleteProject } from './hooks/useDeleteProject';
 import { ConfirmationDialog } from '../../../../../common/components/ConfirmationDialog';
 import { setCurrentProject, useCurrentProjectStore } from '../../../../../common/stores/currentProjectStore';
@@ -18,23 +19,23 @@ export const DeleteProjectButton = () => {
   return (
     <>
       <Button onClick={event => setMenuAnchorEl(event.currentTarget)}>Delete Project</Button>
-      <ProjectMenu
-        id="delete-project-menu"
-        anchorEl={menuAnchorEl}
-        onClose={() => setMenuAnchorEl(null)}
-        onSelected={project => {
-          setProjectToDelete(project);
-          setDialogOpen(true);
-        }}
-      />
+      <CategoryMenu id="delete-project-menu" anchorEl={menuAnchorEl} onClose={() => setMenuAnchorEl(null)}>
+        <ProjectMenuContents
+          onSelected={project => {
+            setMenuAnchorEl(null);
+            setProjectToDelete(project);
+            setDialogOpen(true);
+          }}
+        />
+      </CategoryMenu>
       <ConfirmationDialog
         id="delete-project-dialog"
         open={dialogOpen}
         title="Delete project"
-        text={
-          <>
+        content={
+          <Typography>
             Are you sure you want to delete project <b>{projectToDelete?.name}</b>?
-          </>
+          </Typography>
         }
         onCancel={() => setDialogOpen(false)}
         onOk={() => {

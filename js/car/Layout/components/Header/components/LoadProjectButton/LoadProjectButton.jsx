@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '@material-ui/core';
-import { ProjectMenu } from '../ProjectMenu';
+import { CategoryMenu } from '../CategoryMenu';
+import { ProjectMenuContents } from '../ProjectMenuContents';
 import { setCurrentProject } from '../../../../../common/stores/currentProjectStore';
 
 export const LoadProjectButton = () => {
@@ -9,7 +10,7 @@ export const LoadProjectButton = () => {
   return (
     <>
       <Button onClick={event => setMenuAnchorEl(event.currentTarget)}>Load project</Button>
-      <ProjectMenu
+      <CategoryMenu
         id="load-project-menu"
         anchorEl={menuAnchorEl}
         onClose={() => setMenuAnchorEl(null)}
@@ -17,7 +18,14 @@ export const LoadProjectButton = () => {
           setCurrentProject(project);
           setMenuAnchorEl(null);
         }}
-      />
+      >
+        <ProjectMenuContents
+          onSelected={project => {
+            setCurrentProject(project);
+            setMenuAnchorEl(null);
+          }}
+        />
+      </CategoryMenu>
     </>
   );
 };

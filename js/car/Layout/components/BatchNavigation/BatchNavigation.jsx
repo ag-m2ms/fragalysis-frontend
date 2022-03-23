@@ -4,7 +4,7 @@ import { useDeleteBatch } from './hooks/useDeleteBatch';
 import { TreeView } from '@material-ui/lab';
 import { ChevronRight, ExpandMore } from '@material-ui/icons';
 import { NavigationItem } from './components/NavigationItem';
-import { makeStyles } from '@material-ui/core';
+import { makeStyles, Typography } from '@material-ui/core';
 import { setBatchesExpanded, useBatchNavigationStore } from '../../../common/stores/batchNavigationStore';
 import { ConfirmationDialog } from '../../../common/components/ConfirmationDialog';
 
@@ -67,10 +67,10 @@ export const BatchNavigation = () => {
         id="delete-subbatch-dialog"
         open={dialogOpen}
         title="Delete subbatch"
-        text={
-          <>
+        content={
+          <Typography>
             Are you sure you want to delete batch <b>{batchToDelete?.batch_tag}</b>?
-          </>
+          </Typography>
         }
         onCancel={() => setDialogOpen(false)}
         onOk={() => {

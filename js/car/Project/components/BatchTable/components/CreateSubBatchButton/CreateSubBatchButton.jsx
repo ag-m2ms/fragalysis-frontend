@@ -7,19 +7,13 @@ import { Formik, Field, Form } from 'formik';
 import { TextField } from 'formik-material-ui';
 import * as yup from 'yup';
 import { CreateSubBatchSelectedTargetsList } from '../CreateSubBatchSelectedTargetsList';
+import { DialogSection } from '../../../../../common/components/DialogSection';
+import { DialogSectionHeading } from '../../../../../common/components/DialogSectionHeading';
 
 const useStyles = makeStyles(theme => ({
   form: {
     display: 'grid',
     gap: theme.spacing(2)
-  },
-  section: {
-    display: 'grid',
-    gap: theme.spacing()
-  },
-  heading: {
-    fontSize: '0.9rem',
-    fontWeight: 500
   }
 }));
 
@@ -77,8 +71,8 @@ export const CreateSubBatchButton = ({ selectedMethodsIds }) => {
             title="Create subbatch"
             content={
               <Form className={classes.form}>
-                <section className={classes.section}>
-                  <Typography className={classes.heading}>Batch information</Typography>
+                <DialogSection>
+                  <DialogSectionHeading>Batch information</DialogSectionHeading>
                   <Typography>Please provide following information:</Typography>
                   <Field
                     component={TextField}
@@ -88,15 +82,15 @@ export const CreateSubBatchButton = ({ selectedMethodsIds }) => {
                     placeholder="Name (can include a-z, A-Z, 0-9, -, _ or space)"
                     fullWidth
                   />
-                </section>
+                </DialogSection>
 
-                <section className={classes.section}>
-                  <Typography className={classes.heading}>Targets</Typography>
+                <DialogSection>
+                  <DialogSectionHeading>Targets</DialogSectionHeading>
                   <Typography>These targets (with methods) will be added to the batch:</Typography>
                   <SuspenseWithBoundary>
                     <CreateSubBatchSelectedTargetsList />
                   </SuspenseWithBoundary>
-                </section>
+                </DialogSection>
               </Form>
             }
             onCancel={() => {

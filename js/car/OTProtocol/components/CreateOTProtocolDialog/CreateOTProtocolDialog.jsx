@@ -1,25 +1,14 @@
 import React, { useState } from 'react';
 import { SubmitDialog } from '../../../common/components/SubmitDialog';
 import { SuspenseWithBoundary } from '../../../common/components/SuspenseWithBoundary';
-import { makeStyles, Typography } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import { BatchSelector } from '../BatchSelector';
 import { OTWarningSection } from './components/OTWarningSection';
 import { useCreateOTProtocol } from './hooks/useCreateOTProtocol';
-
-const useStyles = makeStyles(theme => ({
-  section: {
-    display: 'grid',
-    gap: theme.spacing()
-  },
-  heading: {
-    fontSize: '0.9rem',
-    fontWeight: 500
-  }
-}));
+import { DialogSection } from '../../../common/components/DialogSection';
+import { DialogSectionHeading } from '../../../common/components/DialogSectionHeading';
 
 export const CreateOTProtocolDialog = ({ open, onClose }) => {
-  const classes = useStyles();
-
   const [selectedBatchesMap, setSelectedBatchesMap] = useState({});
   const selectedBatchesIds = Object.entries(selectedBatchesMap)
     .filter(([_, value]) => value)
@@ -34,8 +23,8 @@ export const CreateOTProtocolDialog = ({ open, onClose }) => {
       open={open}
       title="Create OT protocol"
       content={
-        <section className={classes.section}>
-          <Typography className={classes.heading}>Batches</Typography>
+        <DialogSection>
+          <DialogSectionHeading>Batches</DialogSectionHeading>
           <Typography>Please select batches for OT protocol:</Typography>
           <SuspenseWithBoundary>
             <BatchSelector
@@ -46,7 +35,7 @@ export const CreateOTProtocolDialog = ({ open, onClose }) => {
             />
             <OTWarningSection selectedBatchesMap={selectedBatchesMap} />
           </SuspenseWithBoundary>
-        </section>
+        </DialogSection>
       }
       onCancel={() => {
         onClose();

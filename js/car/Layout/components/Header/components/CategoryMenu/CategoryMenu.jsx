@@ -1,9 +1,8 @@
 import React from 'react';
 import { Menu } from '@material-ui/core';
 import { SuspenseWithBoundary } from '../../../../../common/components/SuspenseWithBoundary';
-import { ProjectMenuContents } from '../ProjectMenuContents';
 
-export const ProjectMenu = ({ id, anchorEl, onSelected, onClose }) => {
+export const CategoryMenu = ({ id, anchorEl, onClose, children }) => {
   return (
     <Menu
       id={id}
@@ -13,9 +12,7 @@ export const ProjectMenu = ({ id, anchorEl, onSelected, onClose }) => {
       anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
       getContentAnchorEl={null}
     >
-      <SuspenseWithBoundary>
-        <ProjectMenuContents onSelected={onSelected} />
-      </SuspenseWithBoundary>
+      <SuspenseWithBoundary>{children}</SuspenseWithBoundary>
     </Menu>
   );
 };
