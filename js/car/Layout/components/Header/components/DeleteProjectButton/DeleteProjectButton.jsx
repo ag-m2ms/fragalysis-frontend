@@ -34,7 +34,7 @@ export const DeleteProjectButton = () => {
         title="Delete project"
         content={
           <Typography>
-            Are you sure you want to delete project <b>{projectToDelete?.name}</b>?
+            Are you sure you want to delete project <strong>{projectToDelete?.name}</strong>?
           </Typography>
         }
         onCancel={() => setDialogOpen(false)}

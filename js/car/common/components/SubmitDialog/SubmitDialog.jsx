@@ -3,6 +3,7 @@ import React from 'react';
 
 export const SubmitDialog = ({
   open,
+  onClose,
   onCancel,
   cancelDisabled,
   onSubmit,
@@ -13,11 +14,11 @@ export const SubmitDialog = ({
   ...other
 }) => {
   return (
-    <Dialog aria-labelledby={id} open={open} fullWidth {...other}>
+    <Dialog aria-labelledby={id} open={open} onClose={onClose} fullWidth {...other}>
       <DialogTitle id={id}>{title}</DialogTitle>
       <DialogContent dividers>{content}</DialogContent>
       <DialogActions>
-        <Button autoFocus onClick={onCancel} color="primary" disabled={cancelDisabled}>
+        <Button autoFocus onClick={onCancel || onClose} color="primary" disabled={cancelDisabled}>
           Cancel
         </Button>
         <Button onClick={onSubmit} color="primary" disabled={submitDisabled}>

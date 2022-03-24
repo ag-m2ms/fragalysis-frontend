@@ -69,7 +69,7 @@ export const BatchNavigation = () => {
         title="Delete subbatch"
         content={
           <Typography>
-            Are you sure you want to delete batch <b>{batchToDelete?.batch_tag}</b>?
+            Are you sure you want to delete batch <strong>{batchToDelete?.batch_tag}</strong>?
           </Typography>
         }
         onCancel={() => setDialogOpen(false)}

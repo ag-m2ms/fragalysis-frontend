@@ -25,7 +25,6 @@ export const CreateSubBatchButton = ({ selectedMethodsIds }) => {
   const { mutate: createSubBatch } = useCreateSubBatch();
 
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [sendDisabled, setSendDisabled] = useState(false);
 
   return (
     <>
@@ -58,13 +57,12 @@ export const CreateSubBatchButton = ({ selectedMethodsIds }) => {
             .required('Required')
         })}
         onSubmit={({ batchtag }) => {
-          setSendDisabled(true);
           createSubBatch({ batchtag: batchtag, methodids: selectedMethodsIds });
           setDialogOpen(false);
         }}
         validateOnMount
       >
-        {({ submitForm, isValid, resetForm }) => (
+        {({ submitForm, isValid, isSubmitting, resetForm }) => (
           <SubmitDialog
             id="create-subbatch-dialog"
             open={dialogOpen}
@@ -93,15 +91,14 @@ export const CreateSubBatchButton = ({ selectedMethodsIds }) => {
                 </DialogSection>
               </Form>
             }
-            onCancel={() => {
+            onClose={() => {
               setDialogOpen(false);
             }}
             onSubmit={submitForm}
-            submitDisabled={!isValid || sendDisabled}
+            submitDisabled={isSubmitting || !isValid}
             TransitionProps={{
               onExited: () => {
                 resetForm();
-                setSendDisabled(false);
               }
             }}
           />

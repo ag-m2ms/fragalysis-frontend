@@ -37,9 +37,7 @@ export const CreateOTProtocolDialog = ({ open, onClose }) => {
           </SuspenseWithBoundary>
         </DialogSection>
       }
-      onCancel={() => {
-        onClose();
-      }}
+      onClose={onClose}
       onSubmit={() => {
         setSubmitDisabled(true);
         createOTProtocol({ batchids: selectedBatchesIds });

@@ -23,7 +23,8 @@ export const OTWarningSection = ({ selectedBatchesMap }) => {
     <>
       {incompatibleTargets.map(({ batch, targets }) => (
         <Alert key={batch.id} severity="warning" variant="outlined">
-          These targets from batch <b>{batch.batch_tag}</b> contain only methods which can't be executed on OpenTrons:
+          These targets from batch <strong>{batch.batch_tag}</strong> contain only methods which can't be executed on
+          OpenTrons:
           <List disablePadding>
             {targets.map(target => {
               return (

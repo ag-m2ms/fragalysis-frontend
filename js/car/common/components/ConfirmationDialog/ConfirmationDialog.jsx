@@ -3,6 +3,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mate
 
 export const ConfirmationDialog = ({
   open,
+  onClose,
   onCancel,
   cancelDisabled,
   onOk,
@@ -13,11 +14,11 @@ export const ConfirmationDialog = ({
   ...other
 }) => {
   return (
-    <Dialog aria-labelledby={id} open={open} {...other}>
+    <Dialog aria-labelledby={id} open={open} onClose={onClose} {...other}>
       <DialogTitle id={id}>{title}</DialogTitle>
       <DialogContent dividers>{content}</DialogContent>
       <DialogActions>
-        <Button autoFocus onClick={onCancel} disabled={cancelDisabled} color="primary">
+        <Button autoFocus onClick={onCancel || onClose} disabled={cancelDisabled} color="primary">
           Cancel
         </Button>
         <Button onClick={onOk} disabled={okDisabled} color="primary">

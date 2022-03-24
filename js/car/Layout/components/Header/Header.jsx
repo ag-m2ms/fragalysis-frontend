@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppBar, Button, Toolbar, Typography, makeStyles } from '@material-ui/core';
+import { AppBar, Toolbar, Typography, makeStyles } from '@material-ui/core';
 import { DeleteProjectButton } from './components/DeleteProjectButton';
 import { LoadProjectButton } from './components/LoadProjectButton';
 import { setNavigationDisplayed, setProjectViewDisplayed, useLayoutStore } from '../../../common/stores/layoutStore';
@@ -7,6 +7,7 @@ import { useCurrentProjectStore } from '../../../common/stores/currentProjectSto
 import { LayoutSwitch } from './components/LayoutSwitch/LayoutSwitch';
 import { CreateOTProtocolButton } from './components/CreateOTProtocolButton/CreateOTProtocolButton';
 import { OTProtocolHistoryButton } from './components/OTProtocolHistoryButton/OTProtocolHistoryButton';
+import { UploadProjectButton } from './components/UploadProjectButton/UploadProjectButton';
 
 const useStyles = makeStyles(theme => ({
   toolbar: {
@@ -32,9 +33,7 @@ export const Header = () => {
           <Typography variant="h6" component="h1">
             Chemist Assisted Robotics
           </Typography>
-          <Button href="/car/upload" component="button">
-            New project
-          </Button>
+          <UploadProjectButton />
           <LoadProjectButton />
           <DeleteProjectButton />
           {!!currentProject && (
