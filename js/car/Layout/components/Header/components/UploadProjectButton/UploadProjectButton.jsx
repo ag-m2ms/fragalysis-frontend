@@ -2,22 +2,15 @@ import React, { useState } from 'react';
 import { SubmitDialog } from '../../../../../common/components/SubmitDialog';
 import { DialogSection } from '../../../../../common/components/DialogSection';
 import { DialogSectionHeading } from '../../../../../common/components/DialogSectionHeading';
-import { Button, FormControl, FormControlLabel, FormHelperText, FormLabel, Radio, Typography } from '@material-ui/core';
-import { Field, Formik, ErrorMessage } from 'formik';
+import { Button, Typography } from '@material-ui/core';
+import { Formik, Form } from 'formik';
 import * as yup from 'yup';
-import { RadioGroup, TextField } from 'formik-material-ui';
-import { makeStyles } from '@material-ui/styles';
 import { useUploadProject } from './hooks/useUploadProject';
-
-const useStyles = makeStyles(theme => ({
-  csvInput: {
-    display: 'none'
-  }
-}));
+import { FormTextField } from '../../../../../common/components/FormTextField';
+import { FormRadioGroup } from '../../../../../common/components/FormRadioGroup';
+import { FormFilePicker } from '../../../../../common/components/FormFilePicker/FormFilePicker';
 
 export const UploadProjectButton = () => {
-  const classes = useStyles();
-
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const { mutate: uploadProject } = useUploadProject();
@@ -76,80 +69,55 @@ export const UploadProjectButton = () => {
             open={dialogOpen}
             title="Upload new project"
             content={
-              <DialogSection>
-                <DialogSectionHeading>Project information</DialogSectionHeading>
-                <Typography>Please provide following information:</Typography>
+              <Form>
+                <DialogSection>
+                  <DialogSectionHeading>Project information</DialogSectionHeading>
+                  <Typography>Please provide following information:</Typography>
 
-                <Field
-                  component={TextField}
-                  label="Your name"
-                  name="submitter_name"
-                  variant="outlined"
-                  placeholder="Your name (can include a-z, A-Z, 0-9, -, _ or space)"
-                  fullWidth
-                />
-                <Field
-                  component={TextField}
-                  label="Your organisation"
-                  name="submitter_organisation"
-                  variant="outlined"
-                  placeholder="Your organisation (can include a-z, A-Z, 0-9, -, _ or space)"
-                  fullWidth
-                />
-
-                <FormControl>
-                  <FormLabel>Smiles file</FormLabel>
-                  <Typography>
-                    The current specification version is <strong>ver_1.2</strong>.
-                  </Typography>
-                  <input
-                    accept="text/csv"
-                    className={classes.csvInput}
-                    id="contained-button-file"
-                    multiple
-                    type="file"
-                    onChange={event => {
-                      const file = event.target.files[0];
-                      setFieldValue('csv_file', file || null, true);
-                      setTimeout(() => {
-                        setFieldTouched('csv_file');
-                      });
-                    }}
+                  <FormTextField
+                    name="submitter_name"
+                    label="Your name"
+                    placeholder="Your name (can include a-z, A-Z, 0-9, -, _ or space)"
                   />
-                  <label htmlFor="contained-button-file">
-                    <Button variant="contained" color="primary" component="span" fullWidth>
-                      Select file
-                    </Button>
-                  </label>
-                  <ErrorMessage name="csv_file">
-                    {msg => <FormHelperText error={true}>{msg}</FormHelperText>}
-                  </ErrorMessage>
-                  {!!values.csv_file && <FormHelperText>{values.csv_file?.name}</FormHelperText>}
-                </FormControl>
 
-                <FormControl component="fieldset">
-                  <FormLabel component="legend">Validate choice</FormLabel>
-                  <Field component={RadioGroup} name="validate_choice">
-                    <FormControlLabel value="0" control={<Radio />} label="Validate" />
-                    <FormControlLabel value="1" control={<Radio />} label="Upload" />
-                  </Field>
-                  <ErrorMessage name="validate_choice">
-                    {msg => <FormHelperText error={true}>{msg}</FormHelperText>}
-                  </ErrorMessage>
-                </FormControl>
+                  <FormTextField
+                    name="submitter_organisation"
+                    label="Your organisation"
+                    placeholder="Your organisation (can include a-z, A-Z, 0-9, -, _ or space)"
+                  />
 
-                <FormControl component="fieldset">
-                  <FormLabel component="legend">API choice</FormLabel>
-                  <Field component={RadioGroup} name="API_choice">
-                    <FormControlLabel value="0" control={<Radio />} label="Postera" />
-                    <FormControlLabel value="1" control={<Radio />} label="Custom chemistry" />
-                    <FormControlLabel value="2" control={<Radio />} label="Combi custom chemistry" />
-                  </Field>
-                  <ErrorMessage name="API_choice">
-                    {msg => <FormHelperText error={true}>{msg}</FormHelperText>}
-                  </ErrorMessage>
-                </FormControl>
-              </DialogSection>
+                  <FormFilePicker
+                    name="csv_file"
+                    label="Smiles file"
+                    description={
+                      <Typography>
+                        The current specification version is <strong>ver_1.2</strong>.
+                      </Typography>
+                    }
+                    id="upload-project-smiles-file"
+                    accept="text/csv"
+                  />
+
+                  <FormRadioGroup
+                    name="validate_choice"
+                    label="Validate choice"
+                    options={[
+                      { value: '0', label: 'Validate' },
+                      { value: '1', label: 'Upload' }
+                    ]}
+                  />
+
+                  <FormRadioGroup
+                    name="API_choice"
+                    label="API choice"
+                    options={[
+                      { value: '0', label: 'Postera' },
+                      { value: '1', label: 'Custom chemistry' },
+                      { value: '2', label: 'Combi custom chemistry' }
+                    ]}
+                  />
+                </DialogSection>
+              </Form>
             }
             onCancel={() => {
               setDialogOpen(false);

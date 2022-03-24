@@ -3,12 +3,12 @@ import React, { useState } from 'react';
 import { SubmitDialog } from '../../../../../common/components/SubmitDialog';
 import { SuspenseWithBoundary } from '../../../../../common/components/SuspenseWithBoundary';
 import { useCreateSubBatch } from './hooks/useCreateSubBatch';
-import { Formik, Field, Form } from 'formik';
-import { TextField } from 'formik-material-ui';
+import { Formik, Form } from 'formik';
 import * as yup from 'yup';
 import { CreateSubBatchSelectedTargetsList } from '../CreateSubBatchSelectedTargetsList';
 import { DialogSection } from '../../../../../common/components/DialogSection';
 import { DialogSectionHeading } from '../../../../../common/components/DialogSectionHeading';
+import { FormTextField } from '../../../../../common/components/FormTextField';
 
 const useStyles = makeStyles(theme => ({
   form: {
@@ -72,13 +72,10 @@ export const CreateSubBatchButton = ({ selectedMethodsIds }) => {
                 <DialogSection>
                   <DialogSectionHeading>Batch information</DialogSectionHeading>
                   <Typography>Please provide following information:</Typography>
-                  <Field
-                    component={TextField}
-                    label="Name"
+                  <FormTextField
                     name="batchtag"
-                    variant="outlined"
+                    label="Name"
                     placeholder="Name (can include a-z, A-Z, 0-9, -, _ or space)"
-                    fullWidth
                   />
                 </DialogSection>
 
