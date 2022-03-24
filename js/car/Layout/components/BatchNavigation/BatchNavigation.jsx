@@ -72,7 +72,7 @@ export const BatchNavigation = () => {
             Are you sure you want to delete batch <strong>{batchToDelete?.batch_tag}</strong>?
           </Typography>
         }
-        onCancel={() => setDialogOpen(false)}
+        onClose={() => setDialogOpen(false)}
         onOk={() => {
           setOkDisabled(true);
           deleteBatch({ batch: batchToDelete });

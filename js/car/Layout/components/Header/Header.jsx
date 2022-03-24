@@ -1,13 +1,10 @@
 import React from 'react';
-import { AppBar, Toolbar, Typography, makeStyles } from '@material-ui/core';
-import { DeleteProjectButton } from './components/DeleteProjectButton';
-import { LoadProjectButton } from './components/LoadProjectButton';
+import { AppBar, Toolbar, Typography, makeStyles, Button } from '@material-ui/core';
 import { setNavigationDisplayed, setProjectViewDisplayed, useLayoutStore } from '../../../common/stores/layoutStore';
-import { useCurrentProjectStore } from '../../../common/stores/currentProjectStore';
+import { setCurrentProject, useCurrentProjectStore } from '../../../common/stores/currentProjectStore';
 import { LayoutSwitch } from './components/LayoutSwitch/LayoutSwitch';
-import { CreateOTProtocolButton } from './components/CreateOTProtocolButton/CreateOTProtocolButton';
-import { OTProtocolHistoryButton } from './components/OTProtocolHistoryButton/OTProtocolHistoryButton';
-import { UploadProjectButton } from './components/UploadProjectButton/UploadProjectButton';
+import { CreateOTProtocolButton } from './components/CreateOTProtocolButton';
+import { OTProtocolHistoryButton } from './components/OTProtocolHistoryButton';
 
 const useStyles = makeStyles(theme => ({
   toolbar: {
@@ -15,6 +12,9 @@ const useStyles = makeStyles(theme => ({
     '& button, a': {
       color: `${theme.palette.white} !important`
     }
+  },
+  heading: {
+    textTransform: 'none'
   }
 }));
 
@@ -30,12 +30,11 @@ export const Header = () => {
     <>
       <AppBar position="static">
         <Toolbar className={classes.toolbar}>
-          <Typography variant="h6" component="h1">
-            Chemist Assisted Robotics
-          </Typography>
-          <UploadProjectButton />
-          <LoadProjectButton />
-          <DeleteProjectButton />
+          <Button className={classes.heading} onClick={() => setCurrentProject(null)} disableRipple>
+            <Typography variant="h6" component="h1">
+              Chemist Assisted Robotics
+            </Typography>
+          </Button>
           {!!currentProject && (
             <>
               <CreateOTProtocolButton />

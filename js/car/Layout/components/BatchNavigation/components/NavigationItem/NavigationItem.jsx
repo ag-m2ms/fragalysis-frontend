@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
     minHeight: 'unset',
     width: theme.spacing(2),
     height: theme.spacing(2),
-    boxShadow: 'none'
+    boxShadow: 'none !important'
   },
   icon: {
     width: '1.2em !important',

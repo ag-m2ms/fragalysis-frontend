@@ -39,9 +39,7 @@ export const BatchView = () => {
       }
       PaperProps={{ className: classes.box }}
     >
-      <SuspenseWithBoundary>
-        <BatchTable />
-      </SuspenseWithBoundary>
+      <BatchTable />
     </ContentBox>
   );
 };

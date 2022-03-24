@@ -8,6 +8,7 @@ import { useClearStoresOnProjectChange } from './hooks/useClearStoresOnProjectCh
 import { useCurrentProjectStore } from '../../../common/stores/currentProjectStore';
 import { SuspenseWithBoundary } from '../../../common/components/SuspenseWithBoundary';
 import { useLayoutStore } from '../../../common/stores/layoutStore';
+import { Landing } from '../Landing';
 
 const useStyles = makeStyles(theme => ({
   content: {
@@ -43,24 +44,29 @@ export const Layout = () => {
   return (
     <>
       <Header />
-      {currentProject && (
-        <div className={classes.content}>
-          {navigationDisplayed && (
-            <aside className={classes.navigation}>
-              <ContentBox title="Navigation" PaperProps={{ className: classes.navigationBox }}>
-                <BatchNavigation />
-              </ContentBox>
-            </aside>
-          )}
-          {projectViewDisplayed && (
-            <main className={classes.project}>
-              <SuspenseWithBoundary>
-                <ProjectView />
-              </SuspenseWithBoundary>
-            </main>
-          )}
-        </div>
-      )}
+
+      <div className={classes.content}>
+        {currentProject ? (
+          <>
+            {navigationDisplayed && (
+              <aside className={classes.navigation}>
+                <ContentBox title="Navigation" PaperProps={{ className: classes.navigationBox }}>
+                  <BatchNavigation />
+                </ContentBox>
+              </aside>
+            )}
+            {projectViewDisplayed && (
+              <main className={classes.project}>
+                <SuspenseWithBoundary>
+                  <ProjectView />
+                </SuspenseWithBoundary>
+              </main>
+            )}
+          </>
+        ) : (
+          <Landing />
+        )}
+      </div>
     </>
   );
 };
