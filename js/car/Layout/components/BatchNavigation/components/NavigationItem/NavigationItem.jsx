@@ -8,6 +8,7 @@ import { IconComponent } from '../../../../../common/components/IconComponent';
 import classNames from 'classnames';
 import { useTemporaryId } from '../../../../../common/hooks/useTemporaryId';
 import { DeleteForever } from '@material-ui/icons';
+import { requestDeleteSubBatch } from '../../stores/deleteSubBatchDialogStore';
 
 const useStyles = makeStyles(theme => ({
   label: {
@@ -44,7 +45,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export const NavigationItem = ({ node, children, onDelete }) => {
+export const NavigationItem = ({ node, children }) => {
   const classes = useStyles();
 
   const { batch, children: subBatchNodes } = node;
@@ -77,7 +78,7 @@ export const NavigationItem = ({ node, children, onDelete }) => {
                     <Fab
                       className={classNames(classes.action, classes.button, classes.deleteButton)}
                       size="small"
-                      onClick={() => onDelete(batch)}
+                      onClick={() => requestDeleteSubBatch(batch)}
                     >
                       <DeleteForever className={classes.icon} fontSize="inherit" />
                     </Fab>

@@ -12,6 +12,9 @@ const otProtocolSummaryDialogStore = create(() => ({
 
 export const useOtProtocolSummaryDialogStore = createSelectorHooks(otProtocolSummaryDialogStore);
 
+export const requestOtProtocolSummary = otProtocol =>
+  useOtProtocolSummaryDialogStore.setState({ dialogOpen: true, otProtocol });
+
 export const setOtProtocolSummaryDialogOpen = dialogOpen => useOtProtocolSummaryDialogStore.setState({ dialogOpen });
 
 export const setOtProtocolForSummaryDialog = otProtocol => useOtProtocolSummaryDialogStore.setState({ otProtocol });

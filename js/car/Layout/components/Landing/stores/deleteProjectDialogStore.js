@@ -2,8 +2,7 @@ import create from 'zustand';
 import { createSelectorHooks } from 'auto-zustand-selectors-hook';
 
 /**
- * Stores the state of OT protocol summary dialog. You can open the dialog either from the navigation menu or through
- * a notification.
+ * Stores the state of delete project dialog. Provides a streamlined API.
  */
 const deleteProjectDialogStore = create(() => ({
   dialogOpen: false,

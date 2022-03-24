@@ -11,8 +11,7 @@ import {
 } from '../../../common/stores/otProtocolSummaryDialogStore';
 
 export const OTProtocolSummaryDialog = () => {
-  const dialogOpen = useOtProtocolSummaryDialogStore.useDialogOpen();
-  const otProtocol = useOtProtocolSummaryDialogStore.useOtProtocol();
+  const { dialogOpen, otProtocol } = useOtProtocolSummaryDialogStore();
 
   return (
     <CloseDialog

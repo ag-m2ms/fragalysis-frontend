@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useBatchTree } from '../../../common/hooks/useBatchTree';
-import { useDeleteBatch } from './hooks/useDeleteBatch';
 import { TreeView } from '@material-ui/lab';
 import { ChevronRight, ExpandMore } from '@material-ui/icons';
 import { NavigationItem } from './components/NavigationItem';
-import { makeStyles, Typography } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 import { setBatchesExpanded, useBatchNavigationStore } from '../../../common/stores/batchNavigationStore';
-import { ConfirmationDialog } from '../../../common/components/ConfirmationDialog';
+import { DeleteSubBatchDialog } from './components/DeleteSubBatchDialog';
 
 const useStyles = makeStyles(theme => ({
   icon: {
@@ -27,23 +26,11 @@ export const BatchNavigation = () => {
   const selected = useBatchNavigationStore(selectedBatchesIdsSelector);
   const expanded = useBatchNavigationStore.useExpanded();
 
-  const [batchToDelete, setBatchToDelete] = useState(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [okDisabled, setOkDisabled] = useState(false);
-  const { mutate: deleteBatch } = useDeleteBatch();
-
   const renderTree = node => {
     const { batch } = node;
 
     return (
-      <NavigationItem
-        key={batch.id}
-        node={node}
-        onDelete={batch => {
-          setBatchToDelete(batch);
-          setDialogOpen(true);
-        }}
-      >
+      <NavigationItem key={batch.id} node={node}>
         {Array.isArray(node.children) ? node.children.map(node => renderTree(node)) : null}
       </NavigationItem>
     );
@@ -63,30 +50,7 @@ export const BatchNavigation = () => {
         {batchTree.map(item => renderTree(item))}
       </TreeView>
 
-      <ConfirmationDialog
-        id="delete-subbatch-dialog"
-        open={dialogOpen}
-        title="Delete subbatch"
-        content={
-          <Typography>
-            Are you sure you want to delete batch <strong>{batchToDelete?.batch_tag}</strong>?
-          </Typography>
-        }
-        onClose={() => setDialogOpen(false)}
-        onOk={() => {
-          setOkDisabled(true);
-          deleteBatch({ batch: batchToDelete });
-          setDialogOpen(false);
-        }}
-        okDisabled={okDisabled}
-        TransitionProps={{
-          onExited: () => {
-            // Prevents batch name from suddenly disappearing when the dialog is closing
-            setBatchToDelete(null);
-            setOkDisabled(false);
-          }
-        }}
-      />
+      <DeleteSubBatchDialog />
     </>
   );
 };

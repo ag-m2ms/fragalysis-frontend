@@ -3,10 +3,7 @@ import { Button } from '@material-ui/core';
 import { CategoryMenu } from '../CategoryMenu';
 import { OTProtocolMenuContents } from '../OTProtocolMenuContents';
 import { OTProtocolSummaryDialog } from '../../../../../OTProtocol';
-import {
-  setOtProtocolForSummaryDialog,
-  setOtProtocolSummaryDialogOpen
-} from '../../../../../common/stores/otProtocolSummaryDialogStore';
+import { requestOtProtocolSummary } from '../../../../../common/stores/otProtocolSummaryDialogStore';
 
 export const OTProtocolHistoryButton = () => {
   const [menuAnchorEl, setMenuAnchorEl] = useState(null);
@@ -18,8 +15,7 @@ export const OTProtocolHistoryButton = () => {
         <OTProtocolMenuContents
           onSelected={otProtocol => {
             setMenuAnchorEl(null);
-            setOtProtocolForSummaryDialog(otProtocol);
-            setOtProtocolSummaryDialogOpen(true);
+            requestOtProtocolSummary(otProtocol);
           }}
         />
       </CategoryMenu>
