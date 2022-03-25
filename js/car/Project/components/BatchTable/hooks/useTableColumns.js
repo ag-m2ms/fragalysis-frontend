@@ -125,6 +125,17 @@ const filterByMethodPreferredReactantPrice = index =>
     return filterValue ? withinRange : !withinRange;
   });
 
+const formatPreferredVendorsString = vendors => {
+  if (vendors.length === 1) {
+    return vendors[0];
+  }
+
+  const lastVendor = vendors.at(-1);
+  const remainingVendors = vendors.slice(0, -1);
+
+  return `${remainingVendors.join(', ')} or ${lastVendor}`;
+};
+
 export const useTableColumns = maxNoSteps => {
   const classes = useStyles();
 
@@ -346,11 +357,11 @@ export const useTableColumns = maxNoSteps => {
           id: `reactant-vendor-step-${index}`,
           defaultCanFilter: true,
           filterOrder: 7,
-          Filter: ({ column: { filterValue, setFilter }, preFilteredFlatRows }) => {
+          Filter: ({ column: { filterValue, setFilter } }) => {
             return (
               <YesNoFilter
                 id={`reactant-vendor-${index + 1}-filter`}
-                label={`Preferred reactant vendor - step ${index + 1}`}
+                label={`Reactant vendor is ${formatPreferredVendorsString(PREFERRED_VENDORS)} - step ${index + 1}`}
                 filterValue={filterValue}
                 setFilter={setFilter}
               />
@@ -364,11 +375,11 @@ export const useTableColumns = maxNoSteps => {
           id: `reactant-leadtime-step-${index}`,
           defaultCanFilter: true,
           filterOrder: 8,
-          Filter: ({ column: { filterValue, setFilter }, preFilteredFlatRows }) => {
+          Filter: ({ column: { filterValue, setFilter } }) => {
             return (
               <YesNoFilter
                 id={`reactant-leadtime-${index + 1}-filter`}
-                label={`Preferred reactant lead time - step ${index + 1}`}
+                label={`Reactant lead time within ${PREFERRED_LEAD_TIME} weeks - step ${index + 1}`}
                 filterValue={filterValue}
                 setFilter={setFilter}
               />
@@ -382,11 +393,11 @@ export const useTableColumns = maxNoSteps => {
           id: `reactant-price-step-${index}`,
           defaultCanFilter: true,
           filterOrder: 9,
-          Filter: ({ column: { filterValue, setFilter }, preFilteredFlatRows }) => {
+          Filter: ({ column: { filterValue, setFilter } }) => {
             return (
               <YesNoFilter
                 id={`reactant-price-${index + 1}-filter`}
-                label={`Reactant price - step ${index + 1}`}
+                label={`Reactant price within ${PREFERRED_PRICE} - step ${index + 1}`}
                 filterValue={filterValue}
                 setFilter={setFilter}
               />
