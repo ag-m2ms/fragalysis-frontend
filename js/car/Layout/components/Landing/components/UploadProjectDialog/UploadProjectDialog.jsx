@@ -10,6 +10,17 @@ import { FormTextField } from '../../../../../common/components/FormTextField';
 import { FormRadioGroup } from '../../../../../common/components/FormRadioGroup';
 import { FormFilePicker } from '../../../../../common/components/FormFilePicker';
 
+const validationOptions = [
+  { value: '0', label: 'Validate' },
+  { value: '1', label: 'Upload' }
+];
+
+const apiOptions = [
+  { value: '0', label: 'Postera' },
+  { value: '1', label: 'Custom chemistry' },
+  { value: '2', label: 'Combi custom chemistry' }
+];
+
 export const UploadProjectDialog = ({ open, onClose }) => {
   const { mutate: uploadProject } = useUploadProject();
 
@@ -18,6 +29,7 @@ export const UploadProjectDialog = ({ open, onClose }) => {
       initialValues={{
         submitter_name: '',
         submitter_organisation: '',
+        protein_target: '',
         csv_file: null,
         validate_choice: '',
         API_choice: ''
@@ -35,15 +47,21 @@ export const UploadProjectDialog = ({ open, onClose }) => {
           .max(100, 'The name is too long')
           .matches(/^[a-zA-Z0-9\-_ ]+$/, 'The name can only include a-z, A-Z, 0-9, -, _ or space')
           .required('Required'),
+        protein_target: yup
+          .string()
+          .min(1, 'The name is too short')
+          .max(100, 'The name is too long')
+          .matches(/^[a-zA-Z0-9\-_ ]+$/, 'The name can only include a-z, A-Z, 0-9, -, _ or space')
+          .required('Required'),
         csv_file: yup.mixed().required('Required'),
         validate_choice: yup
           .string()
-          .oneOf(['0', '1'])
-          .required('Required'),
+          .oneOf(validationOptions.map(({ value }) => value))
+          .required('Select one of the choices'),
         API_choice: yup
           .string()
-          .oneOf(['0', '1', '2'])
-          .required('Required')
+          .oneOf(apiOptions.map(({ value }) => value))
+          .required('Select one of the choices')
       })}
       onSubmit={data => {
         console.log(data);
@@ -75,6 +93,12 @@ export const UploadProjectDialog = ({ open, onClose }) => {
                   placeholder="Your organisation (can include a-z, A-Z, 0-9, -, _ or space)"
                 />
 
+                <FormTextField
+                  name="protein_target"
+                  label="Protein target name"
+                  placeholder="Protein target name (can include a-z, A-Z, 0-9, -, _ or space)"
+                />
+
                 <FormFilePicker
                   name="csv_file"
                   label="Smiles file"
@@ -87,24 +111,9 @@ export const UploadProjectDialog = ({ open, onClose }) => {
                   accept="text/csv"
                 />
 
-                <FormRadioGroup
-                  name="validate_choice"
-                  label="Validate choice"
-                  options={[
-                    { value: '0', label: 'Validate' },
-                    { value: '1', label: 'Upload' }
-                  ]}
-                />
+                <FormRadioGroup name="validate_choice" label="Validate choice" options={validationOptions} />
 
-                <FormRadioGroup
-                  name="API_choice"
-                  label="API choice"
-                  options={[
-                    { value: '0', label: 'Postera' },
-                    { value: '1', label: 'Custom chemistry' },
-                    { value: '2', label: 'Combi custom chemistry' }
-                  ]}
-                />
+                <FormRadioGroup name="API_choice" label="API choice" options={apiOptions} />
               </DialogSection>
             </Form>
           }
