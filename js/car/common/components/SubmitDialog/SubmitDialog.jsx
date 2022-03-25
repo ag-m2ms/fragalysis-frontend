@@ -6,8 +6,10 @@ export const SubmitDialog = ({
   onClose,
   onCancel,
   cancelDisabled,
+  CancelButtonProps = {},
   onSubmit,
   submitDisabled,
+  SubmitButtonProps = {},
   id,
   title,
   content,
@@ -21,7 +23,7 @@ export const SubmitDialog = ({
         <Button autoFocus onClick={onCancel || onClose} color="primary" disabled={cancelDisabled}>
           Cancel
         </Button>
-        <Button onClick={onSubmit} color="primary" disabled={submitDisabled}>
+        <Button onClick={onSubmit} color="primary" disabled={submitDisabled} {...SubmitButtonProps}>
           Submit
         </Button>
       </DialogActions>

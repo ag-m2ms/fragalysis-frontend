@@ -47,7 +47,7 @@ export const CreateSubBatchDialog = ({ open, onClose, selectedMethodsIds }) => {
           open={open}
           title="Create subbatch"
           content={
-            <Form className={classes.form}>
+            <Form className={classes.form} id="create-subbatch-form">
               <DialogSection>
                 <DialogSectionHeading>Batch information</DialogSectionHeading>
                 <Typography>Please provide following information:</Typography>
@@ -70,6 +70,10 @@ export const CreateSubBatchDialog = ({ open, onClose, selectedMethodsIds }) => {
           onClose={onClose}
           onSubmit={submitForm}
           submitDisabled={isSubmitting}
+          SubmitButtonProps={{
+            type: 'submit',
+            form: 'create-subbatch-form'
+          }}
           TransitionProps={{
             onExited: () => {
               resetForm();

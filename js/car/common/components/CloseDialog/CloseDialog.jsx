@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@material-ui/core';
 
-export const CloseDialog = ({ open, onClose, id, title, content, ...other }) => {
+export const CloseDialog = ({ open, onClose, closeDisabled, CloseButtonProps = {}, id, title, content, ...other }) => {
   return (
     <Dialog aria-labelledby={id} open={open} {...other}>
       <DialogTitle id={id}>{title}</DialogTitle>
@@ -9,7 +9,7 @@ export const CloseDialog = ({ open, onClose, id, title, content, ...other }) => 
         <Typography>{content}</Typography>
       </DialogContent>
       <DialogActions>
-        <Button autoFocus onClick={onClose} color="primary">
+        <Button autoFocus onClick={onClose} color="primary" disabled={closeDisabled} {...CloseButtonProps}>
           Close
         </Button>
       </DialogActions>

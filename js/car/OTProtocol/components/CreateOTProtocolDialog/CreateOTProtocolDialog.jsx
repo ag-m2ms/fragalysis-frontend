@@ -1,12 +1,12 @@
 import React from 'react';
 import { SubmitDialog } from '../../../common/components/SubmitDialog';
 import { Typography } from '@material-ui/core';
-import { BatchSelector } from './components/BatchSelector';
 import { useCreateOTProtocol } from './hooks/useCreateOTProtocol';
 import { DialogSection } from '../../../common/components/DialogSection';
 import { DialogSectionHeading } from '../../../common/components/DialogSectionHeading';
 import { Form, Formik } from 'formik';
 import * as yup from 'yup';
+import { FormBatchSelector } from './components/FormBatchSelector';
 
 export const CreateOTProtocolDialog = ({ open, onClose }) => {
   const { mutate: createOTProtocol } = useCreateOTProtocol();
@@ -37,17 +37,21 @@ export const CreateOTProtocolDialog = ({ open, onClose }) => {
           open={open}
           title="Create OT protocol"
           content={
-            <Form>
+            <Form id="create-ot-protocol-form">
               <DialogSection>
                 <DialogSectionHeading>Batches</DialogSectionHeading>
                 <Typography>Please select batches for OT protocol:</Typography>
-                <BatchSelector name="selectedBatchesMap" label="Batch selector" />
+                <FormBatchSelector name="selectedBatchesMap" label="Batch selector" />
               </DialogSection>
             </Form>
           }
           onClose={onClose}
           onSubmit={submitForm}
           submitDisabled={isSubmitting}
+          SubmitButtonProps={{
+            type: 'submit',
+            form: 'create-ot-protocol-form'
+          }}
           TransitionProps={{
             onExited: () => {
               resetForm();

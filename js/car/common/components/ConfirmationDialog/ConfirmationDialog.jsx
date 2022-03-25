@@ -6,8 +6,10 @@ export const ConfirmationDialog = ({
   onClose,
   onCancel,
   cancelDisabled,
+  CancelButtonProps = {},
   onOk,
   okDisabled,
+  OkButtonProps = {},
   id,
   title,
   content,
@@ -18,10 +20,16 @@ export const ConfirmationDialog = ({
       <DialogTitle id={id}>{title}</DialogTitle>
       <DialogContent dividers>{content}</DialogContent>
       <DialogActions>
-        <Button autoFocus onClick={onCancel || onClose} disabled={cancelDisabled} color="primary">
+        <Button
+          autoFocus
+          onClick={onCancel || onClose}
+          disabled={cancelDisabled}
+          color="primary"
+          {...CancelButtonProps}
+        >
           Cancel
         </Button>
-        <Button onClick={onOk} disabled={okDisabled} color="primary">
+        <Button onClick={onOk} disabled={okDisabled} color="primary" {...OkButtonProps}>
           Ok
         </Button>
       </DialogActions>

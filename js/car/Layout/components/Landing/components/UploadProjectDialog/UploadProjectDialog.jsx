@@ -58,7 +58,7 @@ export const UploadProjectDialog = ({ open, onClose }) => {
           open={open}
           title="Upload new project"
           content={
-            <Form>
+            <Form id="upload-project-form">
               <DialogSection>
                 <DialogSectionHeading>Project information</DialogSectionHeading>
                 <Typography>Please provide following information:</Typography>
@@ -113,6 +113,10 @@ export const UploadProjectDialog = ({ open, onClose }) => {
           }}
           onSubmit={submitForm}
           submitDisabled={isSubmitting}
+          SubmitButtonProps={{
+            type: 'submit',
+            form: 'upload-project-form'
+          }}
           TransitionProps={{
             onExited: () => {
               resetForm();
