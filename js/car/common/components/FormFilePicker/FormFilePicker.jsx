@@ -1,5 +1,5 @@
 import React from 'react';
-import { ErrorMessage, useFormikContext } from 'formik';
+import { ErrorMessage, useField } from 'formik';
 import { Button, FormControl, FormHelperText, FormLabel, makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
@@ -11,10 +11,10 @@ const useStyles = makeStyles(theme => ({
 export const FormFilePicker = ({ name, label, description, id, buttonText, accept }) => {
   const classes = useStyles();
 
-  const { setFieldValue, setFieldTouched, values } = useFormikContext();
+  const [field, meta, helpers] = useField(name);
 
   return (
-    <FormControl>
+    <FormControl variant="filled" error={meta.touched && !!meta.error}>
       <FormLabel>{label}</FormLabel>
       {description}
       <input
@@ -24,20 +24,21 @@ export const FormFilePicker = ({ name, label, description, id, buttonText, accep
         type="file"
         onChange={event => {
           const file = event.target.files[0];
-          setFieldValue(name, file || null, true);
-          // Without timeout the setFieldTouched would execute sooner than setFieldValue
+          helpers.setValue(file || null);
+          // Without timeout the setTouched would execute sooner than setValue
           setTimeout(() => {
-            setFieldTouched(name);
+            helpers.setTouched();
           });
         }}
+        onBlur={() => helpers.setTouched()}
       />
       <label htmlFor={id}>
         <Button variant="contained" color="primary" component="span" fullWidth>
           {buttonText ?? 'Select file'}
         </Button>
       </label>
-      <ErrorMessage name={name}>{msg => <FormHelperText error={true}>{msg}</FormHelperText>}</ErrorMessage>
-      {!!values[name] && <FormHelperText>{values[name]?.name}</FormHelperText>}
+      <ErrorMessage name={name}>{error => <FormHelperText error={true}>{error}</FormHelperText>}</ErrorMessage>
+      {!!field.value && <FormHelperText>{field.value?.name}</FormHelperText>}
     </FormControl>
   );
 };

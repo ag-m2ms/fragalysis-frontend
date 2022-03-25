@@ -52,7 +52,7 @@ export const UploadProjectDialog = ({ open, onClose }) => {
       }}
       validateOnMount
     >
-      {({ submitForm, isValid, isSubmitting, resetForm }) => (
+      {({ submitForm, isSubmitting, resetForm }) => (
         <SubmitDialog
           id="upload-project-dialog"
           open={open}
@@ -112,7 +112,7 @@ export const UploadProjectDialog = ({ open, onClose }) => {
             onClose();
           }}
           onSubmit={submitForm}
-          submitDisabled={isSubmitting || !isValid}
+          submitDisabled={isSubmitting}
           TransitionProps={{
             onExited: () => {
               resetForm();

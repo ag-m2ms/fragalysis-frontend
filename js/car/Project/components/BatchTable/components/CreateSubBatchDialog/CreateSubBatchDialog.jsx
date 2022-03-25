@@ -41,7 +41,7 @@ export const CreateSubBatchDialog = ({ open, onClose, selectedMethodsIds }) => {
       }}
       validateOnMount
     >
-      {({ submitForm, isValid, isSubmitting, resetForm }) => (
+      {({ submitForm, isSubmitting, resetForm }) => (
         <SubmitDialog
           id="create-subbatch-dialog"
           open={open}
@@ -69,7 +69,7 @@ export const CreateSubBatchDialog = ({ open, onClose, selectedMethodsIds }) => {
           }
           onClose={onClose}
           onSubmit={submitForm}
-          submitDisabled={isSubmitting || !isValid}
+          submitDisabled={isSubmitting}
           TransitionProps={{
             onExited: () => {
               resetForm();

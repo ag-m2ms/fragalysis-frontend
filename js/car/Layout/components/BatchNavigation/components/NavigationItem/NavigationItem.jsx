@@ -105,6 +105,7 @@ export const NavigationItem = ({ node, children }) => {
                     className={classes.action}
                     onClick={e => e.stopPropagation()}
                     onChange={(_, checked) => setBatchSelected(batch.id, checked)}
+                    inputProps={{ 'aria-label': batch.batch_tag }}
                   />
                 </Tooltip>
               </>

@@ -10,8 +10,8 @@ const useStyles = makeStyles(theme => ({
   deleteButton: {
     color: theme.palette.error.main,
     minHeight: 'unset',
-    width: theme.spacing(4),
-    height: theme.spacing(4),
+    width: 36,
+    height: 36,
     boxShadow: 'none !important'
   }
 }));

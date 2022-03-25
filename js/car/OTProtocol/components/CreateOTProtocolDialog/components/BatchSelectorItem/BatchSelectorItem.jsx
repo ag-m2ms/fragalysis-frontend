@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export const SelectorItem = ({ batch, children, selected, onSelect }) => {
+export const BatchSelectorItem = ({ batch, children, selected, onSelect }) => {
   const classes = useStyles();
 
   return (
@@ -37,6 +37,7 @@ export const SelectorItem = ({ batch, children, selected, onSelect }) => {
               className={classes.action}
               onClick={e => e.stopPropagation()}
               onChange={(_, checked) => onSelect(batch.id, checked)}
+              inputProps={{ 'aria-label': batch.batch_tag }}
             />
           </Tooltip>
         </>

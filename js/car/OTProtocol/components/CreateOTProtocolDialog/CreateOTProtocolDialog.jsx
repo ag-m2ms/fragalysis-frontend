@@ -1,56 +1,60 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { SubmitDialog } from '../../../common/components/SubmitDialog';
-import { SuspenseWithBoundary } from '../../../common/components/SuspenseWithBoundary';
 import { Typography } from '@material-ui/core';
-import { BatchSelector } from '../BatchSelector';
-import { OTWarningSection } from './components/OTWarningSection';
+import { BatchSelector } from './components/BatchSelector';
 import { useCreateOTProtocol } from './hooks/useCreateOTProtocol';
 import { DialogSection } from '../../../common/components/DialogSection';
 import { DialogSectionHeading } from '../../../common/components/DialogSectionHeading';
+import { Form, Formik } from 'formik';
+import * as yup from 'yup';
 
 export const CreateOTProtocolDialog = ({ open, onClose }) => {
-  const [selectedBatchesMap, setSelectedBatchesMap] = useState({});
-  const selectedBatchesIds = Object.entries(selectedBatchesMap)
-    .filter(([_, value]) => value)
-    .map(([key]) => Number(key));
-
   const { mutate: createOTProtocol } = useCreateOTProtocol();
-  const [submitDisabled, setSubmitDisabled] = useState(false);
 
   return (
-    <SubmitDialog
-      id="create-ot-protocol-dialog"
-      open={open}
-      title="Create OT protocol"
-      content={
-        <DialogSection>
-          <DialogSectionHeading>Batches</DialogSectionHeading>
-          <Typography>Please select batches for OT protocol:</Typography>
-          <SuspenseWithBoundary>
-            <BatchSelector
-              selectedBatchesMap={selectedBatchesMap}
-              onBatchSelect={(batchId, selected) => {
-                setSelectedBatchesMap(prevSelected => ({ ...prevSelected, [batchId]: selected }));
-              }}
-            />
-            <OTWarningSection selectedBatchesMap={selectedBatchesMap} />
-          </SuspenseWithBoundary>
-        </DialogSection>
-      }
-      onClose={onClose}
-      onSubmit={() => {
-        setSubmitDisabled(true);
+    <Formik
+      initialValues={{
+        selectedBatchesMap: {}
+      }}
+      validationSchema={yup.object().shape({
+        selectedBatchesMap: yup
+          .object()
+          .test('one-or-more-selected', 'Select at least one batch', value => Object.values(value).some(val => val))
+      })}
+      onSubmit={({ selectedBatchesMap }) => {
+        const selectedBatchesIds = Object.entries(selectedBatchesMap)
+          .filter(([_, value]) => value)
+          .map(([key]) => Number(key));
+
         createOTProtocol({ batchids: selectedBatchesIds });
         onClose();
       }}
-      submitDisabled={!Object.entries(selectedBatchesMap).length || submitDisabled}
-      TransitionProps={{
-        onExited: () => {
-          // Clear the selection when dialog closes
-          setSelectedBatchesMap({});
-          setSubmitDisabled(false);
-        }
-      }}
-    />
+      validateOnMount
+    >
+      {({ submitForm, isSubmitting, resetForm }) => (
+        <SubmitDialog
+          id="create-ot-protocol-dialog"
+          open={open}
+          title="Create OT protocol"
+          content={
+            <Form>
+              <DialogSection>
+                <DialogSectionHeading>Batches</DialogSectionHeading>
+                <Typography>Please select batches for OT protocol:</Typography>
+                <BatchSelector name="selectedBatchesMap" label="Batch selector" />
+              </DialogSection>
+            </Form>
+          }
+          onClose={onClose}
+          onSubmit={submitForm}
+          submitDisabled={isSubmitting}
+          TransitionProps={{
+            onExited: () => {
+              resetForm();
+            }
+          }}
+        />
+      )}
+    </Formik>
   );
 };
