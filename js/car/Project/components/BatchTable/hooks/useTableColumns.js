@@ -8,11 +8,7 @@ import { ImSad, ImSmile } from 'react-icons/im';
 import { useSynthesiseMethod } from './useSynthesiseMethod';
 import { useAdjustReactionSuccessRate } from './useAdjustReactionSuccessRate';
 import { AutocompleteFilter } from '../components/AutocompleteFilter';
-import {
-  createTableMethodAutocompleteFilter,
-  createTableMethodYesNoFilter,
-  createTableMethodRangeFilter
-} from '../utils/createTableMethodFilters';
+import { createTableMethodAutocompleteFilter, createTableMethodYesNoFilter } from '../utils/createTableMethodFilters';
 import {
   createTableTargetAutocompleteFilter,
   createTableTargetRangeFilter,
@@ -41,6 +37,10 @@ const useStyles = makeStyles(theme => ({
     lineHeight: 1
   }
 }));
+
+const PREFERRED_VENDORS = ['mcule'];
+const PREFERRED_LEAD_TIME = 4;
+const PREFERRED_PRICE = 200;
 
 const filterByMethodReactionName = createTableMethodAutocompleteFilter((row, ids, filterValue) =>
   filterValue.includes(row.values[ids[0]])
@@ -71,36 +71,58 @@ const filterByTargetPrice = createTableTargetRangeFilter((row, ids, filterValue)
   return prices.some(price => price >= min && price <= max);
 });
 
-const filterByMethodReactantVendor = index =>
-  createTableMethodAutocompleteFilter((row, ids, filterValue) => {
-    const vendors = (
-      row.original.reactions?.[index]?.reactants?.map(({ catalogentries }) =>
-        catalogentries?.map(({ vendor }) => vendor)
-      ) || []
-    ).flat(2);
-    return filterValue.some(value => vendors.includes(value));
+const filterByMethodPreferredReactantVendor = index =>
+  createTableMethodYesNoFilter((row, ids, filterValue) => {
+    const reactantVendors1 =
+      row.original.reactions?.[index]?.reactants?.[0].catalogentries?.map(({ vendor }) => vendor) || [];
+    const reactantVendors2 =
+      row.original.reactions?.[index]?.reactants?.[1].catalogentries?.map(({ vendor }) => vendor) || [];
+
+    const presentInBoth =
+      reactantVendors1.some(vendor => PREFERRED_VENDORS.includes(vendor)) &&
+      reactantVendors2.some(vendor => PREFERRED_VENDORS.includes(vendor));
+
+    return filterValue ? presentInBoth : !presentInBoth;
   });
 
-const filterByMethodReactantLeadTime = index =>
-  createTableMethodRangeFilter((row, ids, filterValue) => {
-    const leadTimes = (
-      row.original.reactions?.[index]?.reactants?.map(({ catalogentries }) =>
-        catalogentries?.map(({ leadtime }) => leadtime)
-      ) || []
-    ).flat(2);
-    const [min, max] = filterValue;
-    return leadTimes.some(leadTime => leadTime >= min && leadTime <= max);
+const filterByMethodPreferredReactantLeadTime = index =>
+  createTableMethodYesNoFilter((row, ids, filterValue) => {
+    const reactantLeadTimes1 =
+      row.original.reactions?.[index]?.reactants?.[0]?.catalogentries?.map(({ leadtime }) => leadtime) || [];
+    const reactantLeadTimes2 =
+      row.original.reactions?.[index]?.reactants?.[1]?.catalogentries?.map(({ leadtime }) => leadtime) || [];
+
+    if (!reactantLeadTimes1.length || !reactantLeadTimes2.length) {
+      return !filterValue;
+    }
+
+    const minimalLeadTime1 = Math.min(...reactantLeadTimes1);
+    const minimalLeadTime2 = Math.min(...reactantLeadTimes2);
+    const sum = minimalLeadTime1 + minimalLeadTime2;
+
+    const withinRange = sum <= PREFERRED_LEAD_TIME;
+
+    return filterValue ? withinRange : !withinRange;
   });
 
-const filterByMethodReactantPrice = index =>
-  createTableMethodRangeFilter((row, ids, filterValue) => {
-    const prices = (
-      row.original.reactions?.[index]?.reactants?.map(({ catalogentries }) =>
-        catalogentries?.map(({ upperprice }) => upperprice)
-      ) || []
-    ).flat(2);
-    const [min, max] = filterValue;
-    return prices.some(price => price >= min && price <= max);
+const filterByMethodPreferredReactantPrice = index =>
+  createTableMethodYesNoFilter((row, ids, filterValue) => {
+    const reactantPrices1 =
+      row.original.reactions?.[index]?.reactants?.[0]?.catalogentries?.map(({ upperprice }) => upperprice) || [];
+    const reactantPrices2 =
+      row.original.reactions?.[index]?.reactants?.[1]?.catalogentries?.map(({ upperprice }) => upperprice) || [];
+
+    if (!reactantPrices1.length || !reactantPrices2.length) {
+      return !filterValue;
+    }
+
+    const minimalPrice1 = Math.min(...reactantPrices1);
+    const minimalPrice2 = Math.min(...reactantPrices2);
+    const sum = minimalPrice1 + minimalPrice2;
+
+    const withinRange = sum <= PREFERRED_PRICE;
+
+    return filterValue ? withinRange : !withinRange;
   });
 
 export const useTableColumns = maxNoSteps => {
@@ -110,14 +132,14 @@ export const useTableColumns = maxNoSteps => {
   const { mutate: adjustReactionSuccessRate } = useAdjustReactionSuccessRate();
 
   // Since filter functions should be memoized, we can't call them directly
-  const reactantVendorFilters = useMemo(() => {
-    return new Array(maxNoSteps).fill(0).map((_, index) => filterByMethodReactantVendor(index));
+  const preferredReactantVendorFilters = useMemo(() => {
+    return new Array(maxNoSteps).fill(0).map((_, index) => filterByMethodPreferredReactantVendor(index));
   }, [maxNoSteps]);
-  const reactantLeadTimeFilters = useMemo(() => {
-    return new Array(maxNoSteps).fill(0).map((_, index) => filterByMethodReactantLeadTime(index));
+  const preferredReactantLeadTimeFilters = useMemo(() => {
+    return new Array(maxNoSteps).fill(0).map((_, index) => filterByMethodPreferredReactantLeadTime(index));
   }, [maxNoSteps]);
-  const reactantPriceFilters = useMemo(() => {
-    return new Array(maxNoSteps).fill(0).map((_, index) => filterByMethodReactantPrice(index));
+  const preferredReactantPriceFilters = useMemo(() => {
+    return new Array(maxNoSteps).fill(0).map((_, index) => filterByMethodPreferredReactantPrice(index));
   }, [maxNoSteps]);
 
   const columns = useMemo(() => {
@@ -326,29 +348,15 @@ export const useTableColumns = maxNoSteps => {
           filterOrder: 7,
           Filter: ({ column: { filterValue, setFilter }, preFilteredFlatRows }) => {
             return (
-              <AutocompleteFilter
+              <YesNoFilter
                 id={`reactant-vendor-${index + 1}-filter`}
-                options={[
-                  ...new Set(
-                    preFilteredFlatRows
-                      .filter(row => row.depth === 1)
-                      .map(row =>
-                        row.original.reactions?.[index]?.reactants.map(({ catalogentries }) =>
-                          catalogentries.map(({ vendor }) => vendor)
-                        )
-                      )
-                      .flat(2)
-                      .filter(vendor => !!vendor)
-                  )
-                ].sort()}
-                label={`Reactant vendor - step ${index + 1}`}
-                placeholder="Reactant vendor"
+                label={`Preferred reactant vendor - step ${index + 1}`}
                 filterValue={filterValue}
                 setFilter={setFilter}
               />
             );
           },
-          filter: reactantVendorFilters[index]
+          filter: preferredReactantVendorFilters[index]
         };
       }),
       ...new Array(maxNoSteps).fill(0).map((_, index) => {
@@ -357,28 +365,16 @@ export const useTableColumns = maxNoSteps => {
           defaultCanFilter: true,
           filterOrder: 8,
           Filter: ({ column: { filterValue, setFilter }, preFilteredFlatRows }) => {
-            const leadTimes = preFilteredFlatRows
-              .filter(row => row.depth === 1)
-              .map(row =>
-                row.original.reactions?.[index]?.reactants.map(({ catalogentries }) =>
-                  catalogentries.map(({ leadtime }) => leadtime)
-                )
-              )
-              .flat(2)
-              .filter(leadTime => Number.isFinite(leadTime));
-
             return (
-              <RangeFilter
+              <YesNoFilter
                 id={`reactant-leadtime-${index + 1}-filter`}
-                label={`Reactant lead time - step ${index + 1}`}
-                min={Math.min(...leadTimes)}
-                max={Math.max(...leadTimes)}
+                label={`Preferred reactant lead time - step ${index + 1}`}
                 filterValue={filterValue}
                 setFilter={setFilter}
               />
             );
           },
-          filter: reactantLeadTimeFilters[index]
+          filter: preferredReactantLeadTimeFilters[index]
         };
       }),
       ...new Array(maxNoSteps).fill(0).map((_, index) => {
@@ -387,28 +383,16 @@ export const useTableColumns = maxNoSteps => {
           defaultCanFilter: true,
           filterOrder: 9,
           Filter: ({ column: { filterValue, setFilter }, preFilteredFlatRows }) => {
-            const prices = preFilteredFlatRows
-              .filter(row => row.depth === 1)
-              .map(row =>
-                row.original.reactions?.[index]?.reactants.map(({ catalogentries }) =>
-                  catalogentries.map(({ upperprice }) => upperprice)
-                )
-              )
-              .flat(2)
-              .filter(price => Number.isFinite(price));
-
             return (
-              <RangeFilter
+              <YesNoFilter
                 id={`reactant-price-${index + 1}-filter`}
                 label={`Reactant price - step ${index + 1}`}
-                min={Math.min(...prices)}
-                max={Math.max(...prices)}
                 filterValue={filterValue}
                 setFilter={setFilter}
               />
             );
           },
-          filter: reactantPriceFilters[index]
+          filter: preferredReactantPriceFilters[index]
         };
       })
     ];
@@ -420,9 +404,9 @@ export const useTableColumns = maxNoSteps => {
     classes.reactionNameWrapper,
     synthesiseMethod,
     adjustReactionSuccessRate,
-    reactantVendorFilters,
-    reactantLeadTimeFilters,
-    reactantPriceFilters
+    preferredReactantVendorFilters,
+    preferredReactantLeadTimeFilters,
+    preferredReactantPriceFilters
   ]);
 
   return columns;
