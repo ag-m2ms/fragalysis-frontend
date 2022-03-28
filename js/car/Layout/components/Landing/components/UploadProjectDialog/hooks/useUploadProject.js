@@ -1,11 +1,11 @@
 import React from 'react';
 import { useMutation } from 'react-query';
-import { createOTProtocolKey, getOTTaskStatusQueryKey } from '../../../../../../common/api/otSessionQueryKeys';
 import { axiosPost } from '../../../../../../common/utils/axiosFunctions';
 import { addCeleryTask } from '../../../../../../common/stores/celeryTasksStore';
 import { HideNotificationButton } from '../../../../../../common/components/HideNotificationButton/HideNotificationButton';
 import { scopes } from '../../../../../../common/constants/scopes';
 import { useSnackbar } from 'notistack';
+import { getProjectUploadTaskStatusQueryKey, uploadProjectKey } from '../../../../../../common/api/projectsQueryKeys';
 
 export const useUploadProject = () => {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -16,7 +16,7 @@ export const useUploadProject = () => {
       Object.entries(data).forEach(([key, value]) => {
         formData.append(key, value);
       });
-      return axiosPost('/car/upload/createproject/', formData, { baseURL: '/' });
+      return axiosPost(uploadProjectKey(), formData);
     },
     {
       onMutate: async () => {
@@ -33,7 +33,7 @@ export const useUploadProject = () => {
         const { task_id } = response;
 
         addCeleryTask(task_id, {
-          queryKey: getOTTaskStatusQueryKey({ task_id }),
+          queryKey: getProjectUploadTaskStatusQueryKey({ task_id }),
           scope: scopes.GLOBAL,
           onSuccess: todo => {
             closeSnackbar(creatingMessageId);
