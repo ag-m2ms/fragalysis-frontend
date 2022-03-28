@@ -22,7 +22,10 @@ export const CeleryTask = ({ task }) => {
         }
       }
     },
-    onError: err => onError(err)
+    onError: err => {
+      removeCeleryTask(id);
+      onError(err);
+    }
   });
 
   return null;
