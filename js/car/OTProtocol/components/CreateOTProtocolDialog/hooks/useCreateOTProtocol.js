@@ -46,6 +46,11 @@ export const useCreateOTProtocol = () => {
                 </>
               )
             });
+          },
+          onError: err => {
+            const message = err.traceback ?? err.message;
+            console.error(message);
+            enqueueSnackbar(message, { variant: 'error' });
           }
         });
       }

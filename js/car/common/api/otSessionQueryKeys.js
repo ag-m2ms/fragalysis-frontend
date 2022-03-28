@@ -1,3 +1,3 @@
-export const createOTProtocolKey = () => '/otsessions/createotprotocol/';
+export const createOTProtocolKey = () => '/otbatchprotocols/createotprotocol/';
 
-export const getOTTaskStatusQueryKey = params => ['/otsessions/gettaskstatus/', params];
+export const getOTTaskStatusQueryKey = params => ['/otbatchprotocols/gettaskstatus/', params];

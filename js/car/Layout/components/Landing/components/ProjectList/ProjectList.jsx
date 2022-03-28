@@ -24,23 +24,27 @@ export const ProjectList = () => {
   return (
     <>
       <List>
-        {projects?.map(project => (
-          <ListItem key={project.id} onClick={() => setCurrentProject(project)} button>
-            <ListItemText primary={project.name} />
-            <ListItemSecondaryAction>
-              <Tooltip title="Delete project">
-                <Fab
-                  className={classes.deleteButton}
-                  onClick={() => requestDeleteProject(project)}
-                  edge="end"
-                  aria-label="delete-project"
-                >
-                  <DeleteForever />
-                </Fab>
-              </Tooltip>
-            </ListItemSecondaryAction>
-          </ListItem>
-        ))}
+        {!!projects?.length ? (
+          projects.map(project => (
+            <ListItem key={project.id} onClick={() => setCurrentProject(project)} button>
+              <ListItemText primary={project.name} />
+              <ListItemSecondaryAction>
+                <Tooltip title="Delete project">
+                  <Fab
+                    className={classes.deleteButton}
+                    onClick={() => requestDeleteProject(project)}
+                    edge="end"
+                    aria-label="delete-project"
+                  >
+                    <DeleteForever />
+                  </Fab>
+                </Tooltip>
+              </ListItemSecondaryAction>
+            </ListItem>
+          ))
+        ) : (
+          <ListItem>There are no projects</ListItem>
+        )}
       </List>
 
       <DeleteProjectDialog />

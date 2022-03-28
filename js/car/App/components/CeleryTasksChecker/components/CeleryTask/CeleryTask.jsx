@@ -13,9 +13,10 @@ export const CeleryTask = ({ task }) => {
         case 'SUCCESS': {
           removeCeleryTask(id);
           onSuccess(rest);
-          break; //traceback
+          break;
         }
         case 'FAILURE': {
+          removeCeleryTask(id);
           onError(rest);
           break;
         }
