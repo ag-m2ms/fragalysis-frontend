@@ -65,7 +65,7 @@ export const UploadProjectDialog = ({ open, onClose }) => {
       })}
       onSubmit={data => {
         console.log(data);
-        //uploadProject({ data });
+        uploadProject({ data });
         onClose();
       }}
       validateOnMount

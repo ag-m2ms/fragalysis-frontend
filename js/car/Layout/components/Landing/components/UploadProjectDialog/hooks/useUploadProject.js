@@ -16,7 +16,7 @@ export const useUploadProject = () => {
       Object.entries(data).forEach(([key, value]) => {
         formData.append(key, value);
       });
-      return axiosPost('/car/upload/', formData, { baseURL: '/' });
+      return axiosPost('/car/upload/createproject/', formData, { baseURL: '/' });
     },
     {
       onMutate: async () => {
