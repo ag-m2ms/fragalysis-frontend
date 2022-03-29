@@ -9,9 +9,10 @@ import {
   setOtProtocolSummaryDialogOpen,
   useOtProtocolSummaryDialogStore
 } from '../../../common/stores/otProtocolSummaryDialogStore';
+import { BatchProtocolList } from './components/BatchProtocolList';
 
 export const OTProtocolSummaryDialog = () => {
-  const { dialogOpen, otProtocol } = useOtProtocolSummaryDialogStore();
+  const { dialogOpen, taskId } = useOtProtocolSummaryDialogStore();
 
   return (
     <CloseDialog
@@ -24,7 +25,9 @@ export const OTProtocolSummaryDialog = () => {
           <Typography>
             This is a list of batches for which OT protocols have been generated with download links:
           </Typography>
-          <SuspenseWithBoundary></SuspenseWithBoundary>
+          <SuspenseWithBoundary>
+            <BatchProtocolList taskId={taskId} />
+          </SuspenseWithBoundary>
         </DialogSection>
       }
       onClose={() => {

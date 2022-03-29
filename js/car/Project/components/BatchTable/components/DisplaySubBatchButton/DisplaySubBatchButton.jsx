@@ -1,6 +1,6 @@
-import { Button, makeStyles } from '@material-ui/core';
-import { useSnackbar } from 'notistack';
 import React, { useEffect, useRef } from 'react';
+import { useSnackbar } from 'notistack';
+import { SnackbarButton } from '../../../../../common/components/SnackbarButton';
 import {
   setBatchesExpanded,
   setBatchSelected,
@@ -8,15 +8,7 @@ import {
 } from '../../../../../common/stores/batchNavigationStore';
 import { useBatchViewsRefs } from '../../../../../common/stores/batchViewsRefsStore';
 
-const useStyles = makeStyles(theme => ({
-  button: {
-    color: theme.palette.primary.contrastText
-  }
-}));
-
 export const DisplaySubBatchButton = ({ batches, messageId, batchId }) => {
-  const classes = useStyles();
-
   const expanded = useBatchNavigationStore.useExpanded();
 
   // Stores the zustand subscription
@@ -34,10 +26,7 @@ export const DisplaySubBatchButton = ({ batches, messageId, batchId }) => {
   }, []);
 
   return (
-    <Button
-      className={classes.button}
-      variant="outlined"
-      color="inherit"
+    <SnackbarButton
       onClick={() => {
         // Expand the path to the subbatch recursively
         const newExpanded = new Set(expanded);
@@ -74,6 +63,6 @@ export const DisplaySubBatchButton = ({ batches, messageId, batchId }) => {
       }}
     >
       Show subbatch
-    </Button>
+    </SnackbarButton>
   );
 };
