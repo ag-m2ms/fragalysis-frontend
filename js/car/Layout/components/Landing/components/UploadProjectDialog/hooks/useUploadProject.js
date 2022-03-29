@@ -44,11 +44,12 @@ export const useUploadProject = () => {
           scope: scopes.GLOBAL,
           onSuccess: async ({ project_id }) => {
             // Load the projects again first, its used to navigate to the project in the ShowProjectButton component
-            await queryClient.invalidateQueries(getProjectsQueryKey());
+            await queryClient.refetchQueries(getProjectsQueryKey());
 
             // Get the project from the freshly fetched data
             const projects = queryClient.getQueryData(getProjectsQueryKey());
-            const project = projects.find(project => project.id === project_id);
+            // Refetch may fail, in that case, don't display the Show Project button
+            const project = projects?.find(project => project.id === project_id);
 
             closeSnackbar(creatingMessageId);
 
@@ -57,7 +58,7 @@ export const useUploadProject = () => {
               autoHideDuration: null,
               action: key => (
                 <>
-                  <ShowProjectButton messageId={key} project={project} />
+                  {project && <ShowProjectButton messageId={key} project={project} />}
                   <HideNotificationButton messageId={key} />
                 </>
               )

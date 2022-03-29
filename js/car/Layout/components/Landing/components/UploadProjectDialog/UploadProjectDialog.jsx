@@ -64,7 +64,6 @@ export const UploadProjectDialog = ({ open, onClose }) => {
           .required('Select one of the choices')
       })}
       onSubmit={data => {
-        console.log(data);
         uploadProject({ data });
         onClose();
       }}
