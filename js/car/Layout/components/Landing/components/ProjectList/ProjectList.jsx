@@ -1,10 +1,10 @@
 import { Fab, List, ListItem, ListItemSecondaryAction, ListItemText, makeStyles, Tooltip } from '@material-ui/core';
 import { DeleteForever } from '@material-ui/icons';
 import React from 'react';
-import { useGetProjects } from '../../../../../common/hooks/useGetProjects';
+import { requestDeleteProject } from '../../../../stores/deleteProjectDialogStore';
+import { DeleteProjectDialog } from '../../../DeleteProjectDialog';
 import { setCurrentProject } from '../../../../../common/stores/currentProjectStore';
-import { requestDeleteProject } from '../../stores/deleteProjectDialogStore';
-import { DeleteProjectDialog } from '../DeleteProjectDialog/DeleteProjectDialog';
+import { useGetProjects } from '../../../../../common/hooks/useGetProjects';
 
 const useStyles = makeStyles(theme => ({
   deleteButton: {

@@ -5,7 +5,7 @@ import { ChevronRight, ExpandMore } from '@material-ui/icons';
 import { NavigationItem } from './components/NavigationItem';
 import { makeStyles } from '@material-ui/core';
 import { setBatchesExpanded, useBatchNavigationStore } from '../../../common/stores/batchNavigationStore';
-import { DeleteSubBatchDialog } from './components/DeleteSubBatchDialog';
+import { DeleteSubBatchDialog } from '../DeleteSubBatchDialog';
 
 const useStyles = makeStyles(theme => ({
   icon: {

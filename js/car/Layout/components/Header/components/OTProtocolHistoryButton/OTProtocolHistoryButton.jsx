@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Button } from '@material-ui/core';
 import { CategoryMenu } from '../CategoryMenu';
 import { OTProtocolMenuContents } from '../OTProtocolMenuContents';
-import { OTProtocolSummaryDialog } from '../../../../../OTProtocol';
-import { requestOtProtocolSummary } from '../../../../../common/stores/otProtocolSummaryDialogStore';
+import { requestOtProtocolSummary } from '../../../../stores/otProtocolSummaryDialogStore';
+import { OTProtocolSummaryDialog } from '../../../OTProtocolSummaryDialog';
 
 export const OTProtocolHistoryButton = () => {
   const [menuAnchorEl, setMenuAnchorEl] = useState(null);

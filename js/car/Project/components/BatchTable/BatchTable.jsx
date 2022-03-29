@@ -15,10 +15,10 @@ import { useTable, useSortBy, useExpanded, useRowSelect, useFilters } from 'reac
 import { TargetRow } from './components/TargetRow';
 import { setFilters, useBatchesTableStateStore } from '../../../common/stores/batchesTableStateStore';
 import { useBatchContext } from '../../hooks/useBatchContext';
-import { TableToolbar } from './components/TableToolbar';
+import { TableToolbar } from '../TableToolbar';
 import { useTableSelectionColumn } from './hooks/useTableSelectionColumn';
 import { useTableColumns } from './hooks/useTableColumns';
-import { useGetTableData } from './hooks/useGetTableData';
+import { useGetTableData } from '../../hooks/useGetTableData';
 
 const useStyles = makeStyles(theme => ({
   root: {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from '@material-ui/core';
-import { CreateOTProtocolDialog } from '../../../../../OTProtocol';
+import { CreateOTProtocolDialog } from '../../../CreateOTProtocolDialog';
 
 export const CreateOTProtocolButton = () => {
   const [dialogOpen, setDialogOpen] = useState(false);

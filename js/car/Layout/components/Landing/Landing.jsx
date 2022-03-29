@@ -3,7 +3,7 @@ import { IconButton, makeStyles, Tooltip } from '@material-ui/core';
 import { AddCircle } from '@material-ui/icons';
 import { ContentBox } from '../../../common/components/ContentBox';
 import { ProjectList } from './components/ProjectList';
-import { UploadProjectDialog } from './components/UploadProjectDialog';
+import { UploadProjectDialog } from '../UploadProjectDialog';
 
 const useStyles = makeStyles(theme => ({
   root: {

@@ -8,7 +8,7 @@ import { IconComponent } from '../../../../../common/components/IconComponent';
 import classNames from 'classnames';
 import { useTemporaryId } from '../../../../../common/hooks/useTemporaryId';
 import { DeleteForever } from '@material-ui/icons';
-import { requestDeleteSubBatch } from '../../stores/deleteSubBatchDialogStore';
+import { requestDeleteSubBatch } from '../../../../stores/deleteSubBatchDialogStore';
 
 const useStyles = makeStyles(theme => ({
   label: {
