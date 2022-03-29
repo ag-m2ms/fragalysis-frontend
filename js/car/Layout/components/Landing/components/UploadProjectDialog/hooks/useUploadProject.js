@@ -1,13 +1,20 @@
 import React from 'react';
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { axiosPost } from '../../../../../../common/utils/axiosFunctions';
 import { addCeleryTask } from '../../../../../../common/stores/celeryTasksStore';
 import { HideNotificationButton } from '../../../../../../common/components/HideNotificationButton/HideNotificationButton';
 import { scopes } from '../../../../../../common/constants/scopes';
 import { useSnackbar } from 'notistack';
-import { getProjectUploadTaskStatusQueryKey, uploadProjectKey } from '../../../../../../common/api/projectsQueryKeys';
+import {
+  getProjectsQueryKey,
+  getProjectUploadTaskStatusQueryKey,
+  uploadProjectKey
+} from '../../../../../../common/api/projectsQueryKeys';
+import { ShowProjectButton } from '../components/ShowProjectButton';
 
 export const useUploadProject = () => {
+  const queryClient = useQueryClient();
+
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   return useMutation(
@@ -35,20 +42,35 @@ export const useUploadProject = () => {
         addCeleryTask(task_id, {
           queryKey: getProjectUploadTaskStatusQueryKey({ task_id }),
           scope: scopes.GLOBAL,
-          onSuccess: todo => {
+          onSuccess: async ({ project_id }) => {
+            // Load the projects again first, its used to navigate to the project in the ShowProjectButton component
+            await queryClient.invalidateQueries(getProjectsQueryKey());
+
+            // Get the project from the freshly fetched data
+            const projects = queryClient.getQueryData(getProjectsQueryKey());
+            const project = projects.find(project => project.id === project_id);
+
             closeSnackbar(creatingMessageId);
 
-            //console.log(protocol_summary);
-
-            enqueueSnackbar('OT protocol has been generated successfully', {
+            enqueueSnackbar('Project has been created successfully', {
               variant: 'success',
               autoHideDuration: null,
               action: key => (
                 <>
+                  <ShowProjectButton messageId={key} project={project} />
                   <HideNotificationButton messageId={key} />
                 </>
               )
             });
+          },
+          onError: err => {
+            closeSnackbar(creatingMessageId);
+
+            const message = err.traceback ?? err.message;
+            console.error(message);
+            enqueueSnackbar(message, { variant: 'error' });
+
+            queryClient.invalidateQueries(getProjectsQueryKey());
           }
         });
       }
