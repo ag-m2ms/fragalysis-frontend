@@ -1,9 +1,14 @@
 import { useSnackbar } from 'notistack';
 import React from 'react';
+import { getProjectsQueryKey } from '../../../../../common/api/projectsQueryKeys';
 import { SnackbarButton } from '../../../../../common/components/SnackbarButton';
 import { setCurrentProject } from '../../../../../common/stores/currentProjectStore';
 
-export const ShowProjectButton = ({ messageId, project }) => {
+/**
+ * queryClient is passed because notistack provides is defined before react-query provider, thus using useQueryClient
+ * would return undefined
+ */
+export const ShowProjectButton = ({ messageId, projectId, queryClient }) => {
   const { closeSnackbar } = useSnackbar();
 
   return (
@@ -11,7 +16,13 @@ export const ShowProjectButton = ({ messageId, project }) => {
       onClick={() => {
         closeSnackbar(messageId);
 
-        setCurrentProject(project);
+        const projects = queryClient.getQueryData(getProjectsQueryKey());
+        const project = projects?.find(project => project.id === projectId);
+
+        // Either refetch of projects data or the project might have been deleted
+        if (project) {
+          setCurrentProject(project);
+        }
       }}
     >
       Show project

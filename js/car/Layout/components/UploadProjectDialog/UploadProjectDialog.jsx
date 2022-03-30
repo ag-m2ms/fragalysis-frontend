@@ -27,6 +27,7 @@ export const UploadProjectDialog = ({ open, onClose }) => {
   return (
     <Formik
       initialValues={{
+        project_name: '',
         submitter_name: '',
         submitter_organisation: '',
         protein_target: '',
@@ -35,6 +36,12 @@ export const UploadProjectDialog = ({ open, onClose }) => {
         API_choice: ''
       }}
       validationSchema={yup.object().shape({
+        project_name: yup
+          .string()
+          .min(1, 'The name is too short')
+          .max(100, 'The name is too long')
+          .matches(/^[a-zA-Z0-9\-_ ]+$/, 'The name can only include a-z, A-Z, 0-9, -, _ or space')
+          .required('Required'),
         submitter_name: yup
           .string()
           .min(1, 'The name is too short')
@@ -79,6 +86,12 @@ export const UploadProjectDialog = ({ open, onClose }) => {
               <DialogSection>
                 <DialogSectionHeading>Project information</DialogSectionHeading>
                 <Typography>Please provide following information:</Typography>
+
+                <FormTextField
+                  name="project_name"
+                  label="Project name"
+                  placeholder="Project name (can include a-z, A-Z, 0-9, -, _ or space)"
+                />
 
                 <FormTextField
                   name="submitter_name"

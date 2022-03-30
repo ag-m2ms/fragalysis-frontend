@@ -11,11 +11,16 @@ import {
   uploadProjectKey
 } from '../../../../common/api/projectsQueryKeys';
 import { ShowProjectButton } from '../components/ShowProjectButton';
+import { useTemporaryId } from '../../../../common/hooks/useTemporaryId';
 
 export const useUploadProject = () => {
   const queryClient = useQueryClient();
 
+  const { generateId } = useTemporaryId();
+
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
+  const projectsQueryKey = getProjectsQueryKey();
 
   return useMutation(
     ({ data }) => {
@@ -26,15 +31,44 @@ export const useUploadProject = () => {
       return axiosPost(uploadProjectKey(), formData);
     },
     {
-      onMutate: async () => {
+      onMutate: async ({ data }) => {
         const creatingMessageId = enqueueSnackbar('A project is being created...', { variant: 'info' });
-        return { creatingMessageId };
+
+        // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
+        await queryClient.cancelQueries(projectsQueryKey);
+
+        // Snapshot the previous value
+        const previousProjects = queryClient.getQueryData(projectsQueryKey);
+
+        // Optimistically update to the new value
+        queryClient.setQueryData(projectsQueryKey, projects => {
+          const newProject = {
+            id: generateId(),
+            init_date: null,
+            name: data.project_name,
+            submitterorganisation: data.submitter_organisation,
+            submittername: data.submitter_name,
+            proteintarget: data.protein_target,
+            quotedcost: null,
+            quoteurl: null
+          };
+
+          return [...projects, newProject];
+        });
+
+        // Return a context object with the snapshotted value
+        return { previousProjects, creatingMessageId };
       },
-      onError: (err, vars, { creatingMessageId }) => {
+      // If the mutation fails, use the context returned from onMutate to roll back
+      onError: (err, vars, { previousProjects, creatingMessageId }) => {
         closeSnackbar(creatingMessageId);
 
         console.error(err);
         enqueueSnackbar(err.message, { variant: 'error' });
+
+        queryClient.setQueryData(projectsQueryKey, previousProjects);
+
+        queryClient.invalidateQueries(projectsQueryKey);
       },
       onSuccess: (response, vars, { creatingMessageId }) => {
         const { task_id } = response;
@@ -43,13 +77,14 @@ export const useUploadProject = () => {
           queryKey: getProjectUploadTaskStatusQueryKey({ task_id }),
           scope: scopes.GLOBAL,
           onSuccess: async ({ project_id }) => {
-            // Load the projects again first, its used to navigate to the project in the ShowProjectButton component
-            await queryClient.refetchQueries(getProjectsQueryKey());
-
-            // Get the project from the freshly fetched data
-            const projects = queryClient.getQueryData(getProjectsQueryKey());
-            // Refetch may fail, in that case, don't display the Show Project button
-            const project = projects?.find(project => project.id === project_id);
+            /**
+             * Load the projects again first, its used to navigate to the project in the ShowProjectButton component. The
+             * reason why it's not completely optimistically updated is because some of the project fields are generated on the
+             * server. Setting a temporary project as a current project could lead to bugs since the fields wouldn't match.
+             * It would be possible to do full optimistic update by setting the temporary project and then replace it with
+             * a new the original one once the data is loaded, but there's a time frame where the data wouldn't match.
+             */
+            await queryClient.refetchQueries(projectsQueryKey);
 
             closeSnackbar(creatingMessageId);
 
@@ -58,7 +93,7 @@ export const useUploadProject = () => {
               autoHideDuration: null,
               action: key => (
                 <>
-                  {project && <ShowProjectButton messageId={key} project={project} />}
+                  <ShowProjectButton messageId={key} projectId={project_id} queryClient={queryClient} />
                   <HideNotificationButton messageId={key} />
                 </>
               )
@@ -71,7 +106,7 @@ export const useUploadProject = () => {
             console.error(message);
             enqueueSnackbar(message, { variant: 'error' });
 
-            queryClient.invalidateQueries(getProjectsQueryKey());
+            queryClient.invalidateQueries(projectsQueryKey);
           }
         });
       }

@@ -60,8 +60,6 @@ export const useCreateSubBatch = () => {
         queryClient.setQueryData(batchesQueryKey, previousBatches);
       },
       onSuccess: (response, vars, { temporaryId, creatingMessageId }) => {
-        closeSnackbar(creatingMessageId);
-
         // Real batch ID
         const batchId = response.id;
 
@@ -75,6 +73,8 @@ export const useCreateSubBatch = () => {
             return batch;
           });
         });
+
+        closeSnackbar(creatingMessageId);
 
         enqueueSnackbar('The subbatch was created successfully', {
           variant: 'success',
