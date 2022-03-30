@@ -50,7 +50,7 @@ export const Layout = () => {
           <>
             {navigationDisplayed && (
               <aside className={classes.navigation}>
-                <ContentBox title="Navigation" PaperProps={{ className: classes.navigationBox }}>
+                <ContentBox title={currentProject.name} PaperProps={{ className: classes.navigationBox }}>
                   <BatchNavigation />
                 </ContentBox>
               </aside>
