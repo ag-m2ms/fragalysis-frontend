@@ -1,10 +1,9 @@
 import React from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import {
-  createOTProtocolKey,
-  getOtProtocolsQueryKey,
-  getOTTaskStatusQueryKey
-} from '../../../../common/api/otProtocolsQueryKeys';
+  createOTBatchProtocolKey,
+  getOTBatchProtocolTaskStatusQueryKey
+} from '../../../../common/api/otBatchProtocolsQueryKeys';
 import { axiosPost } from '../../../../common/utils/axiosFunctions';
 import { addCeleryTask } from '../../../../common/stores/celeryTasksStore';
 import { HideNotificationButton } from '../../../../common/components/HideNotificationButton/HideNotificationButton';
@@ -12,6 +11,7 @@ import { scopes } from '../../../../common/constants/scopes';
 import { useProjectSnackbar } from '../../../../common/hooks/useProjectSnackbar';
 import { ShowOTProtocolSummaryButton } from '../components/ShowOTProtocolSummaryButton';
 import { useCurrentProjectStore } from '../../../../common/stores/currentProjectStore';
+import { getOtProtocolsQueryKey } from '../../../../common/api/otProtocolsQueryKeys';
 
 export const useCreateOTProtocol = () => {
   const queryClient = useQueryClient();
@@ -20,55 +20,51 @@ export const useCreateOTProtocol = () => {
 
   const { enqueueSnackbar, closeSnackbar } = useProjectSnackbar();
 
-  return useMutation(
-    ({ batchids }) =>
-      axiosPost(createOTProtocolKey(), {
-        batchids
-      }),
-    {
-      onMutate: async () => {
-        const creatingMessageId = enqueueSnackbar('An OT protocol is being generated...', { variant: 'info' });
-        return { creatingMessageId };
-      },
-      onError: (err, vars, { creatingMessageId }) => {
-        closeSnackbar(creatingMessageId);
+  const otProtocolsQueryKey = getOtProtocolsQueryKey({ project_id: currentProject.id });
 
-        console.error(err);
-        enqueueSnackbar(err.message, { variant: 'error' });
-      },
-      onSuccess: (response, vars, { creatingMessageId }) => {
-        const { task_id } = response;
+  return useMutation(data => axiosPost(createOTBatchProtocolKey(), data), {
+    onMutate: async () => {
+      const creatingMessageId = enqueueSnackbar('An OT protocol is being generated...', { variant: 'info' });
+      return { creatingMessageId };
+    },
+    onError: (err, vars, { creatingMessageId }) => {
+      closeSnackbar(creatingMessageId);
 
-        addCeleryTask(task_id, {
-          queryKey: getOTTaskStatusQueryKey({ task_id }),
-          scope: scopes.PROJECT,
-          onSuccess: () => {
-            closeSnackbar(creatingMessageId);
+      console.error(err);
+      enqueueSnackbar(err.message, { variant: 'error' });
+    },
+    onSuccess: (response, vars, { creatingMessageId }) => {
+      const { task_id } = response;
 
-            queryClient.invalidateQueries(getOtProtocolsQueryKey({ project_id: currentProject.id }));
+      addCeleryTask(task_id, {
+        queryKey: getOTBatchProtocolTaskStatusQueryKey({ task_id }),
+        scope: scopes.PROJECT,
+        onSuccess: ({ protocol_id }) => {
+          closeSnackbar(creatingMessageId);
 
-            enqueueSnackbar('OT protocol has been generated successfully', {
-              variant: 'success',
-              autoHideDuration: null,
-              action: key => (
-                <>
-                  <ShowOTProtocolSummaryButton messageId={key} taskId={task_id} />
-                  <HideNotificationButton messageId={key} />
-                </>
-              )
-            });
-          },
-          onError: err => {
-            closeSnackbar(creatingMessageId);
+          queryClient.invalidateQueries(otProtocolsQueryKey);
 
-            const message = err.traceback ?? err.message;
-            console.error(message);
-            enqueueSnackbar(message, { variant: 'error' });
+          enqueueSnackbar('OT protocol has been generated successfully', {
+            variant: 'success',
+            autoHideDuration: null,
+            action: key => (
+              <>
+                <ShowOTProtocolSummaryButton messageId={key} otProtocolId={protocol_id} />
+                <HideNotificationButton messageId={key} />
+              </>
+            )
+          });
+        },
+        onError: err => {
+          closeSnackbar(creatingMessageId);
 
-            queryClient.invalidateQueries(getOtProtocolsQueryKey({ project_id: currentProject.id }));
-          }
-        });
-      }
+          const message = err.traceback ?? err.message;
+          console.error(message);
+          enqueueSnackbar(message, { variant: 'error' });
+
+          queryClient.invalidateQueries(otProtocolsQueryKey);
+        }
+      });
     }
-  );
+  });
 };

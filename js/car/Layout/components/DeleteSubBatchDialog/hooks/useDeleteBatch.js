@@ -3,6 +3,7 @@ import { deleteBatchKey, getBatchesQueryKey } from '../../../../common/api/batch
 import { useCurrentProjectStore } from '../../../../common/stores/currentProjectStore';
 import { axiosDelete } from '../../../../common/utils/axiosFunctions';
 import { useProjectSnackbar } from '../../../../common/hooks/useProjectSnackbar';
+import { getOtBatchProtocolsQueryKey } from '../../../../common/api/otBatchProtocolsQueryKeys';
 
 export const useDeleteBatch = () => {
   const queryClient = useQueryClient();
@@ -44,6 +45,8 @@ export const useDeleteBatch = () => {
     // Always refetch after error or success:
     onSettled: () => {
       queryClient.invalidateQueries(batchesQueryKey);
+      // Since information about batches is in OTBatchProtocol as well, it needs to be invalidated
+      queryClient.invalidateQueries(getOtBatchProtocolsQueryKey({ project_id: currentProject.id }));
     }
   });
 };

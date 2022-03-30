@@ -7,14 +7,14 @@ import { createSelectorHooks } from 'auto-zustand-selectors-hook';
  */
 const otProtocolSummaryDialogStore = create(() => ({
   dialogOpen: false,
-  taskId: null
+  otProtocolId: null
 }));
 
 export const useOtProtocolSummaryDialogStore = createSelectorHooks(otProtocolSummaryDialogStore);
 
-export const requestOtProtocolSummary = taskId =>
-  useOtProtocolSummaryDialogStore.setState({ dialogOpen: true, taskId });
+export const requestOtProtocolSummary = otProtocolId =>
+  useOtProtocolSummaryDialogStore.setState({ dialogOpen: true, otProtocolId });
 
 export const setOtProtocolSummaryDialogOpen = dialogOpen => useOtProtocolSummaryDialogStore.setState({ dialogOpen });
 
-export const setOtProtocolForSummaryDialog = taskId => useOtProtocolSummaryDialogStore.setState({ taskId });
+export const setOtProtocolForSummaryDialog = otProtocolId => useOtProtocolSummaryDialogStore.setState({ otProtocolId });

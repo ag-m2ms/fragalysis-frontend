@@ -15,7 +15,7 @@ export const OTProtocolHistoryButton = () => {
         <OTProtocolMenuContents
           onSelected={otProtocol => {
             setMenuAnchorEl(null);
-            requestOtProtocolSummary(otProtocol);
+            requestOtProtocolSummary(otProtocol.id);
           }}
         />
       </CategoryMenu>
