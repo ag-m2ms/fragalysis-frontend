@@ -7,18 +7,24 @@ export const BatchProtocolList = ({ otProtocolId }) => {
 
   return (
     <List>
-      {batchesWithOtProtocols.map(({ batch, otBatchProtocol }) => {
-        return (
-          <ListItem key={batch.id}>
-            <ListItemText primary={batch.batch_tag} />
-            <ListItemSecondaryAction>
-              <Button color="primary" variant="contained" href={otBatchProtocol.zipfile} download>
-                Download protocol
-              </Button>
-            </ListItemSecondaryAction>
-          </ListItem>
-        );
-      })}
+      {!!batchesWithOtProtocols.length ? (
+        batchesWithOtProtocols.map(({ batch, otBatchProtocol }) => {
+          return (
+            <ListItem key={batch.id}>
+              <ListItemText primary={batch.batch_tag} />
+              <ListItemSecondaryAction>
+                <Button color="primary" variant="contained" href={otBatchProtocol.zipfile} download>
+                  Download protocol
+                </Button>
+              </ListItemSecondaryAction>
+            </ListItem>
+          );
+        })
+      ) : (
+        <ListItem>
+          <ListItemText primary="None of the currently existing batches are left in the OT Protocol" />
+        </ListItem>
+      )}
     </List>
   );
 };

@@ -1,9 +1,5 @@
 import React from 'react';
 import { useMutation, useQueryClient } from 'react-query';
-import {
-  createOTBatchProtocolKey,
-  getOTBatchProtocolTaskStatusQueryKey
-} from '../../../../common/api/otBatchProtocolsQueryKeys';
 import { axiosPost } from '../../../../common/utils/axiosFunctions';
 import { addCeleryTask } from '../../../../common/stores/celeryTasksStore';
 import { HideNotificationButton } from '../../../../common/components/HideNotificationButton/HideNotificationButton';
@@ -11,7 +7,11 @@ import { scopes } from '../../../../common/constants/scopes';
 import { useProjectSnackbar } from '../../../../common/hooks/useProjectSnackbar';
 import { ShowOTProtocolSummaryButton } from '../components/ShowOTProtocolSummaryButton';
 import { useCurrentProjectStore } from '../../../../common/stores/currentProjectStore';
-import { getOtProtocolsQueryKey } from '../../../../common/api/otProtocolsQueryKeys';
+import {
+  createOtProtocolKey,
+  getOtProtocolsQueryKey,
+  getOtProtocolTaskStatusQueryKey
+} from '../../../../common/api/otProtocolsQueryKeys';
 
 export const useCreateOTProtocol = () => {
   const queryClient = useQueryClient();
@@ -22,7 +22,7 @@ export const useCreateOTProtocol = () => {
 
   const otProtocolsQueryKey = getOtProtocolsQueryKey({ project_id: currentProject.id });
 
-  return useMutation(data => axiosPost(createOTBatchProtocolKey(), data), {
+  return useMutation(data => axiosPost(createOtProtocolKey(), data), {
     onMutate: async () => {
       const creatingMessageId = enqueueSnackbar('An OT protocol is being generated...', { variant: 'info' });
       return { creatingMessageId };
@@ -37,9 +37,9 @@ export const useCreateOTProtocol = () => {
       const { task_id } = response;
 
       addCeleryTask(task_id, {
-        queryKey: getOTBatchProtocolTaskStatusQueryKey({ task_id }),
+        queryKey: getOtProtocolTaskStatusQueryKey({ task_id }),
         scope: scopes.PROJECT,
-        onSuccess: ({ protocol_id }) => {
+        onSuccess: ({ otprotocol_id }) => {
           closeSnackbar(creatingMessageId);
 
           queryClient.invalidateQueries(otProtocolsQueryKey);
@@ -49,7 +49,7 @@ export const useCreateOTProtocol = () => {
             autoHideDuration: null,
             action: key => (
               <>
-                <ShowOTProtocolSummaryButton messageId={key} otProtocolId={protocol_id} />
+                <ShowOTProtocolSummaryButton messageId={key} otProtocolId={otprotocol_id} />
                 <HideNotificationButton messageId={key} />
               </>
             )
