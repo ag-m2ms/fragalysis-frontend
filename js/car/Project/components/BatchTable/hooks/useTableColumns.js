@@ -16,6 +16,9 @@ import {
 } from '../utils/createTableTargetFilters';
 import { YesNoFilter } from '../components/YesNoFilter';
 import { RangeFilter } from '../components/RangeFilter';
+import { PREFERRED_LEAD_TIME, PREFERRED_PRICE, PREFERRED_VENDORS } from '../../../constants/preferredContstants';
+import { PreferredFlagIndicator } from '../components/PreferredFlagIndicator/PreferredFlagIndicator';
+import { formatPreferredVendorsString } from '../../../utils/formatPreferredVendorsString';
 
 const useStyles = makeStyles(theme => ({
   text: {
@@ -35,12 +38,12 @@ const useStyles = makeStyles(theme => ({
     textAlign: 'center',
     display: 'grid',
     lineHeight: 1
+  },
+  preferredIndicatorsWrapper: {
+    display: 'grid',
+    gap: theme.spacing()
   }
 }));
-
-const PREFERRED_VENDORS = ['mcule'];
-const PREFERRED_LEAD_TIME = 4;
-const PREFERRED_PRICE = 200;
 
 const filterByMethodReactionName = createTableMethodAutocompleteFilter((row, ids, filterValue) =>
   filterValue.includes(row.values[ids[0]])
@@ -72,69 +75,19 @@ const filterByTargetPrice = createTableTargetRangeFilter((row, ids, filterValue)
 });
 
 const filterByMethodPreferredReactantVendor = index =>
-  createTableMethodYesNoFilter((row, ids, filterValue) => {
-    const reactantVendors1 =
-      row.original.reactions?.[index]?.reactants?.[0].catalogentries?.map(({ vendor }) => vendor) || [];
-    const reactantVendors2 =
-      row.original.reactions?.[index]?.reactants?.[1].catalogentries?.map(({ vendor }) => vendor) || [];
-
-    const presentInBoth =
-      reactantVendors1.some(vendor => PREFERRED_VENDORS.includes(vendor)) &&
-      reactantVendors2.some(vendor => PREFERRED_VENDORS.includes(vendor));
-
-    return filterValue ? presentInBoth : !presentInBoth;
-  });
+  createTableMethodYesNoFilter(
+    (row, ids, filterValue) => filterValue === row.original.reactions?.[index]?.preferredVendor
+  );
 
 const filterByMethodPreferredReactantLeadTime = index =>
-  createTableMethodYesNoFilter((row, ids, filterValue) => {
-    const reactantLeadTimes1 =
-      row.original.reactions?.[index]?.reactants?.[0]?.catalogentries?.map(({ leadtime }) => leadtime) || [];
-    const reactantLeadTimes2 =
-      row.original.reactions?.[index]?.reactants?.[1]?.catalogentries?.map(({ leadtime }) => leadtime) || [];
-
-    if (!reactantLeadTimes1.length || !reactantLeadTimes2.length) {
-      return !filterValue;
-    }
-
-    const minimalLeadTime1 = Math.min(...reactantLeadTimes1);
-    const minimalLeadTime2 = Math.min(...reactantLeadTimes2);
-    const sum = minimalLeadTime1 + minimalLeadTime2;
-
-    const withinRange = sum <= PREFERRED_LEAD_TIME;
-
-    return filterValue ? withinRange : !withinRange;
-  });
+  createTableMethodYesNoFilter(
+    (row, ids, filterValue) => filterValue === row.original.reactions?.[index]?.preferredLeadTime
+  );
 
 const filterByMethodPreferredReactantPrice = index =>
-  createTableMethodYesNoFilter((row, ids, filterValue) => {
-    const reactantPrices1 =
-      row.original.reactions?.[index]?.reactants?.[0]?.catalogentries?.map(({ upperprice }) => upperprice) || [];
-    const reactantPrices2 =
-      row.original.reactions?.[index]?.reactants?.[1]?.catalogentries?.map(({ upperprice }) => upperprice) || [];
-
-    if (!reactantPrices1.length || !reactantPrices2.length) {
-      return !filterValue;
-    }
-
-    const minimalPrice1 = Math.min(...reactantPrices1);
-    const minimalPrice2 = Math.min(...reactantPrices2);
-    const sum = minimalPrice1 + minimalPrice2;
-
-    const withinRange = sum <= PREFERRED_PRICE;
-
-    return filterValue ? withinRange : !withinRange;
-  });
-
-const formatPreferredVendorsString = vendors => {
-  if (vendors.length === 1) {
-    return vendors[0];
-  }
-
-  const lastVendor = vendors.at(-1);
-  const remainingVendors = vendors.slice(0, -1);
-
-  return `${remainingVendors.join(', ')} or ${lastVendor}`;
-};
+  createTableMethodYesNoFilter(
+    (row, ids, filterValue) => filterValue === row.original.reactions?.[index]?.preferredPrice
+  );
 
 export const useTableColumns = maxNoSteps => {
   const classes = useStyles();
@@ -221,6 +174,11 @@ export const useTableColumns = maxNoSteps => {
                       {value}
                     </Typography>
                   </div>
+                </div>
+                <div className={classes.preferredIndicatorsWrapper}>
+                  <PreferredFlagIndicator reaction={reaction} type="vendor" />
+                  <PreferredFlagIndicator reaction={reaction} type="leadTime" />
+                  <PreferredFlagIndicator reaction={reaction} type="price" />
                 </div>
                 <IconButton size="small" onClick={() => adjustReactionSuccessRate({ reaction, successrate: 0.6 })}>
                   <IconComponent Component={ImSmile} />
@@ -413,6 +371,7 @@ export const useTableColumns = maxNoSteps => {
     classes.flexCell,
     classes.reactionWrapper,
     classes.reactionNameWrapper,
+    classes.preferredIndicatorsWrapper,
     synthesiseMethod,
     adjustReactionSuccessRate,
     preferredReactantVendorFilters,
