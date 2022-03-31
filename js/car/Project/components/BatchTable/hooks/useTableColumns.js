@@ -247,7 +247,7 @@ export const useTableColumns = maxNoSteps => {
         Filter: ({ column: { filterValue, setFilter }, preFilteredFlatRows }) => {
           return (
             <AutocompleteFilter
-              id={`target-vendor-filter`}
+              id="target-vendor-filter"
               options={[
                 ...new Set(
                   preFilteredFlatRows

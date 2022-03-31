@@ -68,6 +68,7 @@ export const useGetTableData = () => {
           ...method,
           reactions: method.reactions?.map(reaction => ({
             ...reaction,
+            // TODO this might be better to do on the BE?
             preferredVendor: getPreferredVendorsFlag(reaction.reactants),
             preferredLeadTime: getPreferredLeadTimeFlag(reaction.reactants),
             preferredPrice: getPreferredPriceFlag(reaction.reactants)

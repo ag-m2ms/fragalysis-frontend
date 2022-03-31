@@ -4,7 +4,7 @@ import { createSubBatchKey, getBatchesQueryKey } from '../../../../common/api/ba
 import { useTemporaryId } from '../../../../common/hooks/useTemporaryId';
 import { useCurrentProjectStore } from '../../../../common/stores/currentProjectStore';
 import { axiosPost } from '../../../../common/utils/axiosFunctions';
-import { DisplaySubBatchButton } from '../components/DisplaySubBatchButton';
+import { ShowSubBatchButton } from '../components/ShowSubBatchButton';
 import { HideNotificationButton } from '../../../../common/components/HideNotificationButton';
 import { useProjectSnackbar } from '../../../../common/hooks/useProjectSnackbar';
 import { useBatchContext } from '../../../hooks/useBatchContext';
@@ -81,11 +81,7 @@ export const useCreateSubBatch = () => {
           autoHideDuration: null,
           action: key => (
             <>
-              <DisplaySubBatchButton
-                batches={queryClient.getQueryData(batchesQueryKey)}
-                messageId={key}
-                batchId={batchId}
-              />
+              <ShowSubBatchButton queryClient={queryClient} messageId={key} batchId={batchId} />
               <HideNotificationButton messageId={key} />
             </>
           )
