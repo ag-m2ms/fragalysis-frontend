@@ -20,7 +20,12 @@ export const CanonicalizeSmilesDialog = ({ open, onClose, onCanonicalizeStart, o
         csv_file: yup.mixed().required('Required')
       })}
       onSubmit={data => {
-        canonicalize({ data });
+        const formData = new FormData();
+        Object.entries(data).forEach(([key, value]) => {
+          formData.append(key, value);
+        });
+
+        canonicalize({ data: formData });
         onClose();
       }}
     >

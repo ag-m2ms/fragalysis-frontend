@@ -10,11 +10,7 @@ export const useCanonicalizeSmiles = (onCanonicalizeStart, onCanonicalizeEnd) =>
 
   return useMutation(
     ({ data }) => {
-      const formData = new FormData();
-      Object.entries(data).forEach(([key, value]) => {
-        formData.append(key, value);
-      });
-      return axiosPost(canonicalizeSmilesKey(), formData);
+      return axiosPost(canonicalizeSmilesKey(), data);
     },
     {
       onMutate: () => {

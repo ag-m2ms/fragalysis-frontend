@@ -145,6 +145,9 @@ export const SmilesFilter = ({ id, label, filterValue = [], setFilter }) => {
               </div>
             )
           }}
+          inputProps={{
+            autoComplete: 'off'
+          }}
           onKeyPress={event => {
             if (event.key === 'Enter') {
               addSmilesFromInput();
