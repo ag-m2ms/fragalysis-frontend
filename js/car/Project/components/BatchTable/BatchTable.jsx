@@ -115,7 +115,8 @@ export const BatchTable = () => {
               `reactant-leadtime-step-${index}`,
               `reactant-price-step-${index}`
             ])
-            .flat()
+            .flat(),
+          'reactant-smiles'
         ]
       }
     },

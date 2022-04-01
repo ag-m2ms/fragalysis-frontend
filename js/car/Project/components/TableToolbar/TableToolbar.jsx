@@ -16,9 +16,11 @@ const useStyles = makeStyles(theme => ({
   details: {
     display: 'flex',
     gap: theme.spacing(2),
+    overflow: 'auto',
     padding: `${theme.spacing()}px ${theme.spacing(2)}px`,
+    // Filters column
     '& > :nth-child(2)': {
-      flexGrow: 1
+      flex: '1 0 320px'
     }
   },
   firstColumn: {
