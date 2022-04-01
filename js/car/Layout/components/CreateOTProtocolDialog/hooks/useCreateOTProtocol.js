@@ -33,9 +33,7 @@ export const useCreateOTProtocol = () => {
       console.error(err);
       enqueueSnackbar(err.message, { variant: 'error' });
     },
-    onSuccess: (response, vars, { creatingMessageId }) => {
-      const { task_id } = response;
-
+    onSuccess: ({ task_id }, vars, { creatingMessageId }) => {
       addCeleryTask(task_id, {
         queryKey: getOtProtocolTaskStatusQueryKey({ task_id }),
         scope: scopes.PROJECT,

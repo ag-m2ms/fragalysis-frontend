@@ -8,7 +8,7 @@ import { axiosPost } from '../../../../../../common/utils/axiosFunctions';
 import { addCeleryTask } from '../../../../../../common/stores/celeryTasksStore';
 import { scopes } from '../../../../../../common/constants/scopes';
 
-export const useCanonicalizeSmiles = onCanonicalize => {
+export const useCanonicalizeSmiles = (onCanonicalizeStart, onCanonicalizeEnd) => {
   const { enqueueSnackbar } = useProjectSnackbar();
 
   return useMutation(
@@ -20,25 +20,25 @@ export const useCanonicalizeSmiles = onCanonicalize => {
       return axiosPost(canonicalizeSmilesKey(), formData);
     },
     {
-      // If the mutation fails, use the context returned from onMutate to roll back
+      onMutate: () => {
+        onCanonicalizeStart();
+      },
       onError: err => {
         console.error(err);
         enqueueSnackbar(err.message, { variant: 'error' });
       },
-      onSuccess: response => {
-        console.log(response);
-        const { task_id } = response;
-
+      onSuccess: ({ task_id }) => {
         addCeleryTask(task_id, {
           queryKey: getCanonicalizeSmilesTaskStatusQueryKey({ task_id }),
           scope: scopes.PROJECT,
           onSuccess: async ({ canonicalizedsmiles }) => {
-            onCanonicalize(canonicalizedsmiles);
+            onCanonicalizeEnd(canonicalizedsmiles);
           },
           onError: err => {
             const message = err.traceback ?? err.message;
             console.error(message);
             enqueueSnackbar(message, { variant: 'error' });
+            onCanonicalizeEnd();
           }
         });
       }

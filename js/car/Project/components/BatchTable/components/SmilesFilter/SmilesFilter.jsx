@@ -2,7 +2,7 @@ import { Chip, IconButton, makeStyles, TextField, Tooltip } from '@material-ui/c
 import { AddCircle, Clear, CloudUpload } from '@material-ui/icons';
 import classNames from 'classnames';
 import React, { useState } from 'react';
-import { CanonicalizeSmilesDialog } from '../CanonicalizeSmilesDialog/CanonicalizeSmilesDialog';
+import { CanonicalizeSmilesDialog } from '../CanonicalizeSmilesDialog';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -50,6 +50,7 @@ export const SmilesFilter = ({ id, label, filterValue = [], setFilter }) => {
 
   const [inputValue, setInputValue] = useState('');
   const [active, setActive] = useState(false);
+  const [disabled, setDisabled] = useState(false);
 
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -77,6 +78,7 @@ export const SmilesFilter = ({ id, label, filterValue = [], setFilter }) => {
           variant="outlined"
           fullWidth
           value={inputValue}
+          disabled={disabled}
           onChange={event => setInputValue(event.target.value)}
           onFocus={() => setActive(true)}
           onBlur={() => setActive(false)}
@@ -91,6 +93,7 @@ export const SmilesFilter = ({ id, label, filterValue = [], setFilter }) => {
                   key={value}
                   label={value}
                   tabindex={-1}
+                  disabled={disabled}
                   onDelete={() => {
                     const newFilterValue = [...filterValue];
                     const index = filterValue.findIndex(val => value === val);
@@ -105,12 +108,13 @@ export const SmilesFilter = ({ id, label, filterValue = [], setFilter }) => {
                   className={classNames(
                     classes.button,
                     classes.clear,
-                    active && dirty && classes.clearActive,
-                    dirty && 'smiles-filter-dirty'
+                    active && dirty && !disabled && classes.clearActive,
+                    dirty && !disabled && 'smiles-filter-dirty'
                   )}
                   size="small"
                   title="Clear"
                   aria-label="Clear"
+                  disabled={disabled}
                   onClick={() => setFilter([])}
                 >
                   <Clear fontSize="small" />
@@ -120,6 +124,7 @@ export const SmilesFilter = ({ id, label, filterValue = [], setFilter }) => {
                   size="small"
                   title="Add smiles"
                   aria-label="Add smiles"
+                  disabled={disabled}
                   onClick={addSmilesFromInput}
                 >
                   <AddCircle fontSize="small" />
@@ -134,7 +139,7 @@ export const SmilesFilter = ({ id, label, filterValue = [], setFilter }) => {
           }}
         />
         <Tooltip title="Upload smiles from file">
-          <IconButton onClick={() => setDialogOpen(true)}>
+          <IconButton disabled={disabled} onClick={() => setDialogOpen(true)}>
             <CloudUpload />
           </IconButton>
         </Tooltip>
@@ -143,7 +148,13 @@ export const SmilesFilter = ({ id, label, filterValue = [], setFilter }) => {
       <CanonicalizeSmilesDialog
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
-        onCanonicalize={smiles => addSmiles(smiles)}
+        onCanonicalizeStart={() => setDisabled(true)}
+        onCanonicalizeEnd={smiles => {
+          if (smiles) {
+            addSmiles(smiles);
+          }
+          setDisabled(false);
+        }}
       />
     </>
   );

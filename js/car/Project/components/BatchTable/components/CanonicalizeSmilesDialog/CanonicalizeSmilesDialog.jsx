@@ -8,8 +8,8 @@ import { FormFilePicker } from '../../../../../common/components/FormFilePicker'
 import { SubmitDialog } from '../../../../../common/components/SubmitDialog';
 import { useCanonicalizeSmiles } from './hooks/useCanonicalizeSmiles';
 
-export const CanonicalizeSmilesDialog = ({ open, onClose, onCanonicalize }) => {
-  const { mutate: canonicalize } = useCanonicalizeSmiles(onCanonicalize);
+export const CanonicalizeSmilesDialog = ({ open, onClose, onCanonicalizeStart, onCanonicalizeEnd }) => {
+  const { mutate: canonicalize } = useCanonicalizeSmiles(onCanonicalizeStart, onCanonicalizeEnd);
 
   return (
     <Formik
