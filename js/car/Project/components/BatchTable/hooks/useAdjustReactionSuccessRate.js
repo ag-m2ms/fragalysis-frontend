@@ -3,7 +3,7 @@ import { axiosPatch } from '../../../../common/utils/axiosFunctions';
 import { patchReactionKey } from '../../../../common/api/reactionsQueryKeys';
 import { getTargetsQueryKey } from '../../../../common/api/targetsQueryKeys';
 import { useBatchContext } from '../../../hooks/useBatchContext';
-import { useProjectSnackbar } from '../../../../common/hooks/useProjectSnackbar';
+import { useGlobalSnackbar } from '../../../../common/hooks/useGlobalSnackbar';
 
 export const useAdjustReactionSuccessRate = () => {
   const queryClient = useQueryClient();
@@ -12,7 +12,7 @@ export const useAdjustReactionSuccessRate = () => {
 
   const targetsQueryKey = getTargetsQueryKey({ batch_id: batch.id, fetchall: 'yes' });
 
-  const { enqueueSnackbar } = useProjectSnackbar();
+  const { enqueueSnackbarError } = useGlobalSnackbar();
 
   return useMutation(
     ({ reaction, successrate }) =>
@@ -50,7 +50,7 @@ export const useAdjustReactionSuccessRate = () => {
       // If the mutation fails, use the context returned from onMutate to roll back
       onError: (err, _, { previousTargets }) => {
         console.error(err);
-        enqueueSnackbar(err.message, { variant: 'error' });
+        enqueueSnackbarError(err.message);
 
         queryClient.setQueryData(targetsQueryKey, previousTargets);
       },

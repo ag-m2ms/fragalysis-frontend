@@ -1,6 +1,7 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import { useSnackbar } from 'notistack';
 import { useCurrentProjectStore } from '../stores/currentProjectStore';
+import { useSnackbarBase } from './useSnackbarBase';
 
 export const useProjectSnackbar = () => {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -17,11 +18,8 @@ export const useProjectSnackbar = () => {
     [currentProjectId, enqueueSnackbar]
   );
 
-  return useMemo(
-    () => ({
-      enqueueSnackbar: enqueue,
-      closeSnackbar
-    }),
-    [enqueue, closeSnackbar]
-  );
+  return useSnackbarBase({
+    enqueueSnackbar: enqueue,
+    closeSnackbar
+  });
 };

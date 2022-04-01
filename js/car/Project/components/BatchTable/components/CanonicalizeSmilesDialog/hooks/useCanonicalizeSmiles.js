@@ -9,7 +9,7 @@ import { addCeleryTask } from '../../../../../../common/stores/celeryTasksStore'
 import { scopes } from '../../../../../../common/constants/scopes';
 
 export const useCanonicalizeSmiles = (onCanonicalizeStart, onCanonicalizeEnd) => {
-  const { enqueueSnackbar } = useProjectSnackbar();
+  const { enqueueSnackbarError } = useProjectSnackbar();
 
   return useMutation(
     ({ data }) => {
@@ -25,7 +25,7 @@ export const useCanonicalizeSmiles = (onCanonicalizeStart, onCanonicalizeEnd) =>
       },
       onError: err => {
         console.error(err);
-        enqueueSnackbar(err.message, { variant: 'error' });
+        enqueueSnackbarError(err.message);
       },
       onSuccess: ({ task_id }) => {
         addCeleryTask(task_id, {
@@ -37,7 +37,7 @@ export const useCanonicalizeSmiles = (onCanonicalizeStart, onCanonicalizeEnd) =>
           onError: err => {
             const message = err.traceback ?? err.message;
             console.error(message);
-            enqueueSnackbar(message, { variant: 'error' });
+            enqueueSnackbarError(message);
             onCanonicalizeEnd();
           }
         });

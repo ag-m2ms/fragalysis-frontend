@@ -3,7 +3,7 @@ import { axiosPatch } from '../../../../common/utils/axiosFunctions';
 import { patchMethodsKey } from '../../../../common/api/methodsQueryKeys';
 import { useBatchContext } from '../../../hooks/useBatchContext';
 import { getTargetsQueryKey } from '../../../../common/api/targetsQueryKeys';
-import { useProjectSnackbar } from '../../../../common/hooks/useProjectSnackbar';
+import { useGlobalSnackbar } from '../../../../common/hooks/useGlobalSnackbar';
 
 export const useSynthesiseMethod = () => {
   const queryClient = useQueryClient();
@@ -12,7 +12,7 @@ export const useSynthesiseMethod = () => {
 
   const targetsQueryKey = getTargetsQueryKey({ batch_id: batch.id, fetchall: 'yes' });
 
-  const { enqueueSnackbar } = useProjectSnackbar();
+  const { enqueueSnackbarError } = useGlobalSnackbar();
 
   return useMutation(({ method, synthesise }) => axiosPatch(patchMethodsKey(method.id), { synthesise }), {
     onMutate: async ({ method: methodToUpdate, synthesise }) => {
@@ -42,7 +42,7 @@ export const useSynthesiseMethod = () => {
     // If the mutation fails, use the context returned from onMutate to roll back
     onError: (err, vars, { previousTargets }) => {
       console.error(err);
-      enqueueSnackbar(err.message, { variant: 'error' });
+      enqueueSnackbarError(err.message);
 
       queryClient.setQueryData(targetsQueryKey, previousTargets);
     },

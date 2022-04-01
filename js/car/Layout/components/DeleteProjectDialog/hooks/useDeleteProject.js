@@ -1,14 +1,14 @@
 import { useMutation, useQueryClient } from 'react-query';
 import { axiosDelete } from '../../../../common/utils/axiosFunctions';
 import { deleteProjectKey, getProjectsQueryKey } from '../../../../common/api/projectsQueryKeys';
-import { useSnackbar } from 'notistack';
+import { useGlobalSnackbar } from '../../../../common/hooks/useGlobalSnackbar';
 
 export const useDeleteProject = () => {
   const queryClient = useQueryClient();
 
   const projectsQueryKey = getProjectsQueryKey();
 
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbarError } = useGlobalSnackbar();
 
   return useMutation(({ project }) => axiosDelete(deleteProjectKey(project.id)), {
     onMutate: async ({ project }) => {
@@ -34,7 +34,7 @@ export const useDeleteProject = () => {
     // If the mutation fails, use the context returned from onMutate to roll back
     onError: (err, vars, { previousProjects }) => {
       console.error(err);
-      enqueueSnackbar(err.message, { variant: 'error' });
+      enqueueSnackbarError(err.message);
 
       queryClient.setQueryData(projectsQueryKey, previousProjects);
     },

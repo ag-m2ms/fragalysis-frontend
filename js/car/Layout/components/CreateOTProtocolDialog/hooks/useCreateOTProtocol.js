@@ -12,13 +12,15 @@ import {
   getOtProtocolsQueryKey,
   getOtProtocolTaskStatusQueryKey
 } from '../../../../common/api/otProtocolsQueryKeys';
+import { useGlobalSnackbar } from '../../../../common/hooks/useGlobalSnackbar';
 
 export const useCreateOTProtocol = () => {
   const queryClient = useQueryClient();
 
   const currentProject = useCurrentProjectStore.useCurrentProject();
 
-  const { enqueueSnackbar, closeSnackbar } = useProjectSnackbar();
+  const { enqueueSnackbar, enqueueSnackbarSuccess, closeSnackbar } = useProjectSnackbar();
+  const { enqueueSnackbarError } = useGlobalSnackbar();
 
   const otProtocolsQueryKey = getOtProtocolsQueryKey({ project_id: currentProject.id });
 
@@ -31,7 +33,7 @@ export const useCreateOTProtocol = () => {
       closeSnackbar(creatingMessageId);
 
       console.error(err);
-      enqueueSnackbar(err.message, { variant: 'error' });
+      enqueueSnackbarError(err.message);
     },
     onSuccess: ({ task_id }, vars, { creatingMessageId }) => {
       addCeleryTask(task_id, {
@@ -42,9 +44,7 @@ export const useCreateOTProtocol = () => {
 
           queryClient.invalidateQueries(otProtocolsQueryKey);
 
-          enqueueSnackbar('OT protocol has been generated successfully', {
-            variant: 'success',
-            autoHideDuration: null,
+          enqueueSnackbarSuccess('OT protocol has been generated successfully', {
             action: key => (
               <>
                 <ShowOTProtocolSummaryButton messageId={key} otProtocolId={otprotocol_id} />
@@ -58,7 +58,7 @@ export const useCreateOTProtocol = () => {
 
           const message = err.traceback ?? err.message;
           console.error(message);
-          enqueueSnackbar(message, { variant: 'error' });
+          enqueueSnackbarError(message);
 
           queryClient.invalidateQueries(otProtocolsQueryKey);
         }

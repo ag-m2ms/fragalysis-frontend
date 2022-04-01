@@ -2,8 +2,8 @@ import { useMutation, useQueryClient } from 'react-query';
 import { deleteBatchKey, getBatchesQueryKey } from '../../../../common/api/batchesQueryKeys';
 import { useCurrentProjectStore } from '../../../../common/stores/currentProjectStore';
 import { axiosDelete } from '../../../../common/utils/axiosFunctions';
-import { useProjectSnackbar } from '../../../../common/hooks/useProjectSnackbar';
 import { getOtBatchProtocolsQueryKey } from '../../../../common/api/otBatchProtocolsQueryKeys';
+import { useGlobalSnackbar } from '../../../../common/hooks/useGlobalSnackbar';
 
 export const useDeleteBatch = () => {
   const queryClient = useQueryClient();
@@ -12,7 +12,7 @@ export const useDeleteBatch = () => {
 
   const batchesQueryKey = getBatchesQueryKey({ project_id: currentProject.id });
 
-  const { enqueueSnackbar } = useProjectSnackbar();
+  const { enqueueSnackbarError } = useGlobalSnackbar();
 
   return useMutation(({ batch }) => axiosDelete(deleteBatchKey(batch.id)), {
     onMutate: async ({ batch }) => {
@@ -38,7 +38,7 @@ export const useDeleteBatch = () => {
     // If the mutation fails, use the context returned from onMutate to roll back
     onError: (err, vars, { previousBatches }) => {
       console.error(err);
-      enqueueSnackbar(err.message, { variant: 'error' });
+      enqueueSnackbarError(err.message);
 
       queryClient.setQueryData(batchesQueryKey, previousBatches);
     },

@@ -8,6 +8,7 @@ import { ShowSubBatchButton } from '../components/ShowSubBatchButton';
 import { HideNotificationButton } from '../../../../common/components/HideNotificationButton';
 import { useProjectSnackbar } from '../../../../common/hooks/useProjectSnackbar';
 import { useBatchContext } from '../../../hooks/useBatchContext';
+import { useGlobalSnackbar } from '../../../../common/hooks/useGlobalSnackbar';
 
 export const useCreateSubBatch = () => {
   const queryClient = useQueryClient();
@@ -19,7 +20,8 @@ export const useCreateSubBatch = () => {
 
   const { generateId } = useTemporaryId();
 
-  const { enqueueSnackbar, closeSnackbar } = useProjectSnackbar();
+  const { enqueueSnackbar, enqueueSnackbarSuccess, closeSnackbar } = useProjectSnackbar();
+  const { enqueueSnackbarError } = useGlobalSnackbar();
 
   return useMutation(
     ({ batchtag, methodids }) =>
@@ -55,7 +57,7 @@ export const useCreateSubBatch = () => {
         closeSnackbar(creatingMessageId);
 
         console.error(err);
-        enqueueSnackbar(err.message, { variant: 'error' });
+        enqueueSnackbarError(err.message);
 
         queryClient.setQueryData(batchesQueryKey, previousBatches);
       },
@@ -76,9 +78,7 @@ export const useCreateSubBatch = () => {
 
         closeSnackbar(creatingMessageId);
 
-        enqueueSnackbar('The subbatch was created successfully', {
-          variant: 'success',
-          autoHideDuration: null,
+        enqueueSnackbarSuccess('The subbatch was created successfully', {
           action: key => (
             <>
               <ShowSubBatchButton queryClient={queryClient} messageId={key} batchId={batchId} />

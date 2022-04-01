@@ -4,7 +4,6 @@ import { axiosPost } from '../../../../common/utils/axiosFunctions';
 import { addCeleryTask } from '../../../../common/stores/celeryTasksStore';
 import { HideNotificationButton } from '../../../../common/components/HideNotificationButton/HideNotificationButton';
 import { scopes } from '../../../../common/constants/scopes';
-import { useSnackbar } from 'notistack';
 import {
   getProjectsQueryKey,
   getProjectUploadTaskStatusQueryKey,
@@ -12,13 +11,14 @@ import {
 } from '../../../../common/api/projectsQueryKeys';
 import { ShowProjectButton } from '../components/ShowProjectButton';
 import { useTemporaryId } from '../../../../common/hooks/useTemporaryId';
+import { useGlobalSnackbar } from '../../../../common/hooks/useGlobalSnackbar';
 
 export const useUploadProject = () => {
   const queryClient = useQueryClient();
 
   const { generateId } = useTemporaryId();
 
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar, enqueueSnackbarSuccess, enqueueSnackbarError, closeSnackbar } = useGlobalSnackbar();
 
   const projectsQueryKey = getProjectsQueryKey();
 
@@ -64,7 +64,7 @@ export const useUploadProject = () => {
         closeSnackbar(creatingMessageId);
 
         console.error(err);
-        enqueueSnackbar(err.message, { variant: 'error' });
+        enqueueSnackbarError(err.message);
 
         queryClient.setQueryData(projectsQueryKey, previousProjects);
 
@@ -86,9 +86,7 @@ export const useUploadProject = () => {
 
             closeSnackbar(creatingMessageId);
 
-            enqueueSnackbar('Project has been created successfully', {
-              variant: 'success',
-              autoHideDuration: null,
+            enqueueSnackbarSuccess('Project has been created successfully', {
               action: key => (
                 <>
                   <ShowProjectButton messageId={key} projectId={project_id} queryClient={queryClient} />
@@ -102,7 +100,7 @@ export const useUploadProject = () => {
 
             const message = err.traceback ?? err.message;
             console.error(message);
-            enqueueSnackbar(message, { variant: 'error' });
+            enqueueSnackbarError(message);
 
             queryClient.invalidateQueries(projectsQueryKey);
           }
