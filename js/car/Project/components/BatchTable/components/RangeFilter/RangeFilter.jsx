@@ -6,11 +6,14 @@ const useStyles = makeStyles(theme => ({
   root: {
     marginBottom: theme.spacing(2),
     display: 'flex',
-    alignItems: 'flex-end'
+    alignItems: 'flex-start'
   },
   slider: {
     margin: `0 ${theme.spacing()}px`,
     width: `calc(100% - ${theme.spacing(2)}px)`
+  },
+  clearWrapper: {
+    paddingTop: 5
   }
 }));
 
@@ -62,11 +65,13 @@ export const RangeFilter = ({ id, label, min, max, filterValue, setFilter }) => 
           color={active ? 'primary' : 'secondary'}
         />
       </FormControl>
-      <Tooltip title={clearEnabled ? 'Clear filter' : ''}>
-        <IconButton size="small" onClick={() => setFilter()} disabled={!clearEnabled}>
-          <Cancel />
-        </IconButton>
-      </Tooltip>
+      <div className={classes.clearWrapper}>
+        <Tooltip title={clearEnabled ? 'Clear filter' : ''}>
+          <IconButton onClick={() => setFilter()} disabled={!clearEnabled}>
+            <Cancel />
+          </IconButton>
+        </Tooltip>
+      </div>
     </div>
   );
 };

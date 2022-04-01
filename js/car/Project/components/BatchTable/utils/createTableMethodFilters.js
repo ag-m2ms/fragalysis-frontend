@@ -41,3 +41,11 @@ export const createTableMethodRangeFilter = rowFilter => (rows, ids, filterValue
 
   return filterTableMethodRows(rowFilter, rows, ids, filterValue);
 };
+
+export const createTableMethodSmilesFilter = rowFilter => (rows, ids, filterValue) => {
+  if (!filterValue || !filterValue.length) {
+    return [...rows];
+  }
+
+  return filterTableMethodRows(rowFilter, rows, ids, filterValue);
+};

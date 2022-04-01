@@ -37,7 +37,6 @@ export const CreateOTProtocolDialog = ({ open, onClose }) => {
         createOTProtocol({ protocol_name, batchids: selectedBatchesIds });
         onClose();
       }}
-      validateOnMount
     >
       {({ submitForm, isSubmitting, resetForm }) => (
         <SubmitDialog

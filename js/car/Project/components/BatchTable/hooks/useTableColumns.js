@@ -8,7 +8,11 @@ import { ImSad, ImSmile } from 'react-icons/im';
 import { useSynthesiseMethod } from './useSynthesiseMethod';
 import { useAdjustReactionSuccessRate } from './useAdjustReactionSuccessRate';
 import { AutocompleteFilter } from '../components/AutocompleteFilter';
-import { createTableMethodAutocompleteFilter, createTableMethodYesNoFilter } from '../utils/createTableMethodFilters';
+import {
+  createTableMethodAutocompleteFilter,
+  createTableMethodYesNoFilter,
+  createTableMethodSmilesFilter
+} from '../utils/createTableMethodFilters';
 import {
   createTableTargetAutocompleteFilter,
   createTableTargetRangeFilter,
@@ -19,6 +23,7 @@ import { RangeFilter } from '../components/RangeFilter';
 import { PREFERRED_LEAD_TIME, PREFERRED_PRICE, PREFERRED_VENDORS } from '../../../constants/preferredContstants';
 import { PreferredFlagIndicator } from '../components/PreferredFlagIndicator/PreferredFlagIndicator';
 import { formatPreferredVendorsString } from '../../../utils/formatPreferredVendorsString';
+import { SmilesFilter } from '../components/SmilesFilter/SmilesFilter';
 
 const useStyles = makeStyles(theme => ({
   text: {
@@ -88,6 +93,11 @@ const filterByMethodPreferredReactantPrice = index =>
   createTableMethodYesNoFilter(
     (row, ids, filterValue) => filterValue === row.original.reactions?.[index]?.preferredPrice
   );
+
+const filterByMethodReactantsExcludeSmiles = createTableMethodSmilesFilter((row, ids, filterValue) => {
+  const smiles = (row.original.reactions?.map(({ reactants }) => reactants?.map(({ smiles }) => smiles)) || []).flat();
+  return !smiles.some(smile => filterValue.includes(smile));
+});
 
 export const useTableColumns = maxNoSteps => {
   const classes = useStyles();
@@ -363,7 +373,23 @@ export const useTableColumns = maxNoSteps => {
           },
           filter: preferredReactantPriceFilters[index]
         };
-      })
+      }),
+      {
+        id: 'reactant-smiles',
+        defaultCanFilter: true,
+        filterOrder: 10,
+        Filter: ({ column: { filterValue, setFilter } }) => {
+          return (
+            <SmilesFilter
+              id="reactant-smiles"
+              label="Exclude reactant smiles"
+              filterValue={filterValue}
+              setFilter={setFilter}
+            />
+          );
+        },
+        filter: filterByMethodReactantsExcludeSmiles
+      }
     ];
   }, [
     maxNoSteps,

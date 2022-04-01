@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
     }
   },
   firstColumn: {
-    flexBasis: 260
+    flex: '0 0 260px'
   },
   filterColumn: {
     display: 'grid',

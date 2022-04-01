@@ -74,7 +74,6 @@ export const UploadProjectDialog = ({ open, onClose }) => {
         uploadProject({ data });
         onClose();
       }}
-      validateOnMount
     >
       {({ submitForm, isSubmitting, resetForm }) => (
         <SubmitDialog

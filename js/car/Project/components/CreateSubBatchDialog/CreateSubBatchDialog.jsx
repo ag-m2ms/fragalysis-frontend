@@ -39,7 +39,6 @@ export const CreateSubBatchDialog = ({ open, onClose, selectedMethodsIds }) => {
         createSubBatch({ batchtag: batchtag, methodids: selectedMethodsIds });
         onClose();
       }}
-      validateOnMount
     >
       {({ submitForm, isSubmitting, resetForm }) => (
         <SubmitDialog
