@@ -2,7 +2,8 @@ import { Chip, IconButton, makeStyles, TextField, Tooltip } from '@material-ui/c
 import { AddCircle, Clear, CloudUpload } from '@material-ui/icons';
 import classNames from 'classnames';
 import React, { useState } from 'react';
-import { CanonicalizeSmilesDialog } from '../CanonicalizeSmilesDialog';
+import { CanonicalizeSmilesDialog } from '../../../CanonicalizeSmilesDialog';
+import { useCanonicalizeSmiles } from '../../../../hooks/useCanonicalizeSmiles';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -61,11 +62,23 @@ export const SmilesFilter = ({ id, label, filterValue = [], setFilter }) => {
     setFilter([...newFilterValue]);
   };
 
+  const { mutate: canonicalize } = useCanonicalizeSmiles(
+    () => {
+      setDisabled(true);
+    },
+    smiles => {
+      if (!!smiles) {
+        addSmiles(smiles);
+        setInputValue('');
+      }
+      setDisabled(false);
+    }
+  );
+
   const addSmilesFromInput = () => {
     if (!!inputValue) {
       const smiles = inputValue.split(';').map(val => val.trim());
-      addSmiles(smiles);
-      setInputValue('');
+      canonicalize({ data: { smiles } });
     }
   };
 

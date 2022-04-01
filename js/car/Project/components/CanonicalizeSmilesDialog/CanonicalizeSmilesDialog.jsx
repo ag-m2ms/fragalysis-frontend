@@ -2,11 +2,11 @@ import React from 'react';
 import { Typography } from '@material-ui/core';
 import { Form, Formik } from 'formik';
 import * as yup from 'yup';
-import { DialogSection } from '../../../../../common/components/DialogSection';
-import { DialogSectionHeading } from '../../../../../common/components/DialogSectionHeading';
-import { FormFilePicker } from '../../../../../common/components/FormFilePicker';
-import { SubmitDialog } from '../../../../../common/components/SubmitDialog';
-import { useCanonicalizeSmiles } from './hooks/useCanonicalizeSmiles';
+import { DialogSection } from '../../../common/components/DialogSection';
+import { DialogSectionHeading } from '../../../common/components/DialogSectionHeading';
+import { FormFilePicker } from '../../../common/components/FormFilePicker';
+import { SubmitDialog } from '../../../common/components/SubmitDialog';
+import { useCanonicalizeSmiles } from '../../hooks/useCanonicalizeSmiles';
 
 export const CanonicalizeSmilesDialog = ({ open, onClose, onCanonicalizeStart, onCanonicalizeEnd }) => {
   const { mutate: canonicalize } = useCanonicalizeSmiles(onCanonicalizeStart, onCanonicalizeEnd);
