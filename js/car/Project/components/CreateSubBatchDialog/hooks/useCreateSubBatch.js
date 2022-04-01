@@ -5,7 +5,7 @@ import { useTemporaryId } from '../../../../common/hooks/useTemporaryId';
 import { useCurrentProjectStore } from '../../../../common/stores/currentProjectStore';
 import { axiosPost } from '../../../../common/utils/axiosFunctions';
 import { ShowSubBatchButton } from '../components/ShowSubBatchButton';
-import { HideNotificationButton } from '../../../../common/components/HideNotificationButton';
+import { CloseSnackbarButton } from '../../../../common/components/CloseSnackbarButton';
 import { useProjectSnackbar } from '../../../../common/hooks/useProjectSnackbar';
 import { useBatchContext } from '../../../hooks/useBatchContext';
 import { useGlobalSnackbar } from '../../../../common/hooks/useGlobalSnackbar';
@@ -82,7 +82,7 @@ export const useCreateSubBatch = () => {
           action: key => (
             <>
               <ShowSubBatchButton queryClient={queryClient} messageId={key} batchId={batchId} />
-              <HideNotificationButton messageId={key} />
+              <CloseSnackbarButton messageId={key} />
             </>
           )
         });

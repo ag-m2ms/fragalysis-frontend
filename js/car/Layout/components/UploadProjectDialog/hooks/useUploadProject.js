@@ -2,7 +2,7 @@ import React from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { axiosPost } from '../../../../common/utils/axiosFunctions';
 import { addCeleryTask } from '../../../../common/stores/celeryTasksStore';
-import { HideNotificationButton } from '../../../../common/components/HideNotificationButton/HideNotificationButton';
+import { CloseSnackbarButton } from '../../../../common/components/CloseSnackbarButton';
 import { scopes } from '../../../../common/constants/scopes';
 import {
   getProjectsQueryKey,
@@ -90,7 +90,7 @@ export const useUploadProject = () => {
               action: key => (
                 <>
                   <ShowProjectButton messageId={key} projectId={project_id} queryClient={queryClient} />
-                  <HideNotificationButton messageId={key} />
+                  <CloseSnackbarButton messageId={key} />
                 </>
               )
             });

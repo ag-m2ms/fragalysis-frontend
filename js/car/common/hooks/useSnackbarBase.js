@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { useCallback } from 'react';
-import { HideNotificationButton } from '../components/HideNotificationButton/HideNotificationButton';
+import { CloseSnackbarButton } from '../components/CloseSnackbarButton/CloseSnackbarButton';
 
 /**
  * Serves as a base for useProjectSnackbar and useGlobalSnackbar. This file should not be used directly. Use
@@ -14,7 +14,7 @@ export const useSnackbarBase = snackbarBase => {
       return enqueueSnackbar(message, {
         variant: 'success',
         autoHideDuration: null,
-        action: key => <HideNotificationButton messageId={key} />,
+        action: key => <CloseSnackbarButton messageId={key} />,
         ...options
       });
     },
@@ -26,7 +26,7 @@ export const useSnackbarBase = snackbarBase => {
       return enqueueSnackbar(message, {
         variant: 'error',
         autoHideDuration: null,
-        action: key => <HideNotificationButton messageId={key} />,
+        action: key => <CloseSnackbarButton messageId={key} />,
         ...options
       });
     },

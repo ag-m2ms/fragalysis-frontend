@@ -2,7 +2,7 @@ import React from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { axiosPost } from '../../../../common/utils/axiosFunctions';
 import { addCeleryTask } from '../../../../common/stores/celeryTasksStore';
-import { HideNotificationButton } from '../../../../common/components/HideNotificationButton/HideNotificationButton';
+import { CloseSnackbarButton } from '../../../../common/components/CloseSnackbarButton/CloseSnackbarButton';
 import { scopes } from '../../../../common/constants/scopes';
 import { useProjectSnackbar } from '../../../../common/hooks/useProjectSnackbar';
 import { ShowOTProtocolSummaryButton } from '../components/ShowOTProtocolSummaryButton';
@@ -48,7 +48,7 @@ export const useCreateOTProtocol = () => {
             action: key => (
               <>
                 <ShowOTProtocolSummaryButton messageId={key} otProtocolId={otprotocol_id} />
-                <HideNotificationButton messageId={key} />
+                <CloseSnackbarButton messageId={key} />
               </>
             )
           });
