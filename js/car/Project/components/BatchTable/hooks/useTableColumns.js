@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Checkbox, IconButton, makeStyles, Typography } from '@material-ui/core';
+import { Checkbox, colors, IconButton, makeStyles, Typography } from '@material-ui/core';
 import { IconComponent } from '../../../../common/components/IconComponent';
 import { FaFlask } from 'react-icons/fa';
 import { GiMoneyStack } from 'react-icons/gi';
@@ -24,6 +24,7 @@ import { PREFERRED_LEAD_TIME, PREFERRED_PRICE, PREFERRED_VENDORS } from '../../.
 import { PreferredFlagIndicator } from '../components/PreferredFlagIndicator/PreferredFlagIndicator';
 import { formatPreferredVendorsString } from '../../../utils/formatPreferredVendorsString';
 import { SmilesFilter } from '../components/SmilesFilter/SmilesFilter';
+import classNames from 'classnames';
 
 const useStyles = makeStyles(theme => ({
   text: {
@@ -47,6 +48,12 @@ const useStyles = makeStyles(theme => ({
   preferredIndicatorsWrapper: {
     display: 'grid',
     gap: theme.spacing()
+  },
+  unsuccessful: {
+    backgroundColor: colors.red[100]
+  },
+  image: {
+    mixBlendMode: 'multiply'
   }
 }));
 
@@ -176,9 +183,9 @@ export const useTableColumns = maxNoSteps => {
             }
 
             return (
-              <div className={classes.flexCell}>
+              <div className={classNames(classes.flexCell, !reaction.success && classes.unsuccessful)}>
                 <div className={classes.reactionWrapper}>
-                  <img src={reaction.reactionimage} width={270} height={60} />
+                  <img className={classes.image} src={reaction.reactionimage} width={270} height={60} />
                   <div className={classes.reactionNameWrapper}>
                     <Typography variant="caption" noWrap>
                       {value}
@@ -395,7 +402,9 @@ export const useTableColumns = maxNoSteps => {
     maxNoSteps,
     classes.text,
     classes.flexCell,
+    classes.unsuccessful,
     classes.reactionWrapper,
+    classes.image,
     classes.reactionNameWrapper,
     classes.preferredIndicatorsWrapper,
     synthesiseMethod,

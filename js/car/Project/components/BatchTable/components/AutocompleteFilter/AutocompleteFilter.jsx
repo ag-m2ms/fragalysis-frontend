@@ -24,9 +24,8 @@ export const AutocompleteFilter = ({ id, options, label, placeholder, filterValu
       renderTags={(values, getTagProps) =>
         values.map((value, index) => (
           <Chip
-            {...getTagProps(index)}
+            {...getTagProps({ index })}
             classes={{ root: classes.chip }}
-            key={String(value)}
             label={!!value ? value : <i>{String(value)}</i>}
           />
         ))

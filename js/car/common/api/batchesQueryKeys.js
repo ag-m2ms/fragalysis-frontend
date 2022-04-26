@@ -7,3 +7,5 @@ export const deleteBatchKey = batchId => `/batches/${batchId}/`;
 export const canonicalizeSmilesKey = () => '/batches/canonicalizesmiles/';
 
 export const getCanonicalizeSmilesTaskStatusQueryKey = params => ['/batches/gettaskstatus/', params];
+
+export const updateReactionSuccess = () => '/batches/updatereactionsuccess/';

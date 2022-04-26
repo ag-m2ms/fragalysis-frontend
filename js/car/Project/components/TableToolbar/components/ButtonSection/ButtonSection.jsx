@@ -4,6 +4,7 @@ import { setRowsExpanded } from '../../../../../common/stores/batchesTableStateS
 import { useBatchContext } from '../../../../hooks/useBatchContext';
 import { ToolbarSection } from '../ToolbarSection';
 import { CreateSubBatchDialog } from '../../../CreateSubBatchDialog';
+import { MarkReactionsUnsuccessfulDialog } from '../../../MarkReactionsUnsuccessfulDialog/MarkReactionsUnsuccessfulDialog';
 
 export const ButtonSection = ({ tableInstance, selectedMethodsIds }) => {
   const { flatRows, toggleAllRowsExpanded, preFilteredFlatRows, setAllFilters } = tableInstance;
@@ -14,7 +15,8 @@ export const ButtonSection = ({ tableInstance, selectedMethodsIds }) => {
 
   const createSubBatchEnabled = !!selectedMethodsIds.length;
 
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [createSubBatchDialogOpen, setCreateSubBatchDialogOpen] = useState(false);
+  const [markReactionsUnsuccessfulDialogOpen, setMarkReactionsUnsuccessfulDialogOpen] = useState(false);
 
   return (
     <>
@@ -58,7 +60,7 @@ export const ButtonSection = ({ tableInstance, selectedMethodsIds }) => {
               variant="contained"
               color="secondary"
               onClick={() => {
-                setDialogOpen(true);
+                setCreateSubBatchDialogOpen(true);
               }}
               disabled={!createSubBatchEnabled}
             >
@@ -82,12 +84,27 @@ export const ButtonSection = ({ tableInstance, selectedMethodsIds }) => {
             </Button>
           </span>
         </Tooltip>
+
+        <Button
+          fullWidth
+          variant="contained"
+          color="secondary"
+          onClick={() => {
+            setMarkReactionsUnsuccessfulDialogOpen(true);
+          }}
+        >
+          Mark reactions unsuccessful
+        </Button>
       </ToolbarSection>
 
       <CreateSubBatchDialog
-        open={dialogOpen}
-        onClose={() => setDialogOpen(false)}
+        open={createSubBatchDialogOpen}
+        onClose={() => setCreateSubBatchDialogOpen(false)}
         selectedMethodsIds={selectedMethodsIds}
+      />
+      <MarkReactionsUnsuccessfulDialog
+        open={markReactionsUnsuccessfulDialogOpen}
+        onClose={() => setMarkReactionsUnsuccessfulDialogOpen(false)}
       />
     </>
   );
