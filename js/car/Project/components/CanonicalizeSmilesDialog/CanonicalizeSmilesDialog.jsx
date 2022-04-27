@@ -29,7 +29,7 @@ export const CanonicalizeSmilesDialog = ({ open, onClose, onCanonicalizeStart, o
         onClose();
       }}
     >
-      {({ submitForm, isSubmitting, resetForm }) => (
+      {({ isSubmitting, resetForm }) => (
         <SubmitDialog
           id="canonicalize-smiles-dialog"
           open={open}
@@ -45,7 +45,6 @@ export const CanonicalizeSmilesDialog = ({ open, onClose, onCanonicalizeStart, o
             </Form>
           }
           onClose={onClose}
-          onSubmit={submitForm}
           submitDisabled={isSubmitting}
           SubmitButtonProps={{
             type: 'submit',

@@ -75,7 +75,7 @@ export const UploadProjectDialog = ({ open, onClose }) => {
         onClose();
       }}
     >
-      {({ submitForm, isSubmitting, resetForm }) => (
+      {({ isSubmitting, resetForm }) => (
         <SubmitDialog
           id="upload-project-dialog"
           open={open}
@@ -131,7 +131,6 @@ export const UploadProjectDialog = ({ open, onClose }) => {
           onClose={() => {
             onClose();
           }}
-          onSubmit={submitForm}
           submitDisabled={isSubmitting}
           SubmitButtonProps={{
             type: 'submit',

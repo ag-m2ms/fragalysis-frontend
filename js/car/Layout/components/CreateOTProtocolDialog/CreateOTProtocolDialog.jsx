@@ -38,7 +38,7 @@ export const CreateOTProtocolDialog = ({ open, onClose }) => {
         onClose();
       }}
     >
-      {({ submitForm, isSubmitting, resetForm }) => (
+      {({ isSubmitting, resetForm }) => (
         <SubmitDialog
           id="create-ot-protocol-dialog"
           open={open}
@@ -60,7 +60,6 @@ export const CreateOTProtocolDialog = ({ open, onClose }) => {
             </Form>
           }
           onClose={onClose}
-          onSubmit={submitForm}
           submitDisabled={isSubmitting}
           SubmitButtonProps={{
             type: 'submit',

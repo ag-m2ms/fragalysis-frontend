@@ -32,7 +32,7 @@ export const MarkReactionsUnsuccessfulDialog = ({ open, onClose }) => {
         onClose();
       }}
     >
-      {({ submitForm, isSubmitting, resetForm }) => (
+      {({ isSubmitting, resetForm }) => (
         <SubmitDialog
           id="mark-reactions-unsuccessful-dialog"
           open={open}
@@ -55,7 +55,6 @@ export const MarkReactionsUnsuccessfulDialog = ({ open, onClose }) => {
             </Form>
           }
           onClose={onClose}
-          onSubmit={submitForm}
           submitDisabled={isSubmitting}
           SubmitButtonProps={{
             type: 'submit',
