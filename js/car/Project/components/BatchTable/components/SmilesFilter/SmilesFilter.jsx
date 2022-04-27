@@ -78,7 +78,9 @@ export const SmilesFilter = ({ id, label, filterValue = [], setFilter }) => {
   const addSmilesFromInput = () => {
     if (!!inputValue) {
       const smiles = inputValue.split(';').map(val => val.trim());
-      canonicalize({ data: { smiles } });
+      const formData = new FormData();
+      smiles.forEach(smile => formData.append('smiles', smile));
+      canonicalize({ data: formData });
     }
   };
 
@@ -105,7 +107,7 @@ export const SmilesFilter = ({ id, label, filterValue = [], setFilter }) => {
                   className={classes.chip}
                   key={value}
                   label={value}
-                  tabindex={-1}
+                  tabIndex={-1}
                   disabled={disabled}
                   onDelete={() => {
                     const newFilterValue = [...filterValue];
