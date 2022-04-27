@@ -8,7 +8,7 @@ import * as yup from 'yup';
 import { CreateSubBatchSelectedTargetsList } from './components/CreateSubBatchSelectedTargetsList';
 import { DialogSection } from '../../..//common/components/DialogSection';
 import { DialogSectionHeading } from '../../../common/components/DialogSectionHeading';
-import { FormTextField } from '../../../common/components/FormTextField';
+import { FormSelectField } from '../../../common/components/FormSelectField';
 
 const useStyles = makeStyles(theme => ({
   form: {
@@ -16,6 +16,12 @@ const useStyles = makeStyles(theme => ({
     gap: theme.spacing(2)
   }
 }));
+
+const possibleTags = [
+  { value: 'OT-chem', text: 'OT-chem' },
+  { value: 'Low-cost', text: 'Low-cost' },
+  { value: 'For-review', text: 'For-review' }
+];
 
 export const CreateSubBatchDialog = ({ open, onClose, selectedMethodsIds }) => {
   const classes = useStyles();
@@ -28,12 +34,7 @@ export const CreateSubBatchDialog = ({ open, onClose, selectedMethodsIds }) => {
         batchtag: ''
       }}
       validationSchema={yup.object().shape({
-        batchtag: yup
-          .string()
-          .min(1, 'The name is too short')
-          .max(20, 'The name is too long')
-          .matches(/^[a-zA-Z0-9\-_ ]+$/, 'The name can only include a-z, A-Z, 0-9, -, _ or space')
-          .required('Required')
+        batchtag: yup.string().required('Required')
       })}
       onSubmit={({ batchtag }) => {
         createSubBatch({ batchtag: batchtag, methodids: selectedMethodsIds });
@@ -50,11 +51,7 @@ export const CreateSubBatchDialog = ({ open, onClose, selectedMethodsIds }) => {
               <DialogSection>
                 <DialogSectionHeading>Batch information</DialogSectionHeading>
                 <Typography>Please provide following information:</Typography>
-                <FormTextField
-                  name="batchtag"
-                  label="Name"
-                  placeholder="Name (can include a-z, A-Z, 0-9, -, _ or space)"
-                />
+                <FormSelectField id="create-subbatch-batchtag" name="batchtag" label="Name" items={possibleTags} />
               </DialogSection>
 
               <DialogSection>
