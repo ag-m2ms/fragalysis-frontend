@@ -21,7 +21,7 @@ export const CreateOTProtocolDialog = ({ open, onClose }) => {
           .object()
           .test('one-or-more-selected', 'Select at least one batch', value => Object.values(value).some(val => val))
       })}
-      onSubmit={({ protocol_name, selectedBatchesMap }) => {
+      onSubmit={({ selectedBatchesMap }) => {
         const selectedBatchesIds = Object.entries(selectedBatchesMap)
           .filter(([_, value]) => value)
           .map(([key]) => Number(key));

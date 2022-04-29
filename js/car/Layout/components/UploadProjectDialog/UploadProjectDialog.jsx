@@ -9,6 +9,7 @@ import { useUploadProject } from './hooks/useUploadProject';
 import { FormTextField } from '../../../common/components/FormTextField';
 import { FormRadioGroup } from '../../../common/components/FormRadioGroup';
 import { FormFilePicker } from '../../../common/components/FormFilePicker';
+import { useValidateSmiles } from './hooks/useValidateSmiles';
 
 const validationOptions = [
   { value: '0', label: 'Validate' },
@@ -23,6 +24,7 @@ const apiOptions = [
 
 export const UploadProjectDialog = ({ open, onClose }) => {
   const { mutate: uploadProject } = useUploadProject();
+  const { mutate: validateSmiles } = useValidateSmiles();
 
   return (
     <Formik
@@ -71,7 +73,11 @@ export const UploadProjectDialog = ({ open, onClose }) => {
           .required('Select one of the choices')
       })}
       onSubmit={data => {
-        uploadProject({ data });
+        if (data.validate_choice === '0') {
+          validateSmiles({ data });
+        } else {
+          uploadProject({ data });
+        }
         onClose();
       }}
     >

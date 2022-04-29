@@ -4,6 +4,7 @@ import { AddCircle } from '@material-ui/icons';
 import { ContentBox } from '../../../common/components/ContentBox';
 import { ProjectList } from './components/ProjectList';
 import { UploadProjectDialog } from '../UploadProjectDialog';
+import { SmilesValidationErrorsDialog } from '../SmilesValidationErrorsDialog/SmilesValidationErrorsDialog';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -35,6 +36,7 @@ export const Landing = () => {
       </ContentBox>
 
       <UploadProjectDialog open={uploadProjectDialogOpen} onClose={() => setUploadProjectDialogOpen(false)} />
+      <SmilesValidationErrorsDialog />
     </>
   );
 };
