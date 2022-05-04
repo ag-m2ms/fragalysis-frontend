@@ -20,7 +20,7 @@ export const useCreateSubBatch = () => {
 
   const { generateId } = useTemporaryId();
 
-  const { enqueueSnackbar, enqueueSnackbarSuccess, closeSnackbar } = useProjectSnackbar();
+  const { enqueueSnackbarInfo, enqueueSnackbarSuccess, closeSnackbar } = useProjectSnackbar();
   const { enqueueSnackbarError } = useGlobalSnackbar();
 
   return useMutation(
@@ -31,7 +31,7 @@ export const useCreateSubBatch = () => {
       }),
     {
       onMutate: async ({ batchtag }) => {
-        const creatingMessageId = enqueueSnackbar('A new subbatch is being created...', { variant: 'info' });
+        const creatingMessageId = enqueueSnackbarInfo('A new subbatch is being created...');
 
         // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
         await queryClient.cancelQueries(batchesQueryKey);

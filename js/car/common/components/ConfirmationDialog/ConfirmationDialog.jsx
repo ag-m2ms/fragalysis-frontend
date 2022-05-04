@@ -25,13 +25,10 @@ export const ConfirmationDialog = ({
           onClick={onCancel || onClose}
           disabled={cancelDisabled}
           color="primary"
+          children="Cancel"
           {...CancelButtonProps}
-        >
-          Cancel
-        </Button>
-        <Button onClick={onOk} disabled={okDisabled} color="primary" {...OkButtonProps}>
-          Ok
-        </Button>
+        />
+        <Button onClick={onOk} disabled={okDisabled} color="primary" children="Ok" {...OkButtonProps} />
       </DialogActions>
     </Dialog>
   );

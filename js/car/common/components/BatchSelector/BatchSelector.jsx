@@ -2,8 +2,8 @@ import React from 'react';
 import { ChevronRight, ExpandMore } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core';
 import { TreeView } from '@material-ui/lab';
-import { useBatchTree } from '../../../../../common/hooks/useBatchTree';
-import { BatchSelectorItem } from '../BatchSelectorItem';
+import { BatchSelectorItem } from './components/BatchSelectorItem';
+import { useBatchTree } from '../../hooks/useBatchTree';
 
 const useStyles = makeStyles(theme => ({
   icon: {

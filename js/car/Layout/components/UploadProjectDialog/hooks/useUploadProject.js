@@ -18,7 +18,7 @@ export const useUploadProject = () => {
 
   const { generateId } = useTemporaryId();
 
-  const { enqueueSnackbar, enqueueSnackbarSuccess, enqueueSnackbarError, closeSnackbar } = useGlobalSnackbar();
+  const { enqueueSnackbarInfo, enqueueSnackbarSuccess, enqueueSnackbarError, closeSnackbar } = useGlobalSnackbar();
 
   const projectsQueryKey = getProjectsQueryKey();
 
@@ -32,7 +32,7 @@ export const useUploadProject = () => {
     },
     {
       onMutate: async ({ data }) => {
-        const creatingMessageId = enqueueSnackbar('A project is being created...', { variant: 'info' });
+        const creatingMessageId = enqueueSnackbarInfo('A project is being created...');
 
         // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
         await queryClient.cancelQueries(projectsQueryKey);

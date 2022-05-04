@@ -5,6 +5,7 @@ import { setCurrentProject, useCurrentProjectStore } from '../../../common/store
 import { LayoutSwitch } from './components/LayoutSwitch/LayoutSwitch';
 import { CreateOTProtocolButton } from './components/CreateOTProtocolButton';
 import { OTProtocolHistoryButton } from './components/OTProtocolHistoryButton';
+import { ExportProjectButton } from './components/ExportProjectButton';
 
 const useStyles = makeStyles(theme => ({
   toolbar: {
@@ -39,6 +40,7 @@ export const Header = () => {
             <>
               <CreateOTProtocolButton />
               <OTProtocolHistoryButton />
+              <ExportProjectButton />
               <LayoutSwitch checked={navigationDisplayed} onChange={setNavigationDisplayed} label="Navigation" />
               <LayoutSwitch checked={projectViewDisplayed} onChange={setProjectViewDisplayed} label="Project view" />
             </>

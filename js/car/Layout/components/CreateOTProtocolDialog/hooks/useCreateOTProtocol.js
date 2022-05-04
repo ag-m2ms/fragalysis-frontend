@@ -19,14 +19,14 @@ export const useCreateOTProtocol = () => {
 
   const currentProject = useCurrentProjectStore.useCurrentProject();
 
-  const { enqueueSnackbar, enqueueSnackbarSuccess, closeSnackbar } = useProjectSnackbar();
+  const { enqueueSnackbarInfo, enqueueSnackbarSuccess, closeSnackbar } = useProjectSnackbar();
   const { enqueueSnackbarError } = useGlobalSnackbar();
 
   const otProtocolsQueryKey = getOtProtocolsQueryKey({ project_id: currentProject.id });
 
   return useMutation(data => axiosPost(createOtProtocolKey(), data), {
     onMutate: async () => {
-      const creatingMessageId = enqueueSnackbar('An OT protocol is being generated...', { variant: 'info' });
+      const creatingMessageId = enqueueSnackbarInfo('An OT protocol is being generated...');
       return { creatingMessageId };
     },
     onError: (err, vars, { creatingMessageId }) => {

@@ -7,9 +7,14 @@ export const CloseDialog = ({ open, onClose, closeDisabled, CloseButtonProps = {
       <DialogTitle id={id}>{title}</DialogTitle>
       <DialogContent dividers>{content}</DialogContent>
       <DialogActions>
-        <Button autoFocus onClick={onClose} color="primary" disabled={closeDisabled} {...CloseButtonProps}>
-          Close
-        </Button>
+        <Button
+          autoFocus
+          onClick={onClose}
+          color="primary"
+          disabled={closeDisabled}
+          children="Close"
+          {...CloseButtonProps}
+        />
       </DialogActions>
     </Dialog>
   );

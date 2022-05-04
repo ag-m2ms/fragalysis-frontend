@@ -9,6 +9,16 @@ import { CloseSnackbarButton } from '../components/CloseSnackbarButton/CloseSnac
 export const useSnackbarBase = snackbarBase => {
   const { enqueueSnackbar, closeSnackbar } = snackbarBase;
 
+  const enqueueSnackbarInfo = useCallback(
+    (message, options = {}) => {
+      return enqueueSnackbar(message, {
+        variant: 'info',
+        ...options
+      });
+    },
+    [enqueueSnackbar]
+  );
+
   const enqueueSnackbarSuccess = useCallback(
     (message, options = {}) => {
       return enqueueSnackbar(message, {
@@ -36,10 +46,11 @@ export const useSnackbarBase = snackbarBase => {
   return useMemo(
     () => ({
       enqueueSnackbar,
+      enqueueSnackbarInfo,
       enqueueSnackbarSuccess,
       enqueueSnackbarError,
       closeSnackbar
     }),
-    [enqueueSnackbar, enqueueSnackbarSuccess, enqueueSnackbarError, closeSnackbar]
+    [enqueueSnackbar, enqueueSnackbarInfo, enqueueSnackbarSuccess, enqueueSnackbarError, closeSnackbar]
   );
 };

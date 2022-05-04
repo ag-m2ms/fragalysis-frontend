@@ -9,7 +9,7 @@ import { CloseSnackbarButton } from '../../../../common/components/CloseSnackbar
 import { ShowValidationErrorsButton } from '../components/ShowValidationErrorsButton/ShowValidationErrorsButton';
 
 export const useValidateSmiles = () => {
-  const { enqueueSnackbar, enqueueSnackbarSuccess, enqueueSnackbarError, closeSnackbar } = useGlobalSnackbar();
+  const { enqueueSnackbarInfo, enqueueSnackbarSuccess, enqueueSnackbarError, closeSnackbar } = useGlobalSnackbar();
 
   return useMutation(
     ({ data }) => {
@@ -21,7 +21,7 @@ export const useValidateSmiles = () => {
     },
     {
       onMutate: async () => {
-        const creatingMessageId = enqueueSnackbar('The smiles file is being validated...', { variant: 'info' });
+        const creatingMessageId = enqueueSnackbarInfo('The smiles file is being validated...');
 
         return { creatingMessageId };
       },

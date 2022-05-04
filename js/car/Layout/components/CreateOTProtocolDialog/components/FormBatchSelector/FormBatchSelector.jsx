@@ -1,8 +1,8 @@
 import { FormControl, FormHelperText, FormLabel, makeStyles } from '@material-ui/core';
 import { ErrorMessage, useField } from 'formik';
 import React from 'react';
+import { BatchSelector } from '../../../../../common/components/BatchSelector';
 import { SuspenseWithBoundary } from '../../../../../common/components/SuspenseWithBoundary';
-import { BatchSelector } from '../BatchSelector';
 import { OTWarningSection } from '../OTWarningSection';
 
 const useStyles = makeStyles(theme => ({
