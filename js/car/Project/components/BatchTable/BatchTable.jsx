@@ -112,8 +112,9 @@ export const BatchTable = () => {
             .fill(0)
             .map((_, index) => [
               `reactant-vendor-step-${index}`,
-              `reactant-leadtime-step-${index}`,
-              `reactant-price-step-${index}`
+              `reactant-preferred-vendor-step-${index}`,
+              `reactant-preferred-leadtime-step-${index}`,
+              `reactant-preferred-price-step-${index}`
             ])
             .flat(),
           'reactant-smiles'

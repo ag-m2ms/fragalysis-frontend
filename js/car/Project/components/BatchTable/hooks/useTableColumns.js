@@ -86,6 +86,16 @@ const filterByTargetPrice = createTableTargetRangeFilter((row, ids, filterValue)
   return prices.some(price => price >= min && price <= max);
 });
 
+const filterByMethodReactantVendor = index =>
+  createTableMethodAutocompleteFilter((row, ids, filterValue) => {
+    const vendors = (
+      row.original.reactions?.[index]?.reactants?.map(({ catalogentries }) =>
+        catalogentries?.map(({ vendor }) => vendor)
+      ) || []
+    ).flat(2);
+    return filterValue.some(value => vendors.includes(value));
+  });
+
 const filterByMethodPreferredReactantVendor = index =>
   createTableMethodYesNoFilter(
     (row, ids, filterValue) => filterValue === row.original.reactions?.[index]?.preferredVendor
@@ -113,6 +123,9 @@ export const useTableColumns = maxNoSteps => {
   const { mutate: adjustReactionSuccessRate } = useAdjustReactionSuccessRate();
 
   // Since filter functions should be memoized, we can't call them directly
+  const reactantVendorFilters = useMemo(() => {
+    return new Array(maxNoSteps).fill(0).map((_, index) => filterByMethodReactantVendor(index));
+  }, [maxNoSteps]);
   const preferredReactantVendorFilters = useMemo(() => {
     return new Array(maxNoSteps).fill(0).map((_, index) => filterByMethodPreferredReactantVendor(index));
   }, [maxNoSteps]);
@@ -332,10 +345,42 @@ export const useTableColumns = maxNoSteps => {
           id: `reactant-vendor-step-${index}`,
           defaultCanFilter: true,
           filterOrder: 7,
+          Filter: ({ column: { filterValue, setFilter }, preFilteredFlatRows }) => {
+            return (
+              <AutocompleteFilter
+                id={`reactant-vendor-${index + 1}-filter`}
+                options={[
+                  ...new Set(
+                    preFilteredFlatRows
+                      .filter(row => row.depth === 1)
+                      .map(row =>
+                        row.original.reactions?.[index]?.reactants.map(({ catalogentries }) =>
+                          catalogentries.map(({ vendor }) => vendor)
+                        )
+                      )
+                      .flat(2)
+                      .filter(vendor => !!vendor)
+                  )
+                ].sort()}
+                label={`Reactant vendor - step ${index + 1}`}
+                placeholder="Reactant vendor"
+                filterValue={filterValue}
+                setFilter={setFilter}
+              />
+            );
+          },
+          filter: reactantVendorFilters[index]
+        };
+      }),
+      ...new Array(maxNoSteps).fill(0).map((_, index) => {
+        return {
+          id: `reactant-preferred-vendor-step-${index}`,
+          defaultCanFilter: true,
+          filterOrder: 8,
           Filter: ({ column: { filterValue, setFilter } }) => {
             return (
               <YesNoFilter
-                id={`reactant-vendor-${index + 1}-filter`}
+                id={`reactant-preferred-vendor-${index + 1}-filter`}
                 label={`Reactant vendor is ${formatPreferredVendorsString(PREFERRED_VENDORS)} - step ${index + 1}`}
                 filterValue={filterValue}
                 setFilter={setFilter}
@@ -347,13 +392,13 @@ export const useTableColumns = maxNoSteps => {
       }),
       ...new Array(maxNoSteps).fill(0).map((_, index) => {
         return {
-          id: `reactant-leadtime-step-${index}`,
+          id: `reactant-preferred-leadtime-step-${index}`,
           defaultCanFilter: true,
-          filterOrder: 8,
+          filterOrder: 9,
           Filter: ({ column: { filterValue, setFilter } }) => {
             return (
               <YesNoFilter
-                id={`reactant-leadtime-${index + 1}-filter`}
+                id={`reactant-preferred-leadtime-${index + 1}-filter`}
                 label={`Reactant lead time within ${PREFERRED_LEAD_TIME} weeks - step ${index + 1}`}
                 filterValue={filterValue}
                 setFilter={setFilter}
@@ -365,13 +410,13 @@ export const useTableColumns = maxNoSteps => {
       }),
       ...new Array(maxNoSteps).fill(0).map((_, index) => {
         return {
-          id: `reactant-price-step-${index}`,
+          id: `reactant-preferred-price-step-${index}`,
           defaultCanFilter: true,
-          filterOrder: 9,
+          filterOrder: 10,
           Filter: ({ column: { filterValue, setFilter } }) => {
             return (
               <YesNoFilter
-                id={`reactant-price-${index + 1}-filter`}
+                id={`reactant-preferred-price-${index + 1}-filter`}
                 label={`Reactant price within ${PREFERRED_PRICE} - step ${index + 1}`}
                 filterValue={filterValue}
                 setFilter={setFilter}
@@ -384,7 +429,7 @@ export const useTableColumns = maxNoSteps => {
       {
         id: 'reactant-smiles',
         defaultCanFilter: true,
-        filterOrder: 10,
+        filterOrder: 11,
         Filter: ({ column: { filterValue, setFilter } }) => {
           return (
             <SmilesFilter
@@ -409,6 +454,7 @@ export const useTableColumns = maxNoSteps => {
     classes.preferredIndicatorsWrapper,
     synthesiseMethod,
     adjustReactionSuccessRate,
+    reactantVendorFilters,
     preferredReactantVendorFilters,
     preferredReactantLeadTimeFilters,
     preferredReactantPriceFilters
