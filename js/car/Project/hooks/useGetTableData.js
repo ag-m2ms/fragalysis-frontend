@@ -64,8 +64,9 @@ export const useGetTableData = () => {
       const { methods, ...rest } = target;
       return {
         ...rest,
-        subRows: methods?.map(method => ({
+        subRows: methods?.map((method, index) => ({
           ...method,
+          position: index + 1,
           reactions: method.reactions?.map(reaction => ({
             ...reaction,
             // TODO this might be better to do on the BE?

@@ -14,9 +14,13 @@ import { useGlobalSnackbar } from '../../../common/hooks/useGlobalSnackbar';
 import { useProjectSnackbar } from '../../../common/hooks/useProjectSnackbar';
 import { CloseSnackbarButton } from '../../../common/components/CloseSnackbarButton';
 import { DownloadButton } from './components/DownloadButton/DownloadButton';
+import { getBatchesQueryKey } from '../../../common/api/batchesQueryKeys';
+import { useCurrentProjectStore } from '../../../common/stores/currentProjectStore';
 
 export const ExportProjectDialog = ({ open, onClose }) => {
   const queryClient = useQueryClient();
+
+  const project = useCurrentProjectStore.useCurrentProject();
 
   const { enqueueSnackbarInfo } = useProjectSnackbar();
   const { enqueueSnackbarSuccess, enqueueSnackbarError, closeSnackbar } = useGlobalSnackbar();
@@ -37,13 +41,13 @@ export const ExportProjectDialog = ({ open, onClose }) => {
         const messageId = enqueueSnackbarInfo('Your download is being prepared...');
 
         try {
-          const selectedBatchesIds = Object.entries(selectedBatchesMap)
-            .filter(([_, value]) => value)
-            .map(([key]) => Number(key));
+          // Pair the selected batch IDs with batches
+          const batches = await queryClient.fetchQuery(getBatchesQueryKey({ project_id: project.id }));
+          const selectedBatches = batches.filter(batch => !!selectedBatchesMap[batch.id]);
 
           const batchTargets = await Promise.all(
-            selectedBatchesIds.map(id => {
-              const queryKey = getTargetsQueryKey({ batch_id: id, fetchall: 'yes' });
+            selectedBatches.map(batch => {
+              const queryKey = getTargetsQueryKey({ batch_id: batch.id, fetchall: 'yes' });
 
               return queryClient.fetchQuery({ queryKey, queryFn: async () => (await axiosGet(queryKey)).results });
             })
@@ -51,16 +55,17 @@ export const ExportProjectDialog = ({ open, onClose }) => {
 
           // This transforms the data into an array where an item represents a method
           const data = batchTargets
-            .map(targets =>
+            .map((targets, i) =>
               targets.map(target =>
-                target.methods?.map((method, i) => ({
+                target.methods?.map((method, j) => ({
+                  batch_name: selectedBatches[i].batch_tag,
                   target_SMILES: target.smiles,
-                  method_no: i + 1,
+                  method_no: j + 1,
                   ...Object.fromEntries(
                     method.reactions
-                      .map((reaction, j) => [
-                        ...reaction.reactants.map((reactant, k) => [`react${j + 1}.${k + 1}_SMILES`, reactant.smiles]),
-                        [`prod${j + 1}_SMILES`, reaction.products[0].smiles]
+                      .map((reaction, k) => [
+                        ...reaction.reactants.map((reactant, l) => [`react${k + 1}.${l + 1}_SMILES`, reactant.smiles]),
+                        [`prod${k + 1}_SMILES`, reaction.products[0].smiles]
                       ])
                       .flat()
                   )
@@ -69,14 +74,18 @@ export const ExportProjectDialog = ({ open, onClose }) => {
             )
             .flat(2);
 
-          // From the data derive the unique columns since the number of columns depends on the data
-          const fields = [
-            ...new Set(
-              data.reduce((accumulator, item) => {
-                return [...accumulator, ...Object.keys(item)];
-              }, [])
-            )
-          ];
+          /**
+           * Derive the columns from data. A row with the most amount of columns should have all the columns other rows have.
+           * This isn't very stable because in case there is more data which varies across rows the mechanism might not
+           * resolve all of the unique rows. The reason why it's done this way is to ensure the order of the columns.
+           */
+          const fields = data.reduce((currentBest, row) => {
+            const keys = Object.keys(row);
+            if (keys.length > currentBest.length) {
+              return keys;
+            }
+            return currentBest;
+          }, []);
 
           const csvData = await parseAsync(data, { fields });
 

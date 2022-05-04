@@ -25,6 +25,7 @@ import { PreferredFlagIndicator } from '../components/PreferredFlagIndicator/Pre
 import { formatPreferredVendorsString } from '../../../utils/formatPreferredVendorsString';
 import { SmilesFilter } from '../components/SmilesFilter/SmilesFilter';
 import classNames from 'classnames';
+import { FormatListNumbered } from '@material-ui/icons';
 
 const useStyles = makeStyles(theme => ({
   text: {
@@ -138,6 +139,22 @@ export const useTableColumns = maxNoSteps => {
 
   const columns = useMemo(() => {
     return [
+      {
+        accessor: 'position',
+        sortLabel: 'position',
+        disableFilters: true,
+        Header: () => {
+          return <FormatListNumbered />;
+        },
+        Cell: ({ value }) => {
+          return (
+            <Typography className={classes.text} component="span" noWrap>
+              {value}
+            </Typography>
+          );
+        },
+        sortType: 'number'
+      },
       {
         accessor: 'estimatecost',
         sortLabel: 'cost',
