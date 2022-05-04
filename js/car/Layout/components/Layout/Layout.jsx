@@ -9,6 +9,7 @@ import { useCurrentProjectStore } from '../../../common/stores/currentProjectSto
 import { SuspenseWithBoundary } from '../../../common/components/SuspenseWithBoundary';
 import { useLayoutStore } from '../../../common/stores/layoutStore';
 import { Landing } from '../Landing';
+import { SmilesValidationErrorsDialog } from '../SmilesValidationErrorsDialog';
 
 const useStyles = makeStyles(theme => ({
   content: {
@@ -67,6 +68,8 @@ export const Layout = () => {
           <Landing />
         )}
       </div>
+
+      <SmilesValidationErrorsDialog />
     </>
   );
 };

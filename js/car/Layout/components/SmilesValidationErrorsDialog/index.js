@@ -1,1 +1,1 @@
-export * from './ShowSmilesValidationErrorsDialog';
+export * from './SmilesValidationErrorsDialog';
