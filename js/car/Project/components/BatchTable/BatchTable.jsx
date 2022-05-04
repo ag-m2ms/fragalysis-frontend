@@ -52,9 +52,9 @@ const useStyles = makeStyles(theme => ({
   row: {
     gridTemplateColumns: ({ maxNoSteps }) => {
       if (!maxNoSteps) {
-        return '40px 60px 60px 40px';
+        return '40px 60px';
       }
-      return `40px 60px 60px 40px repeat(${maxNoSteps}, 338px)`;
+      return `40px 60px repeat(${maxNoSteps}, 282px)`;
     }
   },
   sortIconInactive: {

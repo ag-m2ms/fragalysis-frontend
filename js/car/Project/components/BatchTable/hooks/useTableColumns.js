@@ -1,12 +1,7 @@
 import React, { useMemo } from 'react';
-import { Checkbox, colors, IconButton, makeStyles, Typography } from '@material-ui/core';
+import { colors, makeStyles, Typography } from '@material-ui/core';
 import { IconComponent } from '../../../../common/components/IconComponent';
-import { FaFlask } from 'react-icons/fa';
-import { GiMoneyStack } from 'react-icons/gi';
 import { IoFootsteps } from 'react-icons/io5';
-import { ImSad, ImSmile } from 'react-icons/im';
-import { useSynthesiseMethod } from './useSynthesiseMethod';
-import { useAdjustReactionSuccessRate } from './useAdjustReactionSuccessRate';
 import { AutocompleteFilter } from '../components/AutocompleteFilter';
 import {
   createTableMethodAutocompleteFilter,
@@ -120,9 +115,6 @@ const filterByMethodReactantsExcludeSmiles = createTableMethodSmilesFilter((row,
 export const useTableColumns = maxNoSteps => {
   const classes = useStyles();
 
-  const { mutate: synthesiseMethod } = useSynthesiseMethod();
-  const { mutate: adjustReactionSuccessRate } = useAdjustReactionSuccessRate();
-
   // Since filter functions should be memoized, we can't call them directly
   const reactantVendorFilters = useMemo(() => {
     return new Array(maxNoSteps).fill(0).map((_, index) => filterByMethodReactantVendor(index));
@@ -154,43 +146,6 @@ export const useTableColumns = maxNoSteps => {
           );
         },
         sortType: 'number'
-      },
-      {
-        accessor: 'estimatecost',
-        sortLabel: 'cost',
-        disableFilters: true,
-        Header: () => {
-          return <IconComponent Component={GiMoneyStack} />;
-        },
-        Cell: ({ value }) => {
-          return (
-            <Typography className={classes.text} component="span" noWrap>
-              {value}
-            </Typography>
-          );
-        },
-        sortType: 'number'
-      },
-      {
-        accessor: 'synthesise',
-        disableSortBy: true,
-        disableFilters: true,
-        Header: () => {
-          return <IconComponent Component={FaFlask} />;
-        },
-        Cell: ({ value, row }) => {
-          return (
-            <Checkbox
-              checked={value}
-              onChange={(_, checked) =>
-                synthesiseMethod({
-                  method: row.original,
-                  synthesise: checked
-                })
-              }
-            />
-          );
-        }
       },
       ...new Array(maxNoSteps).fill(0).map((_, index) => {
         return {
@@ -227,12 +182,6 @@ export const useTableColumns = maxNoSteps => {
                   <PreferredFlagIndicator reaction={reaction} type="leadTime" />
                   <PreferredFlagIndicator reaction={reaction} type="price" />
                 </div>
-                <IconButton size="small" onClick={() => adjustReactionSuccessRate({ reaction, successrate: 0.6 })}>
-                  <IconComponent Component={ImSmile} />
-                </IconButton>
-                <IconButton size="small" onClick={() => adjustReactionSuccessRate({ reaction, successrate: 0.4 })}>
-                  <IconComponent Component={ImSad} />
-                </IconButton>
               </div>
             );
           },
@@ -469,8 +418,6 @@ export const useTableColumns = maxNoSteps => {
     classes.image,
     classes.reactionNameWrapper,
     classes.preferredIndicatorsWrapper,
-    synthesiseMethod,
-    adjustReactionSuccessRate,
     reactantVendorFilters,
     preferredReactantVendorFilters,
     preferredReactantLeadTimeFilters,
