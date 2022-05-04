@@ -60,7 +60,7 @@ export const ExportProjectDialog = ({ open, onClose }) => {
                 target.methods?.map((method, j) => ({
                   batch_name: selectedBatches[i].batch_tag,
                   target_SMILES: target.smiles,
-                  method_no: j + 1,
+                  method_no: j + 1, // This should match with useGetTableData position attribute for sub rows
                   ...Object.fromEntries(
                     method.reactions
                       .map((reaction, k) => [

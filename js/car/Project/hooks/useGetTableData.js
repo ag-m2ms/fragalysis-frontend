@@ -66,7 +66,7 @@ export const useGetTableData = () => {
         ...rest,
         subRows: methods?.map((method, index) => ({
           ...method,
-          position: index + 1,
+          position: index + 1, // This should match with attribute method_no in exported data from ExportProjectDialog
           reactions: method.reactions?.map(reaction => ({
             ...reaction,
             // TODO this might be better to do on the BE?
