@@ -1,9 +1,13 @@
 import { makeStyles, Typography } from '@material-ui/core';
+import classNames from 'classnames';
 import React, { useMemo } from 'react';
 
 const useStyles = makeStyles(theme => ({
   text: {
     width: '100%'
+  },
+  centered: {
+    textAlign: 'center'
   }
 }));
 
@@ -49,6 +53,25 @@ export const useReactantProductTableColumns = () => {
         }
       },
       {
+        accessor: 'upperprice',
+        sortLabel: 'upper price',
+        Header: () => {
+          return (
+            <Typography>
+              <strong>Upper price</strong>
+            </Typography>
+          );
+        },
+        Cell: ({ value }) => {
+          return (
+            <Typography className={classNames(classes.text, classes.centered)} component="span" noWrap>
+              {value}
+            </Typography>
+          );
+        },
+        sortType: 'number'
+      },
+      {
         accessor: 'priceinfo',
         sortLabel: 'price info',
         Header: () => {
@@ -60,7 +83,7 @@ export const useReactantProductTableColumns = () => {
         },
         Cell: ({ value }) => {
           return (
-            <Typography className={classes.text} component="span" noWrap>
+            <Typography className={classNames(classes.text, classes.centered)} component="span" noWrap>
               {value}
             </Typography>
           );
@@ -79,7 +102,7 @@ export const useReactantProductTableColumns = () => {
         },
         Cell: ({ value }) => {
           return (
-            <Typography className={classes.text} component="span" noWrap>
+            <Typography className={classNames(classes.text, classes.centered)} component="span" noWrap>
               {value}
             </Typography>
           );
@@ -87,5 +110,5 @@ export const useReactantProductTableColumns = () => {
         sortType: 'number'
       }
     ];
-  }, [classes.text]);
+  }, [classes.centered, classes.text]);
 };

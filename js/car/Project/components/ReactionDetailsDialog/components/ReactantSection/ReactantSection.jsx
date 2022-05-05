@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
       borderBottom: `1px solid ${theme.palette.divider}`,
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(2),
-      gridTemplateColumns: '3fr 6fr 2fr 2fr'
+      gridTemplateColumns: '160px 1fr 105px repeat(2, 95px)'
     },
     '& th, td': {
       display: 'grid',

@@ -35,7 +35,8 @@ const useStyles = makeStyles(theme => ({
     gap: theme.spacing(1 / 2)
   },
   reactionWrapper: {
-    display: 'grid'
+    display: 'grid',
+    cursor: 'pointer'
   },
   reactionNameWrapper: {
     textAlign: 'center',
@@ -50,8 +51,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: colors.red[100]
   },
   image: {
-    mixBlendMode: 'multiply',
-    cursor: 'pointer'
+    mixBlendMode: 'multiply'
   }
 }));
 
@@ -171,22 +171,16 @@ export const useTableColumns = maxNoSteps => {
 
             return (
               <div className={classNames(classes.flexCell, !reaction.success && classes.unsuccessful)}>
-                <div className={classes.reactionWrapper}>
-                  <Tooltip title="Show reaction details">
-                    <img
-                      className={classes.image}
-                      src={reaction.reactionimage}
-                      width={270}
-                      height={60}
-                      onClick={() => requestReactionDetailsDialog(reaction)}
-                    />
-                  </Tooltip>
-                  <div className={classes.reactionNameWrapper}>
-                    <Typography variant="caption" noWrap>
-                      {value}
-                    </Typography>
+                <Tooltip title="Show reaction details">
+                  <div className={classes.reactionWrapper} onClick={() => requestReactionDetailsDialog(reaction)}>
+                    <img className={classes.image} src={reaction.reactionimage} width={270} height={60} />
+                    <div className={classes.reactionNameWrapper}>
+                      <Typography variant="caption" noWrap>
+                        {value}
+                      </Typography>
+                    </div>
                   </div>
-                </div>
+                </Tooltip>
                 <div className={classes.preferredIndicatorsWrapper}>
                   <PreferredFlagIndicator reaction={reaction} type="vendor" />
                   <PreferredFlagIndicator reaction={reaction} type="leadTime" />
