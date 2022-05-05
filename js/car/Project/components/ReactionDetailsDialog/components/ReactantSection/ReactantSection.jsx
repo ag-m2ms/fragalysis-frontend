@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   colors,
-  Link,
   makeStyles,
   Table,
   TableBody,
@@ -16,6 +15,8 @@ import { DialogSection } from '../../../../../common/components/DialogSection';
 import { DialogSectionHeading } from '../../../../../common/components/DialogSectionHeading';
 import { useReactantProductTableColumns } from './hooks/useReactantProductTableColumns';
 import { useTable, useSortBy } from 'react-table';
+import PubChem from '../../../../../assets/pubchem.svg';
+import PubChemSafety from '../../../../../assets/pubchem-safety.svg';
 
 const useStyles = makeStyles(theme => ({
   table: {
@@ -44,6 +45,10 @@ const useStyles = makeStyles(theme => ({
     '& svg': {
       color: `${colors.grey[400]} !important`
     }
+  },
+  sections: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, 1fr)'
   }
 }));
 
@@ -65,24 +70,37 @@ export const ReactantSection = ({ reactant, index }) => {
   return (
     <DialogSection>
       <DialogSectionHeading>Reactant {index + 1}</DialogSectionHeading>
-      <Typography>
-        Smiles: <strong>{reactant.smiles}</strong>
-      </Typography>
-      {reactantpubcheminfo.cas && (
-        <Typography>
-          CAS number: <strong>{reactantpubcheminfo.cas}</strong>
-        </Typography>
-      )}
-      {!!reactantpubcheminfo.compoundsummarylink && (
-        <Link href={reactantpubcheminfo.compoundsummarylink} target="_blank" rel="noreferrer">
-          PubChem compound summary
-        </Link>
-      )}
-      {!!reactantpubcheminfo.lcsslink && (
-        <Link href={reactantpubcheminfo.lcsslink} target="_blank" rel="noreferrer">
-          Laboratory chemical safety summary
-        </Link>
-      )}
+      <div className={classes.sections}>
+        <div>
+          <Typography>
+            Smiles: <strong>{reactant.smiles}</strong>
+          </Typography>
+          {reactantpubcheminfo.cas && (
+            <Typography>
+              CAS number: <strong>{reactantpubcheminfo.cas}</strong>
+            </Typography>
+          )}
+        </div>
+
+        {!!reactantpubcheminfo.compoundsummarylink && (
+          <div>
+            <Tooltip title="PubChem compound summary">
+              <a href={reactantpubcheminfo.compoundsummarylink} target="_blank" rel="noreferrer">
+                <img src={PubChem} height={50} />
+              </a>
+            </Tooltip>
+          </div>
+        )}
+        {!!reactantpubcheminfo.lcsslink && (
+          <div>
+            <Tooltip title="Laboratory chemical safety summary">
+              <a href={reactantpubcheminfo.lcsslink} target="_blank" rel="noreferrer">
+                <img src={PubChemSafety} height={50} />
+              </a>
+            </Tooltip>
+          </div>
+        )}
+      </div>
 
       {!!reactant.catalogentries.length && (
         <>
