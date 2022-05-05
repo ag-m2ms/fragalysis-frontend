@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { colors, makeStyles, Typography } from '@material-ui/core';
+import { colors, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { IconComponent } from '../../../../common/components/IconComponent';
 import { IoFootsteps } from 'react-icons/io5';
 import { AutocompleteFilter } from '../components/AutocompleteFilter';
@@ -21,6 +21,7 @@ import { formatPreferredVendorsString } from '../../../utils/formatPreferredVend
 import { SmilesFilter } from '../components/SmilesFilter/SmilesFilter';
 import classNames from 'classnames';
 import { FormatListNumbered } from '@material-ui/icons';
+import { requestReactionDetailsDialog } from '../../../stores/reactionDetailsDialogStore';
 
 const useStyles = makeStyles(theme => ({
   text: {
@@ -49,7 +50,8 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: colors.red[100]
   },
   image: {
-    mixBlendMode: 'multiply'
+    mixBlendMode: 'multiply',
+    cursor: 'pointer'
   }
 }));
 
@@ -170,7 +172,15 @@ export const useTableColumns = maxNoSteps => {
             return (
               <div className={classNames(classes.flexCell, !reaction.success && classes.unsuccessful)}>
                 <div className={classes.reactionWrapper}>
-                  <img className={classes.image} src={reaction.reactionimage} width={270} height={60} />
+                  <Tooltip title="Show reaction details">
+                    <img
+                      className={classes.image}
+                      src={reaction.reactionimage}
+                      width={270}
+                      height={60}
+                      onClick={() => requestReactionDetailsDialog(reaction)}
+                    />
+                  </Tooltip>
                   <div className={classes.reactionNameWrapper}>
                     <Typography variant="caption" noWrap>
                       {value}
