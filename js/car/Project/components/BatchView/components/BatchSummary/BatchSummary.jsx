@@ -1,9 +1,9 @@
 import React from 'react';
-import { makeStyles, Typography } from '@material-ui/core';
+import { makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { useGetBatchSummary } from './hooks/useGetBatchSummary';
 import { IconComponent } from '../../../../../common/components/IconComponent';
 import { FaFlask } from 'react-icons/fa';
-import { Cancel, FindInPage } from '@material-ui/icons';
+import { FindInPage } from '@material-ui/icons';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -20,24 +20,23 @@ const useStyles = makeStyles(theme => ({
 export const BatchSummary = () => {
   const classes = useStyles();
 
-  const summary = useGetBatchSummary();
+  const { targets, methods } = useGetBatchSummary();
 
   return (
     <div className={classes.root}>
-      <div className={classes.categoryInfo}>
-        <Typography>{summary.total}</Typography>
-        <IconComponent Component={FindInPage} />
-      </div>
+      <Tooltip title={`There are ${targets} targets in total`}>
+        <div className={classes.categoryInfo}>
+          <Typography>{targets}</Typography>
+          <IconComponent Component={FindInPage} />
+        </div>
+      </Tooltip>
 
-      <div className={classes.categoryInfo}>
-        <Typography>{summary.synthesise}</Typography>
-        <IconComponent Component={FaFlask} />
-      </div>
-
-      <div className={classes.categoryInfo}>
-        <Typography>{summary.ignore}</Typography>
-        <IconComponent Component={Cancel} />
-      </div>
+      <Tooltip title={`There are ${methods} methods in total`}>
+        <div className={classes.categoryInfo}>
+          <Typography>{methods}</Typography>
+          <IconComponent Component={FaFlask} />
+        </div>
+      </Tooltip>
     </div>
   );
 };

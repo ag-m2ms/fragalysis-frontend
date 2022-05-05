@@ -6,15 +6,10 @@ export const useGetBatchSummary = () => {
 
   const { data: targets } = useGetTargets({ batch_id: batch.id, fetchall: 'yes' });
 
-  const methods = targets?.map(({ methods }) => methods).flat() || [];
-
-  const total = methods.length;
-  const synthesise = methods.filter(method => method.synthesise).length;
-  const ignore = methods.filter(method => !method.synthesise).length;
+  const methods = targets.map(({ methods }) => methods).flat() || [];
 
   return {
-    total,
-    synthesise,
-    ignore
+    targets: targets.length,
+    methods: methods.length
   };
 };
