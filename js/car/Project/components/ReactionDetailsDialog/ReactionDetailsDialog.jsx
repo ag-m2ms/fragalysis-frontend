@@ -14,7 +14,10 @@ import { ReactantSection } from './components/ReactantSection/ReactantSection';
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'grid',
-    gap: theme.spacing(2)
+    gap: theme.spacing(2),
+    '& > :nth-child(even)': {
+      backgroundColor: theme.palette.action.hover
+    }
   },
   reactionWrapper: {
     display: 'grid',
