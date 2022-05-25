@@ -82,19 +82,19 @@ export const ReactantSection = ({ reactant, index }) => {
           )}
         </div>
 
-        {!!reactantpubcheminfo.compoundsummarylink && (
+        {!!reactantpubcheminfo.summaryurl && (
           <div>
             <Tooltip title="PubChem compound summary">
-              <a href={reactantpubcheminfo.compoundsummarylink} target="_blank" rel="noreferrer">
+              <a href={reactantpubcheminfo.summaryurl} target="_blank" rel="noreferrer">
                 <img src={PubChem} height={50} />
               </a>
             </Tooltip>
           </div>
         )}
-        {!!reactantpubcheminfo.lcsslink && (
+        {!!reactantpubcheminfo.lcssurl && (
           <div>
             <Tooltip title="Laboratory chemical safety summary">
-              <a href={reactantpubcheminfo.lcsslink} target="_blank" rel="noreferrer">
+              <a href={reactantpubcheminfo.lcssurl} target="_blank" rel="noreferrer">
                 <img src={PubChemSafety} height={50} />
               </a>
             </Tooltip>
