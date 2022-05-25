@@ -1,26 +1,26 @@
 import React, { useState } from 'react';
 import { Button } from '@material-ui/core';
 import { CategoryMenu } from '../CategoryMenu';
-import { OTProtocolMenuContents } from '../OTProtocolMenuContents';
-import { requestOtProtocolSummary } from '../../../../stores/otProtocolSummaryDialogStore';
-import { OTProtocolSummaryDialog } from '../../../OTProtocolSummaryDialog';
+import { OTProjectMenuContents } from '../OTProjectMenuContents';
+import { requestOtProjectSummary } from '../../../../stores/otProjectSummaryDialogStore';
+import { OTProjectSummaryDialog } from '../../../OTProjectSummaryDialog';
 
-export const OTProtocolHistoryButton = () => {
+export const OTProjectHistoryButton = () => {
   const [menuAnchorEl, setMenuAnchorEl] = useState(null);
 
   return (
     <>
       <Button onClick={event => setMenuAnchorEl(event.currentTarget)}>OT protocol history</Button>
       <CategoryMenu id="ot-protocol-history-menu" anchorEl={menuAnchorEl} onClose={() => setMenuAnchorEl(null)}>
-        <OTProtocolMenuContents
-          onSelected={otProtocol => {
+        <OTProjectMenuContents
+          onSelected={otProject => {
             setMenuAnchorEl(null);
-            requestOtProtocolSummary(otProtocol.id);
+            requestOtProjectSummary(otProject.id);
           }}
         />
       </CategoryMenu>
 
-      <OTProtocolSummaryDialog />
+      <OTProjectSummaryDialog />
     </>
   );
 };

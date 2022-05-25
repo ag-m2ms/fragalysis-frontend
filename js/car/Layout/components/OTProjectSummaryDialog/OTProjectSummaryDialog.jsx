@@ -5,14 +5,14 @@ import { DialogSectionHeading } from '../../../common/components/DialogSectionHe
 import { SuspenseWithBoundary } from '../../../common/components/SuspenseWithBoundary';
 import { CloseDialog } from '../../../common/components/CloseDialog';
 import {
-  setOtProtocolForSummaryDialog,
-  setOtProtocolSummaryDialogOpen,
-  useOtProtocolSummaryDialogStore
-} from '../../stores/otProtocolSummaryDialogStore';
+  setOtProjectForSummaryDialog,
+  setOtProjectSummaryDialogOpen,
+  useOtProjectSummaryDialogStore
+} from '../../stores/otProjectSummaryDialogStore';
 import { BatchProtocolList } from './components/BatchProtocolList';
 
-export const OTProtocolSummaryDialog = () => {
-  const { dialogOpen, otProtocolId } = useOtProtocolSummaryDialogStore();
+export const OTProjectSummaryDialog = () => {
+  const { dialogOpen, otProjectId } = useOtProjectSummaryDialogStore();
 
   return (
     <CloseDialog
@@ -26,15 +26,15 @@ export const OTProtocolSummaryDialog = () => {
             This is a list of batches for which OT protocols have been generated with download links:
           </Typography>
           <SuspenseWithBoundary>
-            <BatchProtocolList otProtocolId={otProtocolId} />
+            <BatchProtocolList otProjectId={otProjectId} />
           </SuspenseWithBoundary>
         </DialogSection>
       }
       onClose={() => {
-        setOtProtocolSummaryDialogOpen(false);
+        setOtProjectSummaryDialogOpen(false);
       }}
       TransitionProps={{
-        onExited: () => setOtProtocolForSummaryDialog(null)
+        onExited: () => setOtProjectForSummaryDialog(null)
       }}
     />
   );

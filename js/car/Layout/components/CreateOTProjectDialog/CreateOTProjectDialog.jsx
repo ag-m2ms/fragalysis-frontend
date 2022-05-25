@@ -1,15 +1,15 @@
 import React from 'react';
 import { SubmitDialog } from '../../../common/components/SubmitDialog';
 import { Typography } from '@material-ui/core';
-import { useCreateOTProtocol } from './hooks/useCreateOTProtocol';
+import { useCreateOTProject } from './hooks/useCreateOTProject';
 import { DialogSection } from '../../../common/components/DialogSection';
 import { DialogSectionHeading } from '../../../common/components/DialogSectionHeading';
 import { Form, Formik } from 'formik';
 import * as yup from 'yup';
 import { FormBatchSelector } from './components/FormBatchSelector';
 
-export const CreateOTProtocolDialog = ({ open, onClose }) => {
-  const { mutate: createOTProtocol } = useCreateOTProtocol();
+export const CreateOTProjectDialog = ({ open, onClose }) => {
+  const { mutate: createOTProject } = useCreateOTProject();
 
   return (
     <Formik
@@ -26,7 +26,7 @@ export const CreateOTProtocolDialog = ({ open, onClose }) => {
           .filter(([_, value]) => value)
           .map(([key]) => Number(key));
 
-        createOTProtocol({
+        createOTProject({
           protocol_name: `OT Protocol ${new Date().toLocaleString()}`,
           batchids: selectedBatchesIds
         });

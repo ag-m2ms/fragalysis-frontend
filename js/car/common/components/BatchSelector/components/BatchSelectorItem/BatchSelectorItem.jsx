@@ -29,7 +29,7 @@ export const BatchSelectorItem = ({ batch, children, selected, onSelect }) => {
       label={
         <>
           <Typography className={classes.name} noWrap>
-            {batch.batch_tag}
+            {batch.batchtag}
           </Typography>
           <Tooltip title={selected ? 'Deselect batch' : 'Select batch'}>
             <Checkbox
@@ -37,7 +37,7 @@ export const BatchSelectorItem = ({ batch, children, selected, onSelect }) => {
               className={classes.action}
               onClick={e => e.stopPropagation()}
               onChange={(_, checked) => onSelect(batch.id, checked)}
-              inputProps={{ 'aria-label': batch.batch_tag }}
+              inputProps={{ 'aria-label': batch.batchtag }}
             />
           </Tooltip>
         </>

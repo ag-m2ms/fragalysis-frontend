@@ -27,7 +27,7 @@ export const BatchView = () => {
   return (
     <ContentBox
       ref={element => setBatchViewRef(batch.id, element)}
-      title={batch.batch_tag}
+      title={batch.batchtag}
       endAdornment={
         <SuspenseWithBoundary
           SuspenseProps={{ fallback: null }}

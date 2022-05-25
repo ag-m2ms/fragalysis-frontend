@@ -173,7 +173,7 @@ export const useTableColumns = maxNoSteps => {
               <div className={classNames(classes.flexCell, !reaction.success && classes.unsuccessful)}>
                 <Tooltip title="Show reaction details">
                   <div className={classes.reactionWrapper} onClick={() => requestReactionDetailsDialog(reaction)}>
-                    <img className={classes.image} src={reaction.reactionimage} width={270} height={60} />
+                    <img className={classes.image} src={reaction.image} width={270} height={60} />
                     <div className={classes.reactionNameWrapper}>
                       <Typography variant="caption" noWrap>
                         {value}

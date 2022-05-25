@@ -66,7 +66,7 @@ export const NavigationItem = ({ node, children }) => {
       label={
         <>
           <Typography className={classes.name} noWrap>
-            {batch.batch_tag}
+            {batch.batchtag}
           </Typography>
           <div className={classes.actions}>
             {isTemporaryBatch ? (
@@ -105,7 +105,7 @@ export const NavigationItem = ({ node, children }) => {
                     className={classes.action}
                     onClick={e => e.stopPropagation()}
                     onChange={(_, checked) => setBatchSelected(batch.id, checked)}
-                    inputProps={{ 'aria-label': batch.batch_tag }}
+                    inputProps={{ 'aria-label': batch.batchtag }}
                   />
                 </Tooltip>
               </>

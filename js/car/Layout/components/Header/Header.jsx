@@ -3,8 +3,8 @@ import { AppBar, Toolbar, Typography, makeStyles, Button } from '@material-ui/co
 import { setNavigationDisplayed, setProjectViewDisplayed, useLayoutStore } from '../../../common/stores/layoutStore';
 import { setCurrentProject, useCurrentProjectStore } from '../../../common/stores/currentProjectStore';
 import { LayoutSwitch } from './components/LayoutSwitch/LayoutSwitch';
-import { CreateOTProtocolButton } from './components/CreateOTProtocolButton';
-import { OTProtocolHistoryButton } from './components/OTProtocolHistoryButton';
+import { CreateOTProjectButton } from './components/CreateOTProjectButton';
+import { OTProjectHistoryButton } from './components/OTProjectHistoryButton';
 import { ExportProjectButton } from './components/ExportProjectButton';
 
 const useStyles = makeStyles(theme => ({
@@ -38,8 +38,8 @@ export const Header = () => {
           </Button>
           {!!currentProject && (
             <>
-              <CreateOTProtocolButton />
-              <OTProtocolHistoryButton />
+              <CreateOTProjectButton />
+              <OTProjectHistoryButton />
               <ExportProjectButton />
               <LayoutSwitch checked={navigationDisplayed} onChange={setNavigationDisplayed} label="Navigation" />
               <LayoutSwitch checked={projectViewDisplayed} onChange={setProjectViewDisplayed} label="Project view" />

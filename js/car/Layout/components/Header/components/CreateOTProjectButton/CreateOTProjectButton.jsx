@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { Button } from '@material-ui/core';
-import { CreateOTProtocolDialog } from '../../../CreateOTProtocolDialog';
+import { CreateOTProjectDialog } from '../../../CreateOTProjectDialog';
 
-export const CreateOTProtocolButton = () => {
+export const CreateOTProjectButton = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   return (
     <>
       <Button onClick={() => setDialogOpen(true)}>Create OT Protocol</Button>
-      <CreateOTProtocolDialog open={dialogOpen} onClose={() => setDialogOpen(false)} />
+      <CreateOTProjectDialog open={dialogOpen} onClose={() => setDialogOpen(false)} />
     </>
   );
 };

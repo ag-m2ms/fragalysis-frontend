@@ -5,16 +5,16 @@ import { addCeleryTask } from '../../../../common/stores/celeryTasksStore';
 import { CloseSnackbarButton } from '../../../../common/components/CloseSnackbarButton/CloseSnackbarButton';
 import { scopes } from '../../../../common/constants/scopes';
 import { useProjectSnackbar } from '../../../../common/hooks/useProjectSnackbar';
-import { ShowOTProtocolSummaryButton } from '../components/ShowOTProtocolSummaryButton';
+import { ShowOTProjectSummaryButton } from '../components/ShowOTProjectSummaryButton';
 import { useCurrentProjectStore } from '../../../../common/stores/currentProjectStore';
 import {
-  createOtProtocolKey,
-  getOtProtocolsQueryKey,
-  getOtProtocolTaskStatusQueryKey
-} from '../../../../common/api/otProtocolsQueryKeys';
+  createOtProjectKey,
+  getOtProjectsQueryKey,
+  getOtProjectTaskStatusQueryKey
+} from '../../../../common/api/otProjectsQueryKeys';
 import { useGlobalSnackbar } from '../../../../common/hooks/useGlobalSnackbar';
 
-export const useCreateOTProtocol = () => {
+export const useCreateOTProject = () => {
   const queryClient = useQueryClient();
 
   const currentProject = useCurrentProjectStore.useCurrentProject();
@@ -22,9 +22,9 @@ export const useCreateOTProtocol = () => {
   const { enqueueSnackbarInfo, enqueueSnackbarSuccess, closeSnackbar } = useProjectSnackbar();
   const { enqueueSnackbarError } = useGlobalSnackbar();
 
-  const otProtocolsQueryKey = getOtProtocolsQueryKey({ project_id: currentProject.id });
+  const otProjectsQueryKey = getOtProjectsQueryKey({ project_id: currentProject.id });
 
-  return useMutation(data => axiosPost(createOtProtocolKey(), data), {
+  return useMutation(data => axiosPost(createOtProjectKey(), data), {
     onMutate: async () => {
       const creatingMessageId = enqueueSnackbarInfo('An OT protocol is being generated...');
       return { creatingMessageId };
@@ -37,17 +37,17 @@ export const useCreateOTProtocol = () => {
     },
     onSuccess: ({ task_id }, vars, { creatingMessageId }) => {
       addCeleryTask(task_id, {
-        queryKey: getOtProtocolTaskStatusQueryKey({ task_id }),
+        queryKey: getOtProjectTaskStatusQueryKey({ task_id }),
         scope: scopes.PROJECT,
-        onSuccess: ({ otprotocol_id }) => {
+        onSuccess: ({ otproject_id }) => {
           closeSnackbar(creatingMessageId);
 
-          queryClient.invalidateQueries(otProtocolsQueryKey);
+          queryClient.invalidateQueries(otProjectsQueryKey);
 
           enqueueSnackbarSuccess('OT protocol has been generated successfully', {
             action: key => (
               <>
-                <ShowOTProtocolSummaryButton messageId={key} otProtocolId={otprotocol_id} />
+                <ShowOTProjectSummaryButton messageId={key} otProjectId={otproject_id} />
                 <CloseSnackbarButton messageId={key} />
               </>
             )
@@ -60,7 +60,7 @@ export const useCreateOTProtocol = () => {
           console.error(message);
           enqueueSnackbarError(message);
 
-          queryClient.invalidateQueries(otProtocolsQueryKey);
+          queryClient.invalidateQueries(otProjectsQueryKey);
         }
       });
     }
