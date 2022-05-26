@@ -1,9 +1,9 @@
 import { useQuery } from 'react-query';
-import { getOtProtocolsQueryKey } from '../api/otProtocolsQueryKeys';
+import { getOtProjectsQueryKey } from '../api/otProjectsQueryKeys';
 import { axiosGet } from '../utils/axiosFunctions';
 
-export const useGetOtProtocols = params => {
-  const queryKey = getOtProtocolsQueryKey(params);
+export const useGetOtProjects = params => {
+  const queryKey = getOtProjectsQueryKey(params);
 
   return useQuery(queryKey, async () => (await axiosGet(queryKey)).results);
 };

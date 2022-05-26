@@ -22,7 +22,7 @@ export const DeleteSubBatchDialog = () => {
       title="Delete subbatch"
       content={
         <Typography>
-          Are you sure you want to delete batch <strong>{batch?.batch_tag}</strong>?
+          Are you sure you want to delete batch <strong>{batch?.batchtag}</strong>?
         </Typography>
       }
       onClose={() => setDeleteSubBatchDialogOpen(false)}

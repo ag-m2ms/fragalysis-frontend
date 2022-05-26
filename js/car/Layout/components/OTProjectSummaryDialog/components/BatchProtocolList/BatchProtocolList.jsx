@@ -2,16 +2,16 @@ import { Button, List, ListItem, ListItemSecondaryAction, ListItemText } from '@
 import React from 'react';
 import { useGetProtocolsForTask } from './hooks/useGetProtocolsForTask';
 
-export const BatchProtocolList = ({ otProtocolId }) => {
-  const batchesWithOtProtocols = useGetProtocolsForTask(otProtocolId);
+export const BatchProtocolList = ({ otProjectId }) => {
+  const batchesWithOtProjects = useGetProtocolsForTask(otProjectId);
 
   return (
     <List>
-      {!!batchesWithOtProtocols.length ? (
-        batchesWithOtProtocols.map(({ batch, otBatchProtocol }) => {
+      {!!batchesWithOtProjects.length ? (
+        batchesWithOtProjects.map(({ batch, otBatchProtocol }) => {
           return (
             <ListItem key={batch.id}>
-              <ListItemText primary={batch.batch_tag} />
+              <ListItemText primary={batch.batchtag} />
               <ListItemSecondaryAction>
                 <Button color="primary" variant="contained" href={otBatchProtocol.zipfile} download>
                   Download protocol

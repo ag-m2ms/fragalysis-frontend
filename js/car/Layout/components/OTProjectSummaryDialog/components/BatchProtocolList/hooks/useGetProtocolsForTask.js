@@ -3,13 +3,13 @@ import { useGetBatches } from '../../../../../../common/hooks/useGetBatches';
 import { useGetOtBatchProtocols } from '../../../../../../common/hooks/useGetOtBatchProtocols';
 import { useCurrentProjectStore } from '../../../../../../common/stores/currentProjectStore';
 
-export const useGetProtocolsForTask = otProtocolId => {
+export const useGetProtocolsForTask = otProjectId => {
   const currentProject = useCurrentProjectStore.useCurrentProject();
 
   const { data: batches } = useGetBatches({ project_id: currentProject.id });
   const { data: otBatchProtocols } = useGetOtBatchProtocols({
     project_id: currentProject.id,
-    otprotocol_id: otProtocolId
+    otproject_id: otProjectId
   });
 
   return useMemo(() => {

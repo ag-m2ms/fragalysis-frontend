@@ -32,19 +32,19 @@ export const ProductSection = ({ product }) => {
           )}
         </div>
 
-        {!!productpubcheminfo.compoundsummarylink && (
+        {!!productpubcheminfo.summaryurl && (
           <div>
             <Tooltip title="PubChem compound summary">
-              <a href={productpubcheminfo.compoundsummarylink} target="_blank" rel="noreferrer">
+              <a href={productpubcheminfo.summaryurl} target="_blank" rel="noreferrer">
                 <img src={PubChem} height={50} />
               </a>
             </Tooltip>
           </div>
         )}
-        {!!productpubcheminfo.lcsslink && (
+        {!!productpubcheminfo.lcssurl && (
           <div>
             <Tooltip title="Laboratory chemical safety summary">
-              <a href={productpubcheminfo.lcsslink} target="_blank" rel="noreferrer">
+              <a href={productpubcheminfo.lcssurl} target="_blank" rel="noreferrer">
                 <img src={PubChemSafety} height={50} />
               </a>
             </Tooltip>

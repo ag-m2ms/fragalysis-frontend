@@ -44,7 +44,7 @@ export const useCreateSubBatch = () => {
 
         // Optimistically update to the new value
         queryClient.setQueryData(batchesQueryKey, batches => {
-          const newBatch = { id: temporaryId, batch_id: batch.id, project_id: currentProject.id, batch_tag: batchtag };
+          const newBatch = { id: temporaryId, batch_id: batch.id, project_id: currentProject.id, batchtag: batchtag };
 
           return [...batches, newBatch];
         });

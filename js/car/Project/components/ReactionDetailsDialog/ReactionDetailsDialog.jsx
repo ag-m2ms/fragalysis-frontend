@@ -49,7 +49,7 @@ export const ReactionDetailsDialog = () => {
           <DialogSection>
             <DialogSectionHeading>Reaction</DialogSectionHeading>
             <div className={classes.reactionWrapper}>
-              <img className={classes.image} src={reaction?.reactionimage} width={270} height={60} />
+              <img className={classes.image} src={reaction?.image} width={270} height={60} />
               <div className={classes.reactionNameWrapper}>
                 <Typography noWrap>{reaction?.reactionclass}</Typography>
               </div>
